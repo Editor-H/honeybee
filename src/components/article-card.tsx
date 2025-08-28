@@ -1,57 +1,166 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Bookmark, BookmarkCheck, Clock } from "lucide-react";
 import { Article } from "@/types/article";
+import { useToastContext } from "@/contexts/toast-context";
 
 interface ArticleCardProps {
   article: Article;
+  isInitiallySaved?: boolean;
+  onUnsave?: (articleUrl: string) => void;
+  onSave?: (articleUrl: string) => void;
 }
 
-export function ArticleCard({ article }: ArticleCardProps) {
-  const formatDate = (date: Date) => {
+export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSave }: ArticleCardProps) {
+  const { data: session } = useSession();
+  const [isSaved, setIsSaved] = useState(isInitiallySaved);
+  const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useToastContext();
+  
+  const formatDate = (date: Date | string) => {
     const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    const diffInHours = Math.floor((now.getTime() - dateObj.getTime()) / (1000 * 60 * 60));
     
     if (diffInHours < 1) return "방금 전";
     if (diffInHours < 24) return `${diffInHours}시간 전`;
     const diffInDays = Math.floor(diffInHours / 24);
     if (diffInDays < 7) return `${diffInDays}일 전`;
-    return date.toLocaleDateString('ko-KR');
+    
+    // 7일 이상된 경우 간단한 날짜 형식 사용
+    const currentYear = now.getFullYear();
+    const dateYear = dateObj.getFullYear();
+    
+    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    const day = dateObj.getDate().toString().padStart(2, '0');
+    
+    if (currentYear === dateYear) {
+      // 같은 해면 MM.DD 형식
+      return `${month}.${day}`;
+    } else {
+      // 다른 해면 YY.MM.DD 형식
+      const year = dateYear.toString().slice(-2);
+      return `${year}.${month}.${day}`;
+    }
+  };
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handleSaveClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!session?.user?.id) {
+      showToast('아티클을 저장하려면 먼저 로그인해 주세요 😊', 'info');
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+      if (isSaved) {
+        // 아티클 삭제
+        const response = await fetch(`/api/articles/save?url=${encodeURIComponent(article.url)}`, {
+          method: 'DELETE',
+        });
+        
+        if (response.ok) {
+          setIsSaved(false);
+          showToast('저장이 해제되었습니다', 'success');
+          if (onUnsave) {
+            onUnsave(article.url);
+          }
+        } else {
+          throw new Error('저장 삭제 실패');
+        }
+      } else {
+        // 아티클 저장
+        const response = await fetch('/api/articles/save', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            article: {
+              url: article.url,
+              title: article.title,
+              excerpt: article.excerpt,
+              image: null, // 이미지가 있다면 추가
+              publishedAt: article.publishedAt,
+              platform: article.platform.name,
+            }
+          }),
+        });
+        
+        if (response.ok) {
+          setIsSaved(true);
+          showToast('아티클이 저장되었어요! 📚', 'success');
+          if (onSave) {
+            onSave(article.url);
+          }
+        } else {
+          throw new Error('저장 실패');
+        }
+      }
+    } catch (error) {
+      console.error('Save/Delete error:', error);
+      showToast(
+        isSaved ? '저장 삭제 중 문제가 발생했어요 😅' : '저장하는 중 문제가 발생했어요 😅', 
+        'error'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'frontend': return 'from-blue-400 to-blue-600';
-      case 'backend': return 'from-green-400 to-green-600';
-      case 'ai-ml': return 'from-purple-400 to-purple-600';
-      case 'devops': return 'from-orange-400 to-orange-600';
-      case 'design': return 'from-red-400 to-red-600';
-      default: return 'from-teal-400 to-teal-600';
-    }
+    return 'bg-[#DAA63E]';
   };
 
   const getCategoryTextColor = (category: string) => {
-    switch (category) {
-      case 'frontend': return 'text-blue-700';
-      case 'backend': return 'text-green-700';
-      case 'ai-ml': return 'text-purple-700';
-      case 'devops': return 'text-orange-700';
-      case 'design': return 'text-red-700';
-      default: return 'text-teal-700';
-    }
+    return 'text-[#DAA63E]';
   };
 
   const getPlatformColor = (platformId: string) => {
-    switch (platformId) {
-      case 'toss': return 'from-blue-500 to-blue-600';
-      case 'daangn': return 'from-orange-500 to-orange-600';
-      case 'naver-d2': return 'from-green-500 to-green-600';
-      case 'brunch': return 'from-amber-500 to-yellow-600';
-      case 'medium': return 'from-slate-700 to-slate-800';
-      case 'yozm': return 'from-purple-500 to-purple-600';
-      default: return 'from-gray-500 to-gray-600';
+    return '#DAA63E'; // 모든 플랫폼에 동일한 포인트 컬러 사용
+  };
+
+  const getPlatformLogo = (platformName: string) => {
+    // 이미지 대신 CSS로 로고 스타일을 만들어보겠습니다
+    return null; // 임시로 null 반환하여 이니셜 표시되도록
+  };
+
+  const getPlatformLogoComponent = (platformName: string) => {
+    const logoStyles = {
+      '토스 기술블로그': { bg: 'bg-blue-500', text: 'T', color: 'text-white' },
+      '카카오 기술블로그': { bg: 'bg-yellow-400', text: 'K', color: 'text-black' },
+      '당근마켓 기술블로그': { bg: 'bg-orange-500', text: '당', color: 'text-white' },
+      '우아한형제들': { bg: 'bg-gray-800', text: '우', color: 'text-white' },
+      '네이버 D2': { bg: 'bg-green-500', text: 'N', color: 'text-white' }
+    };
+
+    const style = logoStyles[platformName as keyof typeof logoStyles];
+    
+    if (style) {
+      return (
+        <div className={`w-8 h-8 rounded-full ${style.bg} flex items-center justify-center`}>
+          <span className={`text-sm font-bold ${style.color}`}>{style.text}</span>
+        </div>
+      );
     }
+    
+    return (
+      <div className="text-sm font-semibold text-[#DAA63E]">
+        {platformName.replace(' 기술블로그', '').replace('NAVER ', '').charAt(0)}
+      </div>
+    );
   };
 
   const handleCardClick = () => {
@@ -60,54 +169,87 @@ export function ArticleCard({ article }: ArticleCardProps) {
 
   return (
     <Card 
-      className="group hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:bg-white overflow-hidden cursor-pointer hover:scale-[1.02]"
+      className="group hover:shadow-sm transition-all duration-200 border border-gray-200 bg-white hover:border-[#DAA63E] overflow-hidden cursor-pointer rounded-2xl relative h-[240px] flex flex-col"
       onClick={handleCardClick}
     >
-      <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center relative overflow-hidden">
-        {article.thumbnail ? (
-          <>
-            <img 
-              src={article.thumbnail} 
-              alt={article.title}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                // 이미지 로드 실패 시 숨기기
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-              }}
-            />
-            <div className="absolute inset-0 bg-black/20" />
-            <div className="absolute bottom-2 right-2 px-2 py-1 bg-black/60 rounded text-white text-xs font-medium">
-              {article.platform.name.replace(' 기술블로그', '').replace('NAVER ', '')}
-            </div>
-          </>
+      {/* Content Type Badge */}
+      <div className="absolute top-1.5 right-1.5 z-10">
+        {article.contentType === 'video' ? (
+          <Badge className="bg-blue-50 text-blue-600 text-[10px] px-1.5 py-0.5 border border-blue-200 font-medium">
+            VIDEO
+          </Badge>
         ) : (
-          <>
-            <div className={`absolute inset-0 bg-gradient-to-br opacity-20 ${getPlatformColor(article.platform.id)}`} />
-            <div className="font-bold text-lg text-slate-700">
-              {article.platform.name.replace(' 기술블로그', '').replace('NAVER ', '')}
-            </div>
-          </>
+          <Badge className="bg-[#DAA63E]/10 text-[#DAA63E] text-[10px] px-1.5 py-0.5 border border-[#DAA63E]/20 font-medium">
+            TEXT
+          </Badge>
         )}
       </div>
-      <CardContent className="p-6">
-        <div className="flex items-center text-sm text-slate-500 mb-3">
-          <Badge variant="secondary" className="mr-2 text-xs">
-            {article.platform.name.replace(' 기술블로그', '').replace('NAVER ', '')}
-          </Badge>
-          <span>{article.author.name}</span>
-          <span className="mx-2">•</span>
-          <span>{formatDate(article.publishedAt)}</span>
+      
+      <CardContent className="p-3 flex-1 flex flex-col">
+        <div className="flex items-start gap-2 mb-2">
+          {/* Platform Logo */}
+          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 border border-gray-200">
+            {getPlatformLogoComponent(article.platform.name)}
+          </div>
+
+          {/* Platform Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex justify-between mb-1">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1 mb-0.5">
+                  <span className="font-medium text-gray-700 text-sm truncate">
+                    {article.platform.name.replace(' 기술블로그', '').replace('NAVER ', '')}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <span className="whitespace-nowrap">
+                    {formatDate(article.publishedAt)}
+                  </span>
+                  {article.contentType === 'video' && article.videoDuration && (
+                    <>
+                      <span>•</span>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span>{formatDuration(article.videoDuration)}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+              
+              {/* Save Button */}
+              <button
+                onClick={handleSaveClick}
+                disabled={isLoading}
+                className="p-1 rounded-lg hover:bg-gray-100 transition-all duration-200 flex-shrink-0 ml-2 disabled:opacity-50"
+                title={!session?.user ? "클릭하여 로그인 안내 보기" : isSaved ? "저장 삭제" : "아티클 저장"}
+              >
+                {isLoading ? (
+                  <div className="w-4 h-4 border-2 border-[#DAA63E] border-t-transparent rounded-full animate-spin"></div>
+                ) : isSaved ? (
+                  <BookmarkCheck className="w-4 h-4 text-[#DAA63E]" />
+                ) : (
+                  <Bookmark className="w-4 h-4 text-gray-400 hover:text-[#DAA63E]" />
+                )}
+              </button>
+            </div>
+            <div className="text-xs text-gray-500 truncate">
+              {article.author.name}
+            </div>
+          </div>
         </div>
-        <CardTitle className="text-lg mb-2 line-clamp-2 group-hover:text-yellow-600 transition-colors">
+
+        <CardTitle className="text-base mb-1.5 line-clamp-2 group-hover:text-[#DAA63E] transition-colors leading-tight font-semibold">
           {article.title}
         </CardTitle>
-        <CardDescription className="mb-3 line-clamp-2">
+        
+        <CardDescription className="mb-2 line-clamp-1 text-gray-600 text-xs">
           {article.excerpt}
         </CardDescription>
-        <div className="flex flex-wrap gap-2">
+
+        <div className="flex flex-wrap gap-1 mt-auto">
           {article.tags.slice(0, 3).map((tag, index) => (
-            <Badge key={index} variant="outline" className="text-xs">
+            <Badge key={index} className="text-[10px] bg-gray-100 text-gray-600 border-0 hover:bg-[#DAA63E]/10 hover:text-[#DAA63E] transition-colors px-1.5 py-0.5">
               #{tag}
             </Badge>
           ))}

@@ -24,7 +24,6 @@ export interface Article {
   title: string;
   content: string;
   excerpt: string;
-  thumbnail?: string;
   author: Author;
   platform: Platform;
   category: ArticleCategory;
@@ -37,13 +36,21 @@ export interface Article {
   trending: boolean;
   featured: boolean;
   url: string;
+  // 영상 콘텐츠 지원
+  contentType: 'article' | 'video';
+  videoUrl?: string;
+  videoDuration?: number; // seconds
+  thumbnailUrl?: string;
+  watchCount?: number; // 영상 조회수 (viewCount와 구분)
 }
 
 export type ArticleCategory = 
   | 'frontend'
   | 'backend' 
   | 'ai-ml'
-  | 'devops'
+  | 'cloud-infra'
+  | 'game'
+  | 'office'
   | 'design'
   | 'mobile'
   | 'data'
