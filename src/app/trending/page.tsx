@@ -1,25 +1,9 @@
-import { TrendingUp, ArrowLeft } from "lucide-react";
+import { TrendingUp, ArrowLeft, BarChart3, Building2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArticleCard } from "@/components/article-card";
-import { collectAllFeeds } from "@/lib/rss-collector";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function TrendingPage() {
-  let allArticles;
-  
-  try {
-    allArticles = await collectAllFeeds();
-  } catch (error) {
-    console.error('RSS 수집 실패:', error);
-    const { getRecentArticles } = await import('@/data/mock-data');
-    allArticles = getRecentArticles(20);
-  }
-  
-  // 트렌딩 기사들만 필터링하고 조회수/좋아요 순으로 정렬
-  const trendingArticles = allArticles
-    .filter(article => article.trending || article.viewCount > 3000)
-    .sort((a, b) => (b.viewCount || 0) + (b.likeCount || 0) - (a.viewCount || 0) - (a.likeCount || 0))
-    .slice(0, 24);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50">
@@ -49,40 +33,99 @@ export default async function TrendingPage() {
         {/* Page Title */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-100 to-amber-100 rounded-full mb-4">
-            <TrendingUp className="w-8 h-8 text-yellow-600" />
+            <BarChart3 className="w-8 h-8 text-yellow-600" />
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">핫한 글</h1>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">데이터 분석</h1>
           <p className="text-lg text-slate-600 mb-2">
-            <strong>조회수와 좋아요 수를 합산한 점수</strong>를 기준으로 정렬된 인기 기술 아티클들
+            <strong>트렌드 및 플랫폼 분석</strong>을 통해 IT 생태계의 동향을 파악하세요
           </p>
           <p className="text-sm text-slate-500 mb-4">
-            트렌딩 마크가 있거나 조회수 3,000 이상인 글들을 대상으로 (조회수 + 좋아요 수) 순으로 정렬
+            실시간 데이터 기반의 상세한 인사이트와 차트를 제공합니다
           </p>
-          <div className="text-sm text-slate-500">
-            총 {trendingArticles.length}개의 트렌딩 아티클
-          </div>
         </div>
 
-        {/* Trending Articles Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {trendingArticles.map((article, index) => (
-            <div key={article.id} className="relative">
-              {index < 3 && (
-                <div className="absolute -top-2 -left-2 z-10 w-8 h-8 bg-gradient-to-r from-yellow-500 to-amber-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">
-                  {index + 1}
+        {/* Analytics Cards */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {/* Trending Analysis Card */}
+          <Link href="/analytics/trending">
+            <Card className="h-full hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 hover:border-[#DAA63E]/20">
+              <CardHeader className="text-center pb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#DAA63E]/10 to-[#DAA63E]/20 rounded-full mb-4 mx-auto group-hover:scale-110 transition-transform">
+                  <TrendingUp className="w-8 h-8 text-[#DAA63E]" />
                 </div>
-              )}
-              <ArticleCard article={article} />
-            </div>
-          ))}
-        </div>
+                <CardTitle className="text-2xl text-slate-900 group-hover:text-[#DAA63E] transition-colors">
+                  트렌딩 분석
+                </CardTitle>
+                <CardDescription className="text-base">
+                  인기 아티클, 태그, 플랫폼 동향 분석
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="w-2 h-2 bg-[#DAA63E] rounded-full"></div>
+                  인기 아티클 TOP 10
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  트렌딩 태그 워드클라우드
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  콘텐츠 타입별 분포
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  플랫폼별 활동 현황
+                </div>
+                <div className="pt-3">
+                  <Button className="w-full bg-[#DAA63E] hover:bg-[#B8941F] text-white group-hover:shadow-md transition-all">
+                    분석 보기 →
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
 
-        {trendingArticles.length === 0 && (
-          <div className="text-center py-12">
-            <TrendingUp className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-500 text-lg">현재 트렌딩 기사를 불러올 수 없습니다.</p>
-          </div>
-        )}
+          {/* Platform Analysis Card */}
+          <Link href="/analytics/platform">
+            <Card className="h-full hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 hover:border-blue-500/20">
+              <CardHeader className="text-center pb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500/10 to-blue-500/20 rounded-full mb-4 mx-auto group-hover:scale-110 transition-transform">
+                  <Building2 className="w-8 h-8 text-blue-500" />
+                </div>
+                <CardTitle className="text-2xl text-slate-900 group-hover:text-blue-500 transition-colors">
+                  플랫폼 분석
+                </CardTitle>
+                <CardDescription className="text-base">
+                  각 플랫폼별 상세한 활동 분석
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  플랫폼별 아티클 통계
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  생산성 및 활동 패턴
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                  콘텐츠 유형별 분포
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                  시간대별 발행 패턴
+                </div>
+                <div className="pt-3">
+                  <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white group-hover:shadow-md transition-all">
+                    분석 보기 →
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
       </main>
     </div>
   );

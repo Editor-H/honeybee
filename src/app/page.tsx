@@ -11,6 +11,8 @@ import { SearchBox } from "@/components/search-box";
 import { Sidebar } from "@/components/sidebar";
 import { KeywordsAnalysis } from "@/components/keywords-analysis";
 import { AuthorsAnalysis } from "@/components/authors-analysis";
+import { TrendingAnalysis } from "@/components/trending-analysis";
+import { PlatformAnalysis } from "@/components/platform-analysis";
 import { Article } from "@/types/article";
 import { BookmarkCheck, Search, User } from "lucide-react";
 export default function Home() {
@@ -175,17 +177,7 @@ export default function Home() {
   const renderTabContent = () => {
     switch (activeTab) {
       case "trending":
-        return (
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">🔥 트렌딩 분석</h2>
-              <p className="text-gray-600">실시간 급상승 키워드와 인기 아티클을 확인하세요</p>
-            </div>
-            <div className="bg-white rounded-lg p-8 border border-gray-200">
-              <p className="text-gray-500 text-center">트렌딩 분석 기능을 준비 중입니다...</p>
-            </div>
-          </div>
-        );
+        return <TrendingAnalysis />;
       
       case "keywords":
         return <KeywordsAnalysis />;
@@ -194,17 +186,7 @@ export default function Home() {
         return <AuthorsAnalysis />;
       
       case "platforms":
-        return (
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">🏢 플랫폼 분석</h2>
-              <p className="text-gray-600">기업별 기술 트렌드와 플랫폼 영향력을 비교합니다</p>
-            </div>
-            <div className="bg-white rounded-lg p-8 border border-gray-200">
-              <p className="text-gray-500 text-center">플랫폼 분석 기능을 준비 중입니다...</p>
-            </div>
-          </div>
-        );
+        return <PlatformAnalysis />;
       
       default:
         return null;
