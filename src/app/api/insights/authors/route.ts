@@ -43,8 +43,8 @@ function analyzeSpecialties(text: string): string[] {
 
 // 영향력 점수 계산
 function calculateInfluenceScore(articleCount: number, avgEngagement: number, platform: string): number {
-  let baseScore = Math.min(50, articleCount * 2); // 기본 점수 (최대 50점)
-  let engagementScore = Math.min(30, avgEngagement / 10); // 참여도 점수 (최대 30점)
+  const baseScore = Math.min(50, articleCount * 2); // 기본 점수 (최대 50점)
+  const engagementScore = Math.min(30, avgEngagement / 10); // 참여도 점수 (최대 30점)
   
   // 플랫폼별 가중치
   const platformWeights: { [key: string]: number } = {
@@ -99,11 +99,11 @@ export async function GET(request: NextRequest) {
     const authorMap = new Map<string, {
       name: string;
       platform: string;
-      articles: any[];
+      articles: Article[];
       totalEngagement: number;
     }>();
 
-    articles.forEach((article: any) => {
+    articles.forEach((article: Article) => {
       const authorName = article.author?.name || 'Unknown Author';
       const platform = article.platform?.name || 'Unknown Platform';
       const key = `${authorName}@${platform}`;

@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { AnimatedStats } from "@/components/animated-stats";
 import { ArticleList } from "@/components/article-list";
-import { RefreshButton } from "@/components/refresh-button";
 import { SearchBox } from "@/components/search-box";
 import { Sidebar } from "@/components/sidebar";
 import { KeywordsAnalysis } from "@/components/keywords-analysis";
@@ -21,7 +20,6 @@ export default function Home() {
   const searchParams = useSearchParams();
   const [allArticles, setAllArticles] = useState<Article[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeTab, setActiveTab] = useState("home");
@@ -35,7 +33,6 @@ export default function Home() {
       setActiveTab('home');
     }
   }, [searchParams]);
-  const [cacheInfo, setCacheInfo] = useState<{lastUpdated: Date | null, hoursAgo: number | null}>({ lastUpdated: null, hoursAgo: null });
   const [showHeaderSearch, setShowHeaderSearch] = useState(false);
   const mainSearchRef = useRef<HTMLDivElement>(null);
   
@@ -68,7 +65,7 @@ export default function Home() {
         
         if (data.success && data.articles) {
           // Date 문자열을 Date 객체로 변환
-          const processedArticles = data.articles.map((article: any) => ({
+          const processedArticles = data.articles.map((article: Article) => ({
             ...article,
             publishedAt: new Date(article.publishedAt)
           }));
@@ -86,15 +83,6 @@ export default function Home() {
           }
         }
         
-        // 캐시 정보 가져오기
-        const cacheResponse = await fetch('/api/feeds/refresh');
-        const cacheData = await cacheResponse.json();
-        if (cacheData.success && cacheData.cacheInfo) {
-          setCacheInfo({
-            lastUpdated: cacheData.cacheInfo.lastUpdated ? new Date(cacheData.cacheInfo.lastUpdated) : null,
-            hoursAgo: cacheData.cacheInfo.hoursAgo
-          });
-        }
       } catch (error) {
         console.error('데이터 로딩 실패:', error);
         // 최종 fallback
@@ -318,7 +306,7 @@ export default function Home() {
                     initialArticles={allArticles}
                     searchQuery={searchQuery}
                     activeCategory={activeCategory}
-                    onSearchStateChange={setIsSearching}
+                    onSearchStateChange={() => {}}
                   />
                 )}
               </div>

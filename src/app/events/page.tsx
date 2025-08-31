@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Calendar, Clock, MapPin, Users } from "lucide-react";
+import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { Article } from "@/types/article";
 
 interface EventCardProps {
@@ -243,7 +243,7 @@ export default function EventsPage() {
         
         if (data.success && data.articles) {
           const processedEvents = data.articles
-            .filter((article: any) => {
+            .filter((article: Article) => {
               // events 카테고리이거나 행사 관련 키워드가 포함된 아티클들
               const title = article.title?.toLowerCase() || '';
               const excerpt = article.excerpt?.toLowerCase() || '';
@@ -254,7 +254,7 @@ export default function EventsPage() {
               
               return article.category === 'events' || hasEventKeyword;
             })
-            .map((article: any) => ({
+            .map((article: Article) => ({
               ...article,
               publishedAt: new Date(article.publishedAt),
               category: 'events' // 강제로 events 카테고리로 설정

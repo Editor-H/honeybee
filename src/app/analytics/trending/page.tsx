@@ -37,7 +37,7 @@ export default function TrendingAnalysisPage() {
           // Date 문자열을 Date 객체로 변환
           const processedData = {
             ...result.data,
-            trendingArticles: result.data.trendingArticles.map((article: any) => ({
+            trendingArticles: result.data.trendingArticles.map((article: Article) => ({
               ...article,
               publishedAt: new Date(article.publishedAt)
             }))

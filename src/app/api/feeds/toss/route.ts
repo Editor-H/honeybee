@@ -25,7 +25,7 @@ const defaultTossAuthor: Author = {
 };
 
 // 향상된 썸네일 추출 함수
-function extractThumbnail(item: any): string | undefined {
+function extractThumbnail(item: Parser.Item): string | undefined {
   // 1. RSS enclosure에서 이미지 추출 (대표 이미지)
   if (item.enclosure?.url && item.enclosure.type?.startsWith('image/')) {
     return item.enclosure.url;
