@@ -80,7 +80,7 @@ function searchArticles(articles: Article[], query: string, filters: SearchFilte
       results = results.map(article => ({
         ...article,
         relevanceScore: calculateRelevanceScore(article, query)
-      })).sort((a: any, b: any) => b.relevanceScore - a.relevanceScore);
+      })).sort((a: Article & {relevanceScore: number}, b: Article & {relevanceScore: number}) => b.relevanceScore - a.relevanceScore);
       break;
   }
   

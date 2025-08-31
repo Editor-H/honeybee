@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
     const keywordByPlatform: { [key: string]: { [platform: string]: number } } = {};
     
     // 모든 아티클에서 키워드 추출
-    articles.forEach((article: any) => {
+    articles.forEach((article: Article) => {
       const titleKeywords = extractKeywords(article.title || '');
       const excerptKeywords = extractKeywords(article.excerpt || '');
       const platform = article.platform?.name || 'Unknown';

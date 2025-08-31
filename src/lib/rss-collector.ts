@@ -1086,6 +1086,7 @@ export async function collectFreshFeeds(): Promise<Article[]> {
       // 네이버 D2는 특별한 헤더가 필요
       let feed;
       if (platformKey === 'naver') {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const Parser = require('rss-parser');
         const customParser = new Parser({
           requestOptions: {
@@ -1276,7 +1277,7 @@ export async function collectFreshFeeds(): Promise<Article[]> {
           excerpt: generateExcerpt(rawContent),
           author: defaultAuthor,
           platform,
-          category: category as any,
+          category: category as ArticleCategory,
           tags: smartTags,
           publishedAt: new Date(item.pubDate || Date.now()),
           viewCount: Math.floor(Math.random() * 5000) + 1000,
