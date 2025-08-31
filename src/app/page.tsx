@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import { TrendingAnalysis } from "@/components/trending-analysis";
 import { PlatformAnalysis } from "@/components/platform-analysis";
 import { Article } from "@/types/article";
 import { BookmarkCheck, Search, User } from "lucide-react";
-export default function Home() {
+function HomeContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -315,5 +315,13 @@ export default function Home() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FAEFD9] flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DAA63E]"></div></div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

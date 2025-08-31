@@ -71,7 +71,8 @@ export async function GET() {
         readingTime: Math.floor(Math.random() * 12) + 3,
         trending: Math.random() > 0.8,
         featured: Math.random() > 0.9,
-        url: item.link || 'https://brunch.co.kr'
+        url: item.link || 'https://brunch.co.kr',
+        contentType: 'article' as const
       };
     });
 
@@ -103,7 +104,8 @@ export async function GET() {
         readingTime: 8,
         trending: false,
         featured: false,
-        url: 'https://brunch.co.kr/@mock/dev-productivity'
+        url: 'https://brunch.co.kr/@mock/dev-productivity',
+        contentType: 'article' as const
       },
       {
         id: 'brunch-mock-2', 
@@ -121,7 +123,8 @@ export async function GET() {
         readingTime: 10,
         trending: true,
         featured: false,
-        url: 'https://brunch.co.kr/@mock/it-career-trends'
+        url: 'https://brunch.co.kr/@mock/it-career-trends',
+        contentType: 'article' as const
       }
     ];
 

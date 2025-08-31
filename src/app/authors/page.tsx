@@ -99,7 +99,7 @@ export default async function AuthorsPage() {
                 className="text-2xl font-bold bg-gradient-to-r from-yellow-600 via-yellow-500 to-amber-600 bg-clip-text text-transparent"
               >
                 HoneyBee
-              </a>
+              </Link>
             </div>
           </div>
         </div>

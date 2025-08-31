@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     const { data: existingArticle } = await supabase
       .from('saved_articles')
       .select('id')
-      .eq('user_google_id', session.user.id)
+      .eq('user_google_id', session.user.email)
       .eq('article_url', article.url)
       .single();
 
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from('saved_articles')
       .insert({
-        user_google_id: session.user.id,
+        user_google_id: session.user.email,
         article_url: article.url,
         article_title: article.title,
         article_excerpt: article.excerpt || null,
@@ -64,7 +64,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -79,7 +79,7 @@ export async function DELETE(request: NextRequest) {
     const { error } = await supabase
       .from('saved_articles')
       .delete()
-      .eq('user_google_id', session.user.id)
+      .eq('user_google_id', session.user.email)
       .eq('article_url', articleUrl);
 
     if (error) {

@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from('saved_articles')
       .select('*')
-      .eq('user_google_id', session.user.id)
+      .eq('user_google_id', session.user.email)
       .order('saved_at', { ascending: false });
 
     if (error) {
