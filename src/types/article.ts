@@ -11,9 +11,10 @@ export interface Author {
 export interface Platform {
   id: string;
   name: string;
-  type: 'corporate' | 'personal' | 'community';
+  type: 'corporate' | 'personal' | 'community' | 'educational' | 'media' | 'docs';
   baseUrl: string;
   logoUrl?: string;
+  channelName?: string; // YouTube 채널의 실제 채널명
   description: string;
   isActive: boolean;
   lastCrawled?: Date;
@@ -50,11 +51,13 @@ export type ArticleCategory =
   | 'ai-ml'
   | 'cloud-infra'
   | 'game'
+  | 'graphics'
   | 'office'
   | 'design'
   | 'mobile'
   | 'data'
   | 'security'
+  | 'events'
   | 'general';
 
 export interface TrendingKeyword {

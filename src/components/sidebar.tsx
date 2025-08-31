@@ -89,6 +89,36 @@ export function Sidebar({ activeCategory, onCategoryChange, onLogoClick }: Sideb
         { id: "design-system", name: "디자인 시스템" }
       ]
     },
+    { 
+      id: "game", 
+      name: "게임", 
+      subcategories: [
+        { id: "unity", name: "Unity" },
+        { id: "unreal", name: "Unreal Engine" },
+        { id: "game-dev", name: "게임 개발" },
+        { id: "game-design", name: "게임 디자인" }
+      ]
+    },
+    { 
+      id: "graphics", 
+      name: "그래픽", 
+      subcategories: [
+        { id: "webgl", name: "WebGL" },
+        { id: "threejs", name: "Three.js" },
+        { id: "computer-graphics", name: "컴퓨터 그래픽스" },
+        { id: "shader", name: "셰이더" }
+      ]
+    },
+    { 
+      id: "docs", 
+      name: "기술 문서", 
+      subcategories: [
+        { id: "cloud-docs", name: "클라우드" },
+        { id: "language-docs", name: "언어/프레임워크" },
+        { id: "database-docs", name: "데이터베이스" },
+        { id: "tools-docs", name: "개발도구" }
+      ]
+    },
   ];
 
   const handleCategoryClick = (categoryId: string, hasSubcategories: boolean) => {
@@ -119,7 +149,7 @@ export function Sidebar({ activeCategory, onCategoryChange, onLogoClick }: Sideb
   }, [activeCategory]);
 
   return (
-    <div className="w-64 bg-[#FAEFD9] min-h-screen fixed left-0 top-0 overflow-y-auto">
+    <div className="w-64 bg-[#FAEFD9] h-screen fixed left-0 top-0 overflow-y-auto flex flex-col">
       <div className="px-6 pt-2 pb-4">
         <div 
           className="flex items-center gap-3 mb-2 cursor-pointer hover:opacity-80 transition-opacity"
@@ -148,7 +178,7 @@ export function Sidebar({ activeCategory, onCategoryChange, onLogoClick }: Sideb
       {/* 검색창 높이만큼 여백 추가 */}
       <div className="h-16"></div>
       
-      <nav className="px-6 space-y-2">
+      <nav className="px-6 space-y-2 flex-1 overflow-y-auto pb-6">
         {categories.map((category) => (
           <div key={category.id} className="space-y-1">
             {/* Main Category */}

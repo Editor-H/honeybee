@@ -132,33 +132,61 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
     return '#DAA63E'; // 모든 플랫폼에 동일한 포인트 컬러 사용
   };
 
-  const getPlatformLogo = (platformName: string) => {
-    // 이미지 대신 CSS로 로고 스타일을 만들어보겠습니다
-    return null; // 임시로 null 반환하여 이니셜 표시되도록
-  };
+  const getPlatformLogoComponent = (platform: Article['platform']) => {
+    // 실제 로고 이미지가 있으면 사용하고, 없으면 폴백 이니셜 사용
+    if (platform.logoUrl) {
+      return (
+        <div className="relative w-8 h-8">
+          <img 
+            src={platform.logoUrl} 
+            alt={`${platform.name} 로고`}
+            className="w-8 h-8 rounded-full object-cover border border-gray-200"
+            onError={(e) => {
+              // 이미지 로드 실패 시 폴백 표시
+              const fallback = e.currentTarget.nextElementSibling;
+              e.currentTarget.style.display = 'none';
+              if (fallback) fallback.classList.remove('hidden');
+            }}
+          />
+          {/* 폴백 이니셜 로고 (기본적으로 숨김) */}
+          <div className="hidden absolute inset-0 w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center">
+            <span className="text-sm font-semibold text-white">
+              {platform.name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+        </div>
+      );
+    }
 
-  const getPlatformLogoComponent = (platformName: string) => {
+    // 폴백 이니셜 로고
     const logoStyles = {
       '토스 기술블로그': { bg: 'bg-blue-500', text: 'T', color: 'text-white' },
       '카카오 기술블로그': { bg: 'bg-yellow-400', text: 'K', color: 'text-black' },
       '당근마켓 기술블로그': { bg: 'bg-orange-500', text: '당', color: 'text-white' },
       '우아한형제들': { bg: 'bg-gray-800', text: '우', color: 'text-white' },
-      '네이버 D2': { bg: 'bg-green-500', text: 'N', color: 'text-white' }
+      '네이버 D2': { bg: 'bg-green-500', text: 'N', color: 'text-white' },
+      '넷마블 기술블로그': { bg: 'bg-red-500', text: 'N', color: 'text-white' },
+      '마켓컬리 기술 블로그': { bg: 'bg-purple-500', text: 'K', color: 'text-white' },
+      '생활코딩': { bg: 'bg-green-600', text: '생', color: 'text-white' },
+      '조코딩': { bg: 'bg-blue-600', text: '조', color: 'text-white' },
+      '코딩애플': { bg: 'bg-red-400', text: '코', color: 'text-white' }
     };
 
-    const style = logoStyles[platformName as keyof typeof logoStyles];
+    const style = logoStyles[platform.name as keyof typeof logoStyles];
     
     if (style) {
       return (
-        <div className={`w-8 h-8 rounded-full ${style.bg} flex items-center justify-center`}>
+        <div className={`w-8 h-8 rounded-full ${style.bg} flex items-center justify-center border border-gray-200`}>
           <span className={`text-sm font-bold ${style.color}`}>{style.text}</span>
         </div>
       );
     }
     
     return (
-      <div className="text-sm font-semibold text-[#DAA63E]">
-        {platformName.replace(' 기술블로그', '').replace('NAVER ', '').charAt(0)}
+      <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center border border-gray-200">
+        <span className="text-sm font-semibold text-white">
+          {platform.name.replace(' 기술블로그', '').replace('NAVER ', '').charAt(0)}
+        </span>
       </div>
     );
   };
@@ -169,12 +197,20 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
 
   return (
     <Card 
-      className="group hover:shadow-sm transition-all duration-200 border border-gray-200 bg-white hover:border-[#DAA63E] overflow-hidden cursor-pointer rounded-2xl relative h-[240px] flex flex-col"
+      className={`group hover:shadow-sm transition-all duration-200 border overflow-hidden cursor-pointer rounded-2xl relative h-[240px] flex flex-col ${
+        article.platform.type === 'docs' 
+          ? 'border-blue-300 bg-blue-50/30 hover:border-blue-400 hover:bg-blue-50/50' 
+          : 'border-gray-200 bg-white hover:border-[#DAA63E]'
+      }`}
       onClick={handleCardClick}
     >
       {/* Content Type Badge */}
       <div className="absolute top-1.5 right-1.5 z-10">
-        {article.contentType === 'video' ? (
+        {article.platform.type === 'docs' ? (
+          <Badge className="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 border border-blue-300 font-medium">
+            DOCS
+          </Badge>
+        ) : article.contentType === 'video' ? (
           <Badge className="bg-blue-50 text-blue-600 text-[10px] px-1.5 py-0.5 border border-blue-200 font-medium">
             VIDEO
           </Badge>
@@ -189,7 +225,7 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
         <div className="flex items-start gap-2 mb-2">
           {/* Platform Logo */}
           <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 border border-gray-200">
-            {getPlatformLogoComponent(article.platform.name)}
+            {getPlatformLogoComponent(article.platform)}
           </div>
 
           {/* Platform Info */}
@@ -198,7 +234,10 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1 mb-0.5">
                   <span className="font-medium text-gray-700 text-sm truncate">
-                    {article.platform.name.replace(' 기술블로그', '').replace('NAVER ', '')}
+                    {article.platform.name === 'YouTube' && article.platform.channelName 
+                      ? `YouTube • ${article.platform.channelName}`
+                      : article.platform.name.replace(' 기술블로그', '').replace('NAVER ', '')
+                    }
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-gray-500">

@@ -153,7 +153,11 @@ export default function Home() {
   };
 
   const handleStatClick = (statType: string) => {
-    router.push(`/?tab=${statType}`);
+    if (statType === 'events') {
+      router.push('/events');
+    } else {
+      router.push(`/?tab=${statType}`);
+    }
   };
 
   const handleLogoClick = () => {

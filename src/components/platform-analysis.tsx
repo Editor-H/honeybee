@@ -8,6 +8,7 @@ import { Building2, TrendingUp, Video, FileText, Clock, Activity } from 'lucide-
 
 interface PlatformData {
   name: string;
+  channelName?: string;
   totalArticles: number;
   recentArticles: number;
   videoCount: number;
@@ -100,7 +101,18 @@ export function PlatformAnalysis() {
 
   // 플랫폼별 아티클 수 차트 데이터
   const platformChartData = data.platforms.slice(0, 10).map(platform => ({
-    name: platform.name.length > 15 ? platform.name.substring(0, 15) + '...' : platform.name,
+    name: (platform.name === 'YouTube' && platform.channelName 
+      ? `YouTube • ${platform.channelName}` 
+      : platform.name
+    ).length > 15 
+      ? (platform.name === 'YouTube' && platform.channelName 
+          ? `YouTube • ${platform.channelName}` 
+          : platform.name
+        ).substring(0, 15) + '...' 
+      : (platform.name === 'YouTube' && platform.channelName 
+          ? `YouTube • ${platform.channelName}` 
+          : platform.name
+        ),
     총아티클: platform.totalArticles,
     최근7일: platform.recentArticles,
     영상: platform.videoCount,
@@ -259,7 +271,12 @@ export function PlatformAnalysis() {
                     <div className="flex items-center gap-3">
                       <div className="text-sm font-medium text-gray-500">#{index + 1}</div>
                       <div>
-                        <h3 className="font-semibold text-gray-900">{platform.name}</h3>
+                        <h3 className="font-semibold text-gray-900">
+                          {platform.name === 'YouTube' && platform.channelName 
+                            ? `YouTube • ${platform.channelName}`
+                            : platform.name
+                          }
+                        </h3>
                         <p className="text-sm text-gray-500">
                           {platform.lastArticle 
                             ? `마지막 발행: ${new Date(platform.lastArticle).toLocaleDateString('ko-KR')}`

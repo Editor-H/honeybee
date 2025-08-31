@@ -150,7 +150,25 @@ export function ArticleList({ initialArticles, searchQuery, activeCategory = "al
     let targetArticles = isSearchMode ? searchResults : articles;
     
     if (activeCategory !== "all") {
-      targetArticles = targetArticles.filter(article => article.category === activeCategory);
+      // 기술 문서 카테고리 처리
+      if (activeCategory === "docs") {
+        targetArticles = targetArticles.filter(article => article.platform.type === 'docs');
+      } else if (activeCategory === "cloud-docs") {
+        targetArticles = targetArticles.filter(article => 
+          ['aws_docs', 'google_cloud_docs', 'microsoft_docs', 'digitalocean_docs', 'naver_developers', 'nhn_developers'].includes(article.platform.id));
+      } else if (activeCategory === "language-docs") {
+        targetArticles = targetArticles.filter(article => 
+          ['python_docs', 'java_docs', 'nodejs_docs', 'react_docs'].includes(article.platform.id));
+      } else if (activeCategory === "database-docs") {
+        targetArticles = targetArticles.filter(article => 
+          ['mongodb_docs', 'redis_docs'].includes(article.platform.id));
+      } else if (activeCategory === "tools-docs") {
+        targetArticles = targetArticles.filter(article => 
+          ['kubernetes_docs', 'docker_docs', 'github_docs', 'kakao_developers', 'samsung_developers', 'lg_developers', 'kt_developers'].includes(article.platform.id));
+      } else {
+        // 기존 카테고리 필터링
+        targetArticles = targetArticles.filter(article => article.category === activeCategory);
+      }
     }
     
     return targetArticles.slice(0, displayCount);

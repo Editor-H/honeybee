@@ -11,6 +11,7 @@ const platforms = {
     name: '토스 기술블로그',
     type: 'corporate' as const,
     baseUrl: 'https://toss.tech',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=toss.tech&sz=64',
     description: '토스팀이 만드는 기술 이야기',
     isActive: true,
     rssUrl: 'https://toss.tech/rss.xml'
@@ -20,6 +21,7 @@ const platforms = {
     name: '당근마켓 기술블로그',
     type: 'corporate' as const,
     baseUrl: 'https://medium.com/daangn',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=team.daangn.com&sz=64',
     description: '당근마켓 팀의 기술 이야기',
     isActive: true,
     rssUrl: 'https://medium.com/feed/daangn'
@@ -29,6 +31,7 @@ const platforms = {
     name: '카카오 기술블로그',
     type: 'corporate' as const,
     baseUrl: 'https://tech.kakao.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=tech.kakao.com&sz=64',
     description: '카카오의 기술과 서비스 이야기',
     isActive: true,
     rssUrl: 'https://tech.kakao.com/feed/'
@@ -38,6 +41,7 @@ const platforms = {
     name: '네이버 D2',
     type: 'corporate' as const,
     baseUrl: 'https://d2.naver.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=d2.naver.com&sz=64',
     description: '네이버 개발자들의 기술 이야기',
     isActive: true,
     rssUrl: 'https://d2.naver.com/d2.atom'
@@ -47,6 +51,7 @@ const platforms = {
     name: '우아한형제들',
     type: 'corporate' as const,
     baseUrl: 'https://techblog.woowahan.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=techblog.woowahan.com&sz=64',
     description: '우아한형제들의 기술 블로그',
     isActive: true,
     rssUrl: 'https://techblog.woowahan.com/feed/'
@@ -56,42 +61,51 @@ const platforms = {
     name: 'Medium',
     type: 'community' as const,
     baseUrl: 'https://medium.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=medium.com&sz=64',
     description: '전 세계 개발자들의 기술 이야기',
     isActive: true,
     rssUrl: 'https://medium.com/feed/tag/javascript'
   },
   google_dev: {
     id: 'google_dev',
-    name: 'Google for Developers',
+    name: 'YouTube',
     type: 'corporate' as const,
     baseUrl: 'https://www.youtube.com/c/GoogleforDevelopers',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: 'Google for Developers',
     description: '구글 개발자 공식 채널',
     isActive: true,
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC_x5XG1OV2P6uZZ5FSM9Ttw'
   },
   line_dev: {
     id: 'line_dev',
-    name: 'LINE Developers',
+    name: 'YouTube',
     type: 'corporate' as const,
     baseUrl: 'https://www.youtube.com/c/LINEDevelopers',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: 'LINE Developers',
     description: 'LINE 개발자 채널',
     isActive: true,
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCBJZr0oJLpb6nnvT4wd6Q6g'
   },
   aws_korea: {
     id: 'aws_korea',
-    name: 'AWS Korea',
+    name: 'YouTube',
     type: 'corporate' as const,
     baseUrl: 'https://www.youtube.com/c/AWSKorea',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: 'AWS Korea',
     description: 'AWS Korea 공식 채널',
     isActive: true,
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCM9NbZtGTgXgpR2ksugR8nQ'
   },
   toast: {
     id: 'toast',
-    name: '토스트',
+    name: 'YouTube',
     type: 'corporate' as const,
     baseUrl: 'https://www.youtube.com/c/tosstech',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '토스트',
     description: '토스 개발 관련 영상',
     isActive: true,
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC0Q4zA_2bNB4GCQAuwJCMHw'
@@ -101,6 +115,7 @@ const platforms = {
     name: 'LINE 기술블로그',
     type: 'corporate' as const,
     baseUrl: 'https://techblog.lycorp.co.jp/ko',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=techblog.lycorp.co.jp&sz=64',
     description: 'LINE의 기술 개발 이야기',
     isActive: true,
     rssUrl: 'https://techblog.lycorp.co.jp/ko/feed/index.xml'
@@ -110,6 +125,7 @@ const platforms = {
     name: '쿠팡 기술블로그',
     type: 'corporate' as const,
     baseUrl: 'https://medium.com/coupang-engineering',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=medium.com&sz=64',
     description: '쿠팡 엔지니어링팀의 기술 이야기',
     isActive: true,
     rssUrl: 'https://medium.com/feed/coupang-engineering'
@@ -119,6 +135,7 @@ const platforms = {
     name: '뱅크샐러드',
     type: 'corporate' as const,
     baseUrl: 'https://blog.banksalad.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=blog.banksalad.com&sz=64',
     description: '뱅크샐러드 기술 블로그',
     isActive: true,
     rssUrl: 'https://blog.banksalad.com/rss.xml'
@@ -128,9 +145,487 @@ const platforms = {
     name: '스포카',
     type: 'corporate' as const,
     baseUrl: 'https://spoqa.github.io',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=spoqa.github.io&sz=64',
     description: '스포카 기술 블로그',
     isActive: true,
     rssUrl: 'https://spoqa.github.io/rss'
+  },
+  kurly: {
+    id: 'kurly',
+    name: '마켓컬리 기술 블로그',
+    type: 'corporate' as const,
+    baseUrl: 'https://helloworld.kurly.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=helloworld.kurly.com&sz=64',
+    description: '마켓컬리의 기술과 서비스 이야기',
+    isActive: true,
+    rssUrl: 'https://helloworld.kurly.com/feed.xml'
+  },
+  yogiyo: {
+    id: 'yogiyo',
+    name: '요기요 기술블로그',
+    type: 'corporate' as const,
+    baseUrl: 'https://medium.com/yogiyo-tech',
+    description: '요기요 기술팀의 개발 이야기',
+    isActive: true,
+    rssUrl: 'https://medium.com/feed/yogiyo-tech'
+  },
+  zigbang: {
+    id: 'zigbang',
+    name: '직방 기술블로그',
+    type: 'corporate' as const,
+    baseUrl: 'https://medium.com/zigbang',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=medium.com&sz=64',
+    description: '직방의 기술 개발 이야기',
+    isActive: true,
+    rssUrl: 'https://medium.com/feed/zigbang'
+  },
+  wanted: {
+    id: 'wanted',
+    name: '원티드랩 기술블로그',
+    type: 'corporate' as const,
+    baseUrl: 'https://medium.com/wantedjobs',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=medium.com&sz=64',
+    description: '원티드 개발팀의 기술 이야기',
+    isActive: true,
+    rssUrl: 'https://medium.com/feed/wantedjobs'
+  },
+  musinsa: {
+    id: 'musinsa',
+    name: '무신사 기술블로그',
+    type: 'corporate' as const,
+    baseUrl: 'https://medium.com/musinsa-tech',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=medium.com&sz=64',
+    description: '무신사의 기술과 개발 이야기',
+    isActive: true,
+    rssUrl: 'https://medium.com/feed/musinsa-tech'
+  },
+  goorm: {
+    id: 'goorm',
+    name: '구름 기술블로그',
+    type: 'corporate' as const,
+    baseUrl: 'https://blog.goorm.io',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=blog.goorm.io&sz=64',
+    description: '구름의 기술 개발 이야기',
+    isActive: true,
+    rssUrl: 'https://blog.goorm.io/feed/'
+  },
+  netmarble: {
+    id: 'netmarble',
+    name: '넷마블 기술블로그',
+    type: 'corporate' as const,
+    baseUrl: 'https://netmarble.engineering',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=netmarble.engineering&sz=64',
+    description: '넷마블 개발팀의 기술 이야기',
+    isActive: true,
+    rssUrl: 'https://netmarble.engineering/rss/'
+  },
+  yozm: {
+    id: 'yozm',
+    name: '요즘IT',
+    type: 'media' as const,
+    baseUrl: 'https://yozm.wishket.com',
+    description: 'IT 개발자와 기획자를 위한 전문 미디어',
+    isActive: true,
+    rssUrl: 'https://yozm.wishket.com/rss.xml'
+  },
+  velog: {
+    id: 'velog',
+    name: 'Velog',
+    type: 'community' as const,
+    baseUrl: 'https://velog.io',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=velog.io&sz=64',
+    description: '개발자를 위한 블로그 서비스',
+    isActive: false, // 개인 블로그들이 많아서 비활성화
+    rssUrl: 'https://v2.velog.io/rss'
+  },
+  
+  // 유튜브 채널들
+  jocoding: {
+    id: 'jocoding',
+    name: 'YouTube',
+    type: 'educational' as const,
+    baseUrl: 'https://www.youtube.com/c/조코딩JoCoding',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '조코딩',
+    description: '프로그래밍 교육 및 개발 관련 콘텐츠',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCQNE2JmbasNYbjGAcuBiRRg'
+  },
+  codingapple: {
+    id: 'codingapple',
+    name: 'YouTube',
+    type: 'educational' as const,
+    baseUrl: 'https://www.youtube.com/c/codingapple',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '코딩애플',
+    description: '웹개발 강의 및 프로그래밍 교육',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCSLrpBAzr-ROVGHQ5EmxnUg'
+  },
+  yalco: {
+    id: 'yalco',
+    name: 'YouTube',
+    type: 'educational' as const,
+    baseUrl: 'https://www.youtube.com/c/얄코',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '얄팍한 코딩사전',
+    description: '프로그래밍 기초를 쉽게 설명하는 교육 채널',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC2nkWbaJt1KQDi2r2XHRdJQ'
+  },
+  wony_coding: {
+    id: 'wony_coding',
+    name: 'YouTube',
+    type: 'educational' as const,
+    baseUrl: 'https://www.youtube.com/c/워니코딩',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '워니코딩',
+    description: '웹 프론트엔드 개발 교육',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCbqaTbqZlqKyPVFGTF15d7A'
+  },
+  winterlood: {
+    id: 'winterlood',
+    name: 'YouTube',
+    type: 'educational' as const,
+    baseUrl: 'https://www.youtube.com/c/winterlood',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '한입 크기로 잘라 먹는 리액트',
+    description: 'React 전문 교육 채널',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCKk7MlO_-r_QXhp7dnBPF9Q'
+  },
+  opentutorials: {
+    id: 'opentutorials',
+    name: 'YouTube',
+    type: 'educational' as const,
+    baseUrl: 'https://www.youtube.com/c/opentutorials',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '생활코딩',
+    description: '프로그래밍 교육의 대표 채널',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCvc8kv-i5fvFTJBFAk6n1SA'
+  },
+  
+  // 뉴스/미디어 
+  outstanding: {
+    id: 'outstanding',
+    name: '아웃스탠딩',
+    type: 'media' as const,
+    baseUrl: 'https://outstanding.kr',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=outstanding.kr&sz=64',
+    description: '비즈니스와 테크 트렌드를 다루는 미디어',
+    isActive: true,
+    rssUrl: 'https://outstanding.kr/feed'
+  },
+  zdnet_korea: {
+    id: 'zdnet_korea',
+    name: 'ZDNet Korea',
+    type: 'media' as const,
+    baseUrl: 'https://zdnet.co.kr',
+    description: 'IT 전문 뉴스 미디어',
+    isActive: true,
+    rssUrl: 'https://zdnet.co.kr/rss/news.xml'
+  },
+  
+  // 기술 문서
+  aws_docs: {
+    id: 'aws_docs',
+    name: 'AWS',
+    type: 'docs' as const,
+    baseUrl: 'https://aws.amazon.com/ko/blogs/korea/',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=64',
+    description: 'AWS 공식 한국 블로그',
+    isActive: true,
+    rssUrl: 'https://aws.amazon.com/ko/blogs/korea/feed/'
+  },
+  google_cloud_docs: {
+    id: 'google_cloud_docs',
+    name: 'Google Cloud',
+    type: 'docs' as const,
+    baseUrl: 'https://cloud.google.com/blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=cloud.google.com&sz=64',
+    description: 'Google Cloud 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://cloud.google.com/feeds/cloud-blog.xml'
+  },
+  microsoft_docs: {
+    id: 'microsoft_docs',
+    name: 'Microsoft',
+    type: 'docs' as const,
+    baseUrl: 'https://devblogs.microsoft.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=devblogs.microsoft.com&sz=64',
+    description: 'Microsoft 개발자 블로그',
+    isActive: true,
+    rssUrl: 'https://devblogs.microsoft.com/feed/'
+  },
+  kubernetes_docs: {
+    id: 'kubernetes_docs',
+    name: 'Kubernetes',
+    type: 'docs' as const,
+    baseUrl: 'https://kubernetes.io/blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=kubernetes.io&sz=64',
+    description: 'Kubernetes 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://kubernetes.io/feed.xml'
+  },
+  python_docs: {
+    id: 'python_docs',
+    name: 'Python',
+    type: 'docs' as const,
+    baseUrl: 'https://blog.python.org',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=python.org&sz=64',
+    description: 'Python 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://blog.python.org/feeds/posts/default'
+  },
+  java_docs: {
+    id: 'java_docs',
+    name: 'Java',
+    type: 'docs' as const,
+    baseUrl: 'https://blogs.oracle.com/java',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=oracle.com&sz=64',
+    description: 'Oracle Java 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://blogs.oracle.com/java/rss'
+  },
+  nodejs_docs: {
+    id: 'nodejs_docs',
+    name: 'Node.js',
+    type: 'docs' as const,
+    baseUrl: 'https://nodejs.org/en/blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=nodejs.org&sz=64',
+    description: 'Node.js 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://nodejs.org/en/feed/blog.xml'
+  },
+  react_docs: {
+    id: 'react_docs',
+    name: 'React',
+    type: 'docs' as const,
+    baseUrl: 'https://react.dev/blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=react.dev&sz=64',
+    description: 'React 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://react.dev/rss.xml'
+  },
+  docker_docs: {
+    id: 'docker_docs',
+    name: 'Docker',
+    type: 'docs' as const,
+    baseUrl: 'https://www.docker.com/blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=docker.com&sz=64',
+    description: 'Docker 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://www.docker.com/blog/feed/'
+  },
+  github_docs: {
+    id: 'github_docs',
+    name: 'GitHub',
+    type: 'docs' as const,
+    baseUrl: 'https://github.blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=github.com&sz=64',
+    description: 'GitHub 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://github.blog/feed/'
+  },
+  mongodb_docs: {
+    id: 'mongodb_docs',
+    name: 'MongoDB',
+    type: 'docs' as const,
+    baseUrl: 'https://www.mongodb.com/blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=mongodb.com&sz=64',
+    description: 'MongoDB 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://www.mongodb.com/blog/rss.xml'
+  },
+  redis_docs: {
+    id: 'redis_docs',
+    name: 'Redis',
+    type: 'docs' as const,
+    baseUrl: 'https://redis.io/blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=redis.io&sz=64',
+    description: 'Redis 공식 블로그',
+    isActive: true,
+    rssUrl: 'https://redis.io/blog/rss.xml'
+  },
+  digitalocean_docs: {
+    id: 'digitalocean_docs',
+    name: 'DigitalOcean',
+    type: 'docs' as const,
+    baseUrl: 'https://www.digitalocean.com/blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=digitalocean.com&sz=64',
+    description: 'DigitalOcean 기술 블로그',
+    isActive: true,
+    rssUrl: 'https://www.digitalocean.com/blog/feed.xml'
+  },
+  
+  // 한국 기업 기술 문서
+  naver_developers: {
+    id: 'naver_developers',
+    name: 'NAVER Developers',
+    type: 'docs' as const,
+    baseUrl: 'https://developers.naver.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=developers.naver.com&sz=64',
+    description: 'NAVER 개발자센터',
+    isActive: true,
+    rssUrl: 'https://developers.naver.com/rss/blog.xml'
+  },
+  kakao_developers: {
+    id: 'kakao_developers',
+    name: 'Kakao Developers',
+    type: 'docs' as const,
+    baseUrl: 'https://developers.kakao.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=developers.kakao.com&sz=64',
+    description: 'Kakao 개발자센터',
+    isActive: true,
+    rssUrl: 'https://developers.kakao.com/blog/feed'
+  },
+  samsung_developers: {
+    id: 'samsung_developers',
+    name: 'Samsung Developers',
+    type: 'docs' as const,
+    baseUrl: 'https://developer.samsung.com/blog',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=developer.samsung.com&sz=64',
+    description: 'Samsung 개발자 포털',
+    isActive: true,
+    rssUrl: 'https://developer.samsung.com/blog/ko/feed'
+  },
+  lg_developers: {
+    id: 'lg_developers',
+    name: 'LG Developers',
+    type: 'docs' as const,
+    baseUrl: 'https://developer.lge.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=developer.lge.com&sz=64',
+    description: 'LG 개발자 포털',
+    isActive: true,
+    rssUrl: 'https://developer.lge.com/blog/feed'
+  },
+  nhn_developers: {
+    id: 'nhn_developers',
+    name: 'NHN Developers',
+    type: 'docs' as const,
+    baseUrl: 'https://meetup.nhncloud.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=nhncloud.com&sz=64',
+    description: 'NHN Cloud 기술 미팅',
+    isActive: true,
+    rssUrl: 'https://meetup.nhncloud.com/rss'
+  },
+  kt_developers: {
+    id: 'kt_developers',
+    name: 'KT Developers',
+    type: 'docs' as const,
+    baseUrl: 'https://devlog.kt.co.kr',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=kt.co.kr&sz=64',
+    description: 'KT 개발자 블로그',
+    isActive: true,
+    rssUrl: 'https://devlog.kt.co.kr/feed'
+  },
+  geekle_events: {
+    id: 'geekle_events',
+    name: 'Geekle',
+    type: 'community' as const,
+    baseUrl: 'https://geekle.us',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=geekle.us&sz=64',
+    description: '글로벌 개발자 온라인 컨퍼런스',
+    isActive: true,
+    rssUrl: 'https://geekle.us/feed'
+  },
+  awskorea_events: {
+    id: 'awskorea_events',
+    name: 'AWS Korea',
+    type: 'corporate' as const,
+    baseUrl: 'https://aws.amazon.com/ko/events',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=64',
+    description: 'AWS Korea 이벤트',
+    isActive: true,
+    rssUrl: 'https://aws.amazon.com/ko/about-aws/events/rss/'
+  },
+  microsoft_events: {
+    id: 'microsoft_events',
+    name: 'Microsoft Korea',
+    type: 'corporate' as const,
+    baseUrl: 'https://www.microsoft.com/ko-kr/events',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=microsoft.com&sz=64',
+    description: 'Microsoft Korea 이벤트',
+    isActive: true,
+    rssUrl: 'https://www.microsoft.com/ko-kr/events/feed'
+  },
+  google_events: {
+    id: 'google_events',
+    name: 'Google Developers',
+    type: 'corporate' as const,
+    baseUrl: 'https://developers.google.com/events',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=developers.google.com&sz=64',
+    description: 'Google 개발자 이벤트',
+    isActive: true,
+    rssUrl: 'https://developers.google.com/events/feed'
+  },
+  figma_youtube: {
+    id: 'figma_youtube',
+    name: 'YouTube',
+    type: 'corporate' as const,
+    channelName: 'Figma',
+    baseUrl: 'https://www.youtube.com/c/Figma',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    description: 'Figma 공식 라이브 행사',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCQelDpbPgXodfWyJ1J7yGew'
+  },
+  google_io_youtube: {
+    id: 'google_io_youtube',
+    name: 'YouTube',
+    type: 'corporate' as const,
+    channelName: 'Google I/O',
+    baseUrl: 'https://www.youtube.com/c/GoogleIO',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    description: 'Google I/O 컨퍼런스',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC_x5XG1OV2P6uZZ5FSM9Ttw'
+  },
+  microsoft_youtube: {
+    id: 'microsoft_youtube',
+    name: 'YouTube',
+    type: 'corporate' as const,
+    channelName: 'Microsoft Developer',
+    baseUrl: 'https://www.youtube.com/c/MicrosoftDeveloper',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    description: 'Microsoft 개발자 이벤트',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCsMica-v34Irf9KVTh6xx-g'
+  },
+  adobe_youtube: {
+    id: 'adobe_youtube',
+    name: 'YouTube',
+    type: 'corporate' as const,
+    channelName: 'Adobe Creative Cloud',
+    baseUrl: 'https://www.youtube.com/c/AdobeCreativeCloud',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    description: 'Adobe 크리에이티브 이벤트',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCL0iAkpqV5YaIVG7xkDtS4Q'
+  },
+  apple_dev_youtube: {
+    id: 'apple_dev_youtube',
+    name: 'YouTube',
+    type: 'corporate' as const,
+    channelName: 'Apple Developer',
+    baseUrl: 'https://www.youtube.com/c/AppleDeveloper',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    description: 'Apple 개발자 이벤트',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC_x5XG1OV2P6uZZ5FSM9Ttw'
+  },
+  hashicorp_youtube: {
+    id: 'hashicorp_youtube',
+    name: 'YouTube',
+    type: 'corporate' as const,
+    channelName: 'HashiCorp',
+    baseUrl: 'https://www.youtube.com/c/HashiCorp',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    description: 'HashiCorp 인프라 이벤트',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC-AdvAxaagE9W2f0webyNUQ'
   }
 };
 
@@ -336,7 +831,11 @@ function categorizeArticle(title: string, content: string, tags: string[]): stri
       weight: 0
     },
     design: {
-      keywords: ['design', 'ux', 'ui design', 'figma', 'sketch', 'prototype', 'user experience', 'user interface', 'graphic', 'branding', 'typography', 'color theory', '디자인', '사용자경험', '프로토타입'],
+      keywords: ['design', 'ux', 'ui design', 'figma', 'sketch', 'prototype', 'user experience', 'user interface', 'branding', 'typography', 'color theory', '디자인', '사용자경험', '프로토타입'],
+      weight: 0
+    },
+    graphics: {
+      keywords: ['graphics', 'webgl', 'opengl', 'vulkan', 'directx', 'threejs', 'babylon.js', 'shader', 'glsl', 'hlsl', 'rendering', 'gpu', 'computer graphics', 'animation', 'particle', 'lighting', '그래픽', '렌더링', '셰이더', '3d'],
       weight: 0
     },
     data: {
@@ -345,6 +844,10 @@ function categorizeArticle(title: string, content: string, tags: string[]): stri
     },
     security: {
       keywords: ['security', 'cybersecurity', 'authentication', 'authorization', 'encryption', 'jwt', 'oauth', 'vulnerability', 'penetration', 'zero trust', 'devsecops', '보안', '인증', '암호화'],
+      weight: 0
+    },
+    events: {
+      keywords: ['event', 'conference', 'meetup', 'workshop', 'seminar', 'hackathon', 'summit', 'webinar', 'tech talk', 'developer event', 'tech event', 'design conference', 'ux conference', 'product conference', 'startup event', 'networking', 'career event', 'live event', 'livestream', 'keynote', 'google i/o', 'wwdc', 'figma config', 'adobe max', 'microsoft build', '행사', '컨퍼런스', '미팅', '세미나', '워크샵', '해커톤', '웨비나', '기술행사', '디자인컨퍼런스', '기획자행사', '스타트업행사', '네트워킹', '커리어', '라이브', '키노트'],
       weight: 0
     }
   };
@@ -368,7 +871,7 @@ function categorizeArticle(title: string, content: string, tags: string[]): stri
 
 // 썸네일 관련 함수들 제거됨 - 더 이상 사용하지 않음
 
-// 큐레이션 알고리즘: 플랫폼 다양성과 시간 균형을 고려
+// 개선된 큐레이션 알고리즘: 플랫폼 다양성 보장과 균형 잡힌 노출
 function curateArticles(articles: Article[]): Article[] {
   // 1. 플랫폼별로 그룹화
   const articlesByPlatform = articles.reduce((acc, article) => {
@@ -385,62 +888,165 @@ function curateArticles(articles: Article[]): Article[] {
     );
   });
 
-  // 3. 플랫폼별 가중치 설정 (다양성 강화)
-  const platformWeights: Record<string, number> = {
-    // 기업 블로그 (높은 가중치)
-    toss: 1.2,
-    kakao: 1.2, 
-    naver: 1.2,
-    daangn: 1.1,
-    woowahan: 1.1,
-    line_blog: 1.1,
-    coupang: 1.1,
-    banksalad: 1.0,
-    spoqa: 1.0,
+  // 3. 플랫폼별 품질 점수 및 다양성 설정
+  const platformConfig: Record<string, { 
+    quality: number; 
+    maxExposure: number; 
+    type: 'corporate' | 'educational' | 'media' | 'community' | 'docs'
+  }> = {
+    // 기업 블로그 (높은 품질, 적당한 노출)
+    toss: { quality: 1.2, maxExposure: 4, type: 'corporate' },
+    kakao: { quality: 1.2, maxExposure: 4, type: 'corporate' },
+    naver: { quality: 1.2, maxExposure: 4, type: 'corporate' },
+    daangn: { quality: 1.1, maxExposure: 3, type: 'corporate' },
+    woowahan: { quality: 1.1, maxExposure: 3, type: 'corporate' },
+    line_blog: { quality: 1.1, maxExposure: 3, type: 'corporate' },
+    coupang: { quality: 1.1, maxExposure: 3, type: 'corporate' },
+    banksalad: { quality: 1.0, maxExposure: 3, type: 'corporate' },
+    spoqa: { quality: 1.0, maxExposure: 3, type: 'corporate' },
+    kurly: { quality: 1.1, maxExposure: 3, type: 'corporate' },
+    yogiyo: { quality: 1.0, maxExposure: 3, type: 'corporate' },
+    zigbang: { quality: 1.0, maxExposure: 3, type: 'corporate' },
+    wanted: { quality: 1.0, maxExposure: 3, type: 'corporate' },
+    musinsa: { quality: 1.0, maxExposure: 3, type: 'corporate' },
+    goorm: { quality: 1.0, maxExposure: 3, type: 'corporate' },
+    netmarble: { quality: 1.1, maxExposure: 3, type: 'corporate' }, // 넷마블 노출 제한
     
-    // 영상 콘텐츠 (낮은 가중치 - 다양성 위해 제한)
-    google_dev: 0.6,
-    line_dev: 0.6,
-    aws_korea: 0.6,
-    toast: 0.6,
+    // 영상 콘텐츠 (낮은 노출 - 다양성 위해 제한)
+    google_dev: { quality: 0.8, maxExposure: 2, type: 'corporate' },
+    line_dev: { quality: 0.8, maxExposure: 2, type: 'corporate' },
+    aws_korea: { quality: 0.8, maxExposure: 2, type: 'corporate' },
+    toast: { quality: 0.8, maxExposure: 2, type: 'corporate' },
     
-    // 커뮤니티
-    medium: 0.8
+    // 교육 유튜브 채널들 (교육 가치 높음)
+    jocoding: { quality: 1.0, maxExposure: 3, type: 'educational' },
+    codingapple: { quality: 1.0, maxExposure: 3, type: 'educational' },
+    yalco: { quality: 1.0, maxExposure: 3, type: 'educational' },
+    wony_coding: { quality: 0.9, maxExposure: 2, type: 'educational' },
+    winterlood: { quality: 1.0, maxExposure: 3, type: 'educational' },
+    opentutorials: { quality: 1.1, maxExposure: 4, type: 'educational' }, // 생활코딩은 좀 더 노출
+    
+    // 미디어 (뉴스 가치 높음)
+    yozm: { quality: 1.2, maxExposure: 4, type: 'media' },
+    outstanding: { quality: 1.1, maxExposure: 3, type: 'media' },
+    zdnet_korea: { quality: 1.0, maxExposure: 3, type: 'media' },
+    
+    // 커뮤니티 (낮은 노출)
+    medium: { quality: 0.8, maxExposure: 1, type: 'community' },
+    velog: { quality: 0.6, maxExposure: 1, type: 'community' },
+    
+    // 기술 문서 (공식 문서는 높은 품질)
+    aws_docs: { quality: 1.3, maxExposure: 3, type: 'docs' },
+    google_cloud_docs: { quality: 1.3, maxExposure: 3, type: 'docs' },
+    microsoft_docs: { quality: 1.2, maxExposure: 3, type: 'docs' },
+    kubernetes_docs: { quality: 1.2, maxExposure: 2, type: 'docs' },
+    python_docs: { quality: 1.3, maxExposure: 3, type: 'docs' },
+    java_docs: { quality: 1.2, maxExposure: 3, type: 'docs' },
+    nodejs_docs: { quality: 1.2, maxExposure: 3, type: 'docs' },
+    react_docs: { quality: 1.3, maxExposure: 3, type: 'docs' },
+    docker_docs: { quality: 1.2, maxExposure: 2, type: 'docs' },
+    github_docs: { quality: 1.2, maxExposure: 3, type: 'docs' },
+    mongodb_docs: { quality: 1.1, maxExposure: 2, type: 'docs' },
+    redis_docs: { quality: 1.1, maxExposure: 2, type: 'docs' },
+    digitalocean_docs: { quality: 1.1, maxExposure: 2, type: 'docs' },
+    
+    // 한국 기업 기술 문서
+    naver_developers: { quality: 1.2, maxExposure: 3, type: 'docs' },
+    kakao_developers: { quality: 1.2, maxExposure: 3, type: 'docs' },
+    samsung_developers: { quality: 1.1, maxExposure: 2, type: 'docs' },
+    lg_developers: { quality: 1.0, maxExposure: 2, type: 'docs' },
+    nhn_developers: { quality: 1.1, maxExposure: 2, type: 'docs' },
+    kt_developers: { quality: 1.0, maxExposure: 2, type: 'docs' }
   };
 
-  // 4. 가중치 기반 라운드 로빈 with 셔플링
+  // 4. 다양성 보장을 위한 스마트 라운드 로빈
   const curatedArticles: Article[] = [];
-  const platformIds = Object.keys(articlesByPlatform).sort(() => Math.random() - 0.5); // 플랫폼 순서 랜덤화
+  const platformIds = Object.keys(articlesByPlatform);
   
-  // 각 플랫폼별로 선택할 아티클 수 계산
-  const selectCounts: Record<string, number> = {};
+  // 플랫폼별 선택된 아티클 수 추적
+  const selectedCounts: Record<string, number> = {};
+  platformIds.forEach(id => selectedCounts[id] = 0);
+
+  // 5. 다단계 선택 프로세스
+  // 첫 번째 라운드: 각 플랫폼에서 최소 1개씩 선택 (품질 순)
+  const roundOneArticles: Article[] = [];
   platformIds.forEach(platformId => {
-    const weight = platformWeights[platformId] || 1.0;
-    const articleCount = articlesByPlatform[platformId].length;
-    selectCounts[platformId] = Math.ceil(articleCount * weight);
+    const platformArticles = articlesByPlatform[platformId];
+    const config = platformConfig[platformId] || { quality: 1.0, maxExposure: 2, type: 'corporate' };
+    
+    if (platformArticles && platformArticles.length > 0) {
+      roundOneArticles.push(platformArticles[0]);
+      selectedCounts[platformId]++;
+    }
   });
 
-  // 5. 라운드 로빈으로 균형있게 선택
-  const maxRounds = Math.max(...Object.values(selectCounts));
+  // 두 번째 라운드: 품질과 다양성을 고려하여 추가 선택
+  const remainingSlots = Math.min(120, articles.length - roundOneArticles.length); // 전체 노출 제한
+  let slotsUsed = 0;
   
-  for (let round = 0; round < maxRounds; round++) {
-    for (const platformId of platformIds) {
+  for (let round = 1; round < 10 && slotsUsed < remainingSlots; round++) {
+    // 플랫폼을 품질 점수와 타입 다양성으로 정렬
+    const sortedPlatforms = platformIds
+      .filter(platformId => {
+        const config = platformConfig[platformId] || { quality: 1.0, maxExposure: 2, type: 'corporate' };
+        const articleCount = articlesByPlatform[platformId]?.length || 0;
+        return selectedCounts[platformId] < config.maxExposure && 
+               selectedCounts[platformId] < articleCount;
+      })
+      .sort((a, b) => {
+        const configA = platformConfig[a] || { quality: 1.0, maxExposure: 2, type: 'corporate' };
+        const configB = platformConfig[b] || { quality: 1.0, maxExposure: 2, type: 'corporate' };
+        
+        // 타입 다양성 보너스
+        const typeBonus = (type: string) => {
+          const typeCounts = Object.values(curatedArticles.concat(roundOneArticles))
+            .map(article => platformConfig[article.platform.id]?.type || 'corporate')
+            .reduce((acc, t) => ({ ...acc, [t]: (acc[t] || 0) + 1 }), {} as Record<string, number>);
+          
+          const currentTypeCount = typeCounts[type] || 0;
+          const totalArticles = curatedArticles.length + roundOneArticles.length;
+          
+          // 타입 비율이 낮을수록 보너스 (다양성 추구)
+          return totalArticles > 0 ? 1 - (currentTypeCount / totalArticles) : 1;
+        };
+        
+        const scoreA = configA.quality * (1 + typeBonus(configA.type) * 0.3);
+        const scoreB = configB.quality * (1 + typeBonus(configB.type) * 0.3);
+        
+        return scoreB - scoreA;
+      });
+
+    for (const platformId of sortedPlatforms) {
+      if (slotsUsed >= remainingSlots) break;
+      
+      const config = platformConfig[platformId] || { quality: 1.0, maxExposure: 2, type: 'corporate' };
       const platformArticles = articlesByPlatform[platformId];
-      if (platformArticles && platformArticles[round] && round < selectCounts[platformId]) {
-        curatedArticles.push(platformArticles[round]);
+      const currentCount = selectedCounts[platformId];
+      
+      if (currentCount < config.maxExposure && 
+          currentCount < platformArticles.length) {
+        
+        curatedArticles.push(platformArticles[currentCount]);
+        selectedCounts[platformId]++;
+        slotsUsed++;
       }
     }
   }
 
-  // 6. 최종적으로 발행일 기준으로 약간의 섞기 (완전 최신순이 아닌 다양성)
-  return curatedArticles.sort((a, b) => {
+  // 6. 첫 번째 라운드 아티클들과 합치기
+  const finalArticles = [...roundOneArticles, ...curatedArticles];
+
+  // 7. 시간 기반 정렬 (최신순, 하지만 24시간 내에서는 다양성 고려)
+  return finalArticles.sort((a, b) => {
     const timeA = new Date(a.publishedAt).getTime();
     const timeB = new Date(b.publishedAt).getTime();
     const timeDiff = timeB - timeA;
     
-    // 24시간 내 아티클들은 약간 섞고, 그 외는 시간순
+    // 24시간 내 아티클들은 약간 섞어서 다양성 추구
     if (Math.abs(timeDiff) < 24 * 60 * 60 * 1000) {
-      return Math.random() - 0.5;
+      // 플랫폼 다양성 보너스 적용
+      const platformDiversityBonus = Math.random() * 0.3;
+      return (timeDiff * 0.7) + (platformDiversityBonus * timeDiff);
     }
     return timeDiff;
   });
@@ -467,8 +1073,12 @@ export async function collectFreshFeeds(): Promise<Article[]> {
   console.log('활성화된 플랫폼:', Object.keys(platforms).filter(key => platforms[key as keyof typeof platforms].isActive));
   
   for (const [platformKey, platformData] of Object.entries(platforms)) {
+    const logDisplayName = platformData.name === 'YouTube' && platformData.channelName 
+      ? `YouTube • ${platformData.channelName}` 
+      : platformData.name;
+      
     try {
-      console.log(`\n--- ${platformData.name} 수집 시작 ---`);
+      console.log(`\n--- ${logDisplayName} 수집 시작 ---`);
       console.log(`RSS URL: ${platformData.rssUrl}`);
       
       const startTime = Date.now();
@@ -580,16 +1190,62 @@ export async function collectFreshFeeds(): Promise<Article[]> {
         line_blog: 12,  // LINE 기술블로그
         coupang: 12,    // 쿠팡 기술블로그
         banksalad: 10,  // 뱅크샐러드
-        spoqa: 10       // 스포카
+        spoqa: 10,      // 스포카
+        kurly: 12,      // 마켓컬리
+        yogiyo: 10,     // 요기요
+        zigbang: 10,    // 직방
+        wanted: 10,     // 원티드랩
+        musinsa: 10,    // 무신사
+        goorm: 10,      // 구름
+        netmarble: 12,  // 넷마블
+        yozm: 15,       // 요즘IT (미디어)
+        velog: 5,       // 비로그 (개인 블로그)
+        // 교육 유튜브 채널들
+        jocoding: 10,   // 조코딩
+        codingapple: 10, // 코딩애플
+        yalco: 10,      // 얄팍한 코딩사전
+        wony_coding: 8, // 워니코딩
+        winterlood: 10, // 한입 크기로 잘라 먹는 리액트
+        opentutorials: 12, // 생활코딩
+        // 뉴스/미디어
+        outstanding: 12, // 아웃스탠딩
+        zdnet_korea: 15, // ZDNet Korea
+        // 기술 문서
+        aws_docs: 10,    // AWS 문서
+        google_cloud_docs: 8, // Google Cloud 문서
+        microsoft_docs: 8, // Microsoft 문서
+        kubernetes_docs: 6, // Kubernetes 문서
+        python_docs: 8,  // Python 문서
+        java_docs: 8,    // Java 문서
+        nodejs_docs: 8,  // Node.js 문서
+        react_docs: 8,   // React 문서
+        docker_docs: 8,  // Docker 문서
+        github_docs: 10, // GitHub 문서
+        mongodb_docs: 6, // MongoDB 문서
+        redis_docs: 6,   // Redis 문서
+        digitalocean_docs: 8, // DigitalOcean 문서
+        // 한국 기업 기술 문서
+        naver_developers: 8, // NAVER Developers
+        kakao_developers: 8, // Kakao Developers
+        samsung_developers: 6, // Samsung Developers
+        lg_developers: 6,    // LG Developers
+        nhn_developers: 8,   // NHN Developers
+        kt_developers: 6     // KT Developers
       };
       
       const maxArticles = maxArticlesPerPlatform[platformKey as keyof typeof maxArticlesPerPlatform] || 15;
-      console.log(`${platformData.name} 최대 수집 개수: ${maxArticles}, 실제 처리할 아이템: ${Math.min(maxArticles, itemsToProcess.length)}`);
+      const maxDisplayName = platformData.name === 'YouTube' && platformData.channelName 
+        ? `YouTube • ${platformData.channelName}` 
+        : platformData.name;
+      console.log(`${maxDisplayName} 최대 수집 개수: ${maxArticles}, 실제 처리할 아이템: ${Math.min(maxArticles, itemsToProcess.length)}`);
       const articles = itemsToProcess.slice(0, maxArticles).map((item, index) => {
+        const authorCompanyName = platformData.name === 'YouTube' && platformData.channelName 
+          ? platformData.channelName 
+          : platformData.name;
         const defaultAuthor: Author = {
           id: `${platformKey}-author`,
-          name: item.creator || item.author || `${platformData.name} 작가`,
-          company: platformData.name,
+          name: item.creator || item.author || `${authorCompanyName} 작가`,
+          company: authorCompanyName,
           expertise: ['Tech'],
           articleCount: 0
         };
@@ -607,7 +1263,10 @@ export async function collectFreshFeeds(): Promise<Article[]> {
         const smartTags = generateSmartTags(title, content, originalTags, category);
         
         // YouTube 채널인지 확인
-        const isYouTubeChannel = ['google_dev', 'line_dev', 'aws_korea', 'toast'].includes(platformKey);
+        const isYouTubeChannel = [
+          'google_dev', 'line_dev', 'aws_korea', 'toast',
+          'jocoding', 'codingapple', 'yalco', 'wony_coding', 'winterlood', 'opentutorials'
+        ].includes(platformKey);
         const videoId = isYouTubeChannel && item.link ? extractVideoId(item.link) : null;
         
         const baseArticle = {
@@ -645,17 +1304,17 @@ export async function collectFreshFeeds(): Promise<Article[]> {
       });
 
       allArticles.push(...articles);
-      console.log(`✅ ${platformData.name}: ${articles.length}개 수집 완료`);
-      console.log(`--- ${platformData.name} 수집 종료 ---\n`);
+      console.log(`✅ ${maxDisplayName}: ${articles.length}개 수집 완료`);
+      console.log(`--- ${maxDisplayName} 수집 종료 ---\n`);
       
     } catch (error) {
-      console.error(`❌ ${platformData.name} 수집 실패:`, error);
+      console.error(`❌ ${logDisplayName} 수집 실패:`, error);
       console.error(`RSS URL: ${platformData.rssUrl}`);
       if (error instanceof Error) {
         console.error(`에러 메시지: ${error.message}`);
         console.error(`에러 스택: ${error.stack?.slice(0, 300)}`);
       }
-      console.log(`--- ${platformData.name} 수집 종료 (실패) ---\n`);
+      console.log(`--- ${logDisplayName} 수집 종료 (실패) ---\n`);
     }
   }
 
@@ -664,7 +1323,10 @@ export async function collectFreshFeeds(): Promise<Article[]> {
   
   // 플랫폼별 분포 확인
   const platformDistribution = allArticles.reduce((acc, article) => {
-    acc[article.platform.name] = (acc[article.platform.name] || 0) + 1;
+    const displayName = article.platform.name === 'YouTube' && article.platform.channelName
+      ? `YouTube • ${article.platform.channelName}`
+      : article.platform.name;
+    acc[displayName] = (acc[displayName] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
   
