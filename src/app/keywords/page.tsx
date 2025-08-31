@@ -70,7 +70,7 @@ export default async function KeywordsPage() {
                   홈으로
                 </Button>
               </Link>
-              <a 
+              <Link 
                 href="/" 
                 className="text-2xl font-bold bg-gradient-to-r from-yellow-600 via-yellow-500 to-amber-600 bg-clip-text text-transparent"
               >

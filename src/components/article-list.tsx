@@ -68,7 +68,7 @@ export function ArticleList({ initialArticles, searchQuery, activeCategory = "al
       
       if (data.success && data.results) {
         // Date 문자열을 Date 객체로 변환
-        const processedResults = data.results.map((article: any) => ({
+        const processedResults = data.results.map((article: Article) => ({
           ...article,
           publishedAt: new Date(article.publishedAt)
         }));

@@ -65,7 +65,7 @@ function articleToDbRecord(article: Article) {
 }
 
 // DB 레코드를 Article 타입으로 변환
-function dbRecordToArticle(record: any): Article {
+function dbRecordToArticle(record: Record<string, unknown>): Article {
   return {
     id: record.id,
     title: record.title,
