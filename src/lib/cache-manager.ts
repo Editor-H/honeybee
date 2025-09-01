@@ -1,11 +1,6 @@
-import fs from 'fs/promises';
-import path from 'path';
 import { Article } from '@/types/article';
-import { ArticleService } from './article-service';
+import { supabaseServer } from '@/lib/supabase-server';
 
-const CACHE_DIR = path.join(process.cwd(), '.cache');
-const ARTICLES_CACHE_FILE = path.join(CACHE_DIR, 'articles.json');
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24시간 (밀리초)
 const MAX_CACHED_ARTICLES = 300; // 최신 300개 아티클만 캐시 유지
 
 interface CacheData {
@@ -14,41 +9,43 @@ interface CacheData {
 }
 
 export class CacheManager {
-  private static async ensureCacheDir() {
-    try {
-      await fs.access(CACHE_DIR);
-    } catch {
-      await fs.mkdir(CACHE_DIR, { recursive: true });
-    }
-  }
-
   static async getCachedArticles(): Promise<Article[] | null> {
     try {
-      await this.ensureCacheDir();
-      const data = await fs.readFile(ARTICLES_CACHE_FILE, 'utf-8');
-      const cacheData: CacheData = JSON.parse(data);
+      console.log('🔍 DB 캐시 조회 시작...');
+      const { data: cacheEntry, error } = await supabaseServer
+        .from('cache')
+        .select('data')
+        .eq('key', 'articles')
+        .single();
       
-      // 캐시 사용 전용 모드: 만료 여부와 관계없이 항상 캐시된 데이터 반환
-      const now = Date.now();
-      const timeDiff = now - cacheData.lastUpdated;
-      const hoursAgo = Math.floor(timeDiff / (1000 * 60 * 60));
+      if (error) {
+        console.error('❌ DB 캐시 조회 에러:', error);
+        return null;
+      }
       
-      console.log(`캐시된 데이터 사용 (${hoursAgo}시간 전 수집, 만료 여부 무시)`);
-      return cacheData.articles.map(article => ({
-        ...article,
-        publishedAt: new Date(article.publishedAt)
-      }));
+      console.log('📋 DB 응답:', { cacheEntry });
+      
+      if (cacheEntry?.data) {
+        const cacheData: CacheData = cacheEntry.data;
+        const hoursAgo = Math.floor((Date.now() - cacheData.lastUpdated) / (1000 * 60 * 60));
+        console.log(`✅ DB 캐시 사용 (${hoursAgo}시간 전 수집, ${cacheData.articles.length}개 아티클)`);
+        return cacheData.articles.map(article => ({
+          ...article,
+          publishedAt: new Date(article.publishedAt)
+        }));
+      }
+      
+      console.log('❌ DB 캐시가 비어있습니다 - cacheEntry:', cacheEntry);
+      return null;
     } catch (error) {
-      console.log('캐시 파일이 없거나 읽기 실패:', error);
+      console.error('캐시 읽기 실패:', error);
       return null;
     }
   }
 
   static async setCachedArticles(articles: Article[]): Promise<void> {
     try {
-      await this.ensureCacheDir();
-      
-      // 최신 날짜순으로 정렬 후 최대 개수만 유지 (빠른 접근용 캐시)
+      // 최신 날짜순으로 정렬 후 최대 개수만 유지
       const sortedArticles = articles
         .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
         .slice(0, MAX_CACHED_ARTICLES);
@@ -58,21 +55,21 @@ export class CacheManager {
         lastUpdated: Date.now()
       };
       
-      // 1. 로컬 캐시 저장 (빠른 접근용)
-      await fs.writeFile(
-        ARTICLES_CACHE_FILE, 
-        JSON.stringify(cacheData, null, 2), 
-        'utf-8'
-      );
+      // DB 캐시에 저장 (upsert)
+      const { error } = await supabaseServer
+        .from('cache')
+        .upsert({
+          key: 'articles',
+          data: cacheData,
+          updated_at: new Date().toISOString()
+        });
       
-      // 2. 데이터베이스에 전체 아티클 저장 (영구 저장용)
-      try {
-        await ArticleService.upsertArticles(articles);
-        console.log(`${sortedArticles.length}개 기사를 캐시에 저장, ${articles.length}개를 데이터베이스에 저장했습니다`);
-      } catch (dbError) {
-        console.error('데이터베이스 저장 실패, 캐시만 사용:', dbError);
-        console.log(`${sortedArticles.length}개 기사를 캐시에만 저장했습니다 (전체 ${articles.length}개 중 최신순 선별)`);
+      if (error) {
+        console.error('DB 캐시 저장 실패:', error);
+        throw error;
       }
+      
+      console.log(`✅ ${sortedArticles.length}개 기사를 DB 캐시에 저장했습니다 (전체 ${articles.length}개 중 최신순 선별)`);
       
     } catch (error) {
       console.error('캐시 저장 실패:', error);
@@ -81,14 +78,19 @@ export class CacheManager {
 
   static async getCacheInfo(): Promise<{ lastUpdated: Date | null, hoursAgo: number | null }> {
     try {
-      await this.ensureCacheDir();
-      const data = await fs.readFile(ARTICLES_CACHE_FILE, 'utf-8');
-      const cacheData: CacheData = JSON.parse(data);
+      const { data: cacheEntry } = await supabaseServer
+        .from('cache')
+        .select('data')
+        .eq('key', 'articles')
+        .single();
       
-      const lastUpdated = new Date(cacheData.lastUpdated);
-      const hoursAgo = Math.floor((Date.now() - cacheData.lastUpdated) / (1000 * 60 * 60));
-      
-      return { lastUpdated, hoursAgo };
+      if (cacheEntry?.data) {
+        const cacheData: CacheData = cacheEntry.data;
+        const lastUpdated = new Date(cacheData.lastUpdated);
+        const hoursAgo = Math.floor((Date.now() - cacheData.lastUpdated) / (1000 * 60 * 60));
+        return { lastUpdated, hoursAgo };
+      }
+      return { lastUpdated: null, hoursAgo: null };
     } catch {
       return { lastUpdated: null, hoursAgo: null };
     }
@@ -96,10 +98,13 @@ export class CacheManager {
 
   static async clearCache(): Promise<void> {
     try {
-      await fs.unlink(ARTICLES_CACHE_FILE);
-      console.log('캐시가 삭제되었습니다');
+      await supabaseServer
+        .from('cache')
+        .delete()
+        .eq('key', 'articles');
+      console.log('DB 캐시가 삭제되었습니다');
     } catch (error) {
-      console.log('캐시 삭제 실패 또는 캐시 파일이 없음:', error);
+      console.log('캐시 삭제 실패:', error);
     }
   }
 }
