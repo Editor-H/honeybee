@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 export default function DebugAnalytics() {
-  const [trendingData, setTrendingData] = useState<any>(null);
-  const [platformData, setPlatformData] = useState<any>(null);
+  const [trendingData, setTrendingData] = useState<object | null>(null);
+  const [platformData, setPlatformData] = useState<object | null>(null);
   const [loading, setLoading] = useState(false);
 
   const testTrending = async () => {
