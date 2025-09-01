@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ArticleService } from '@/lib/article-service';
 import { CacheManager } from '@/lib/cache-manager';
+import { Article } from '@/types/article';
 
 export async function GET() {
   try {
