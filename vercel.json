@@ -7,5 +7,6 @@
   "env": {
     "NODE_ENV": "production"
   },
-  "regions": ["icn1"]
+  "regions": ["icn1"],
+  "public": true
 }
