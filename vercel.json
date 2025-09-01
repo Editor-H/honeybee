@@ -6,5 +6,6 @@
   },
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "regions": ["icn1"]
 }
