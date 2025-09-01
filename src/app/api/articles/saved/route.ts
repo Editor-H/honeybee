@@ -5,10 +5,19 @@ import { authOptions } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('🔍 GET /api/articles/saved 호출됨');
+    
     const session = await getServerSession(authOptions);
+    console.log('📱 세션 상태:', session ? '로그인됨' : '로그인 안됨');
     
     if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      console.log('❌ 인증되지 않은 사용자 - 빈 배열 반환');
+      return NextResponse.json({ 
+        success: true,
+        articles: [],
+        total: 0,
+        message: 'Please log in to view saved articles'
+      });
     }
 
     // 저장된 아티클 조회
@@ -25,19 +34,33 @@ export async function GET(request: NextRequest) {
 
     // Article 형태로 변환
     const articles = data?.map(item => ({
-      id: item.id,
+      id: item.id.toString(),
       title: item.article_title,
-      excerpt: item.article_excerpt,
+      content: item.article_excerpt || '',
+      excerpt: item.article_excerpt || '',
       url: item.article_url,
       publishedAt: new Date(item.article_published_at || item.saved_at),
       platform: {
         id: item.article_platform?.toLowerCase().replace(/\s+/g, '-') || 'unknown',
-        name: item.article_platform || 'Unknown Platform'
+        name: item.article_platform || 'Unknown Platform',
+        type: 'corporate' as const,
+        baseUrl: '',
+        description: '',
+        isActive: true
       },
       author: {
-        name: 'Unknown Author' // 저장된 데이터에 작성자 정보가 없으므로 기본값
+        id: 'unknown',
+        name: 'Unknown Author',
+        company: item.article_platform || 'Unknown Platform',
+        expertise: [],
+        articleCount: 0
       },
-      tags: [], // 저장된 데이터에 태그 정보가 없으므로 빈 배열
+      category: 'general' as const,
+      tags: [],
+      readingTime: 5,
+      trending: false,
+      featured: false,
+      contentType: 'article' as const,
       savedAt: item.saved_at
     })) || [];
 

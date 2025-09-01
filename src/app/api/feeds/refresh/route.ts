@@ -2,30 +2,33 @@ import { NextResponse } from 'next/server';
 import { collectFreshFeeds } from '@/lib/rss-collector';
 import { CacheManager } from '@/lib/cache-manager';
 
+// 이 API는 cron job이나 스케줄러에서만 호출되어야 함 (사용자 요청 차단)
 export async function POST() {
   try {
-    console.log('수동 새로고침 요청 시작...');
+    console.log('🔄 정기 RSS 수집 시작...');
     
     // 기존 캐시 삭제
     await CacheManager.clearCache();
     
-    // 새로운 RSS 데이터 수집
+    // 새로운 RSS 데이터 수집 및 자동 캐시 저장
     const articles = await collectFreshFeeds();
+    
+    console.log(`✅ 정기 RSS 수집 완료: ${articles.length}개 아티클`);
     
     return NextResponse.json({
       success: true,
-      message: '피드가 성공적으로 새로고침되었습니다',
-      articlesCount: articles.length,
+      message: 'RSS 데이터가 성공적으로 업데이트되었습니다',
+      totalArticles: articles.length,
       lastUpdated: new Date().toISOString()
     });
     
   } catch (error) {
-    console.error('수동 새로고침 실패:', error);
+    console.error('정기 RSS 수집 실패:', error);
     
     return NextResponse.json({
       success: false,
-      error: '피드 새로고침에 실패했습니다',
-      message: error instanceof Error ? error.message : '알 수 없는 오류'
+      error: '정기 RSS 수집에 실패했습니다',
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 }

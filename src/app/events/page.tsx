@@ -238,42 +238,55 @@ export default function EventsPage() {
   useEffect(() => {
     const loadEvents = async () => {
       try {
-        const response = await fetch('/api/feeds/all');
-        const data = await response.json();
-        
-        if (data.success && data.articles) {
-          const processedEvents = data.articles
-            .filter((article: Article) => {
-              // events 카테고리이거나 행사 관련 키워드가 포함된 아티클들
-              const title = article.title?.toLowerCase() || '';
-              const excerpt = article.excerpt?.toLowerCase() || '';
-              const content = title + ' ' + excerpt;
-              
-              const eventKeywords = ['conference', 'meetup', 'event', 'summit', 'webinar', 'live', 'keynote', 'session', '컨퍼런스', '행사', '세미나', '미팅', '라이브', '키노트'];
-              const hasEventKeyword = eventKeywords.some(keyword => content.includes(keyword));
-              
-              return article.category === 'events' || hasEventKeyword;
-            })
-            .map((article: Article) => ({
-              ...article,
-              publishedAt: new Date(article.publishedAt),
-              category: 'events' // 강제로 events 카테고리로 설정
-            }));
+        // 즉시 주요 행사들 표시 (빠른 초기 로딩)
+        const majorEvents = [...past2024Events, ...past2025Events];
+        setEvents(majorEvents);
+        setLoading(false);
+
+        // 캐시된 RSS 데이터에서 행사 관련 아티클 추가로 로드
+        try {
+          const response = await fetch('/api/feeds/all');
+          const data = await response.json();
           
-          // RSS에서 수집된 행사들과 주요 행사들 합치기
-          const allEvents = [...processedEvents, ...past2024Events, ...past2025Events]
-            .sort((a: Article, b: Article) => 
-              new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-            );
-          setEvents(allEvents);
-        } else {
-          // RSS 데이터가 없으면 주요 행사들만 표시
-          setEvents([...past2024Events, ...past2025Events]);
+          if (data.success && data.articles) {
+            const processedEvents = data.articles
+              .filter((article: Article) => {
+                // events 카테고리이거나 행사 관련 키워드가 포함된 아티클들
+                const title = article.title?.toLowerCase() || '';
+                const excerpt = article.excerpt?.toLowerCase() || '';
+                const content = title + ' ' + excerpt;
+                
+                const eventKeywords = ['conference', 'meetup', 'event', 'summit', 'webinar', 'live', 'keynote', 'session', '컨퍼런스', '행사', '세미나', '미팅', '라이브', '키노트', 'SLASH', 'DEVIEW', 'if(kakao)', '우아콘'];
+                const hasEventKeyword = eventKeywords.some(keyword => content.includes(keyword));
+                
+                return article.category === 'events' || hasEventKeyword;
+              })
+              .map((article: Article) => ({
+                ...article,
+                publishedAt: new Date(article.publishedAt),
+                category: 'events' // 강제로 events 카테고리로 설정
+              }));
+            
+            // RSS 이벤트들을 주요 이벤트와 합치기 (중복 제거)
+            const allEvents = [...processedEvents, ...majorEvents]
+              .filter((event, index, array) => 
+                // 제목 기준으로 중복 제거
+                array.findIndex(e => e.title === event.title) === index
+              )
+              .sort((a: Article, b: Article) => 
+                new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+              );
+            
+            setEvents(allEvents);
+          }
+        } catch (rssError) {
+          console.log('RSS 이벤트 로드 실패, 주요 이벤트만 표시:', rssError);
+          // RSS 실패해도 주요 이벤트는 이미 표시되어 있음
         }
       } catch (error) {
         console.error('행사 데이터 로딩 실패:', error);
+        // 최종 폴백: 주요 행사들만 표시
         setEvents([...past2024Events, ...past2025Events]);
-      } finally {
         setLoading(false);
       }
     };

@@ -23,6 +23,7 @@ function HomeContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeTab, setActiveTab] = useState("home");
+  const [cacheInfo, setCacheInfo] = useState<{fromCache: boolean, cacheAge?: number, lastUpdated?: string}>({fromCache: false});
   
   // URL에서 activeTab 초기화
   useEffect(() => {
@@ -70,7 +71,12 @@ function HomeContent() {
             publishedAt: new Date(article.publishedAt)
           }));
           setAllArticles(processedArticles);
-          console.log(`${processedArticles.length}개 기사 로드 완료`);
+          setCacheInfo({
+            fromCache: data.fromCache || false,
+            cacheAge: data.cacheAge,
+            lastUpdated: data.lastUpdated
+          });
+          console.log(`${processedArticles.length}개 기사 로드 완료 ${data.fromCache ? `(캐시: ${data.cacheAge}시간 전)` : '(새로 수집)'}`);
         } else {
           console.log('기사 데이터를 가져올 수 없어서 mock 데이터 사용');
           // fallback to mock data
@@ -280,6 +286,18 @@ function HomeContent() {
                   <div className="text-center mb-3">
                     <AnimatedStats onStatClick={handleStatClick} />
                   </div>
+                  
+                  {/* Cache Info */}
+                  {cacheInfo.fromCache && cacheInfo.cacheAge !== undefined && (
+                    <div className="flex justify-center items-center mb-3">
+                      <span className="text-xs text-slate-400">
+                        {cacheInfo.cacheAge < 24 ? 
+                          `${cacheInfo.cacheAge}시간 전 업데이트` : 
+                          '오늘 업데이트됨'
+                        }
+                      </span>
+                    </div>
+                  )}
 
                   {/* Search Section */}
                   <div ref={mainSearchRef} className="text-center">

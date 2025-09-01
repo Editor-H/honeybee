@@ -2,15 +2,22 @@ import { Star, ArrowLeft, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { collectAllFeeds } from "@/lib/rss-collector";
+import { CacheManager } from "@/lib/cache-manager";
 
 export default async function KeywordsPage() {
   let allArticles;
   
   try {
-    allArticles = await collectAllFeeds();
+    // 캐시된 데이터만 사용 (빠른 로딩)
+    allArticles = await CacheManager.getCachedArticles();
+    
+    if (!allArticles || allArticles.length === 0) {
+      console.warn('캐시된 데이터가 없음, Mock 데이터 사용');
+      const { getRecentArticles } = await import('@/data/mock-data');
+      allArticles = getRecentArticles(50);
+    }
   } catch (error) {
-    console.error('RSS 수집 실패:', error);
+    console.error('캐시 데이터 로드 실패:', error);
     const { getRecentArticles } = await import('@/data/mock-data');
     allArticles = getRecentArticles(50);
   }

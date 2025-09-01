@@ -3,7 +3,18 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import dynamic from 'next/dynamic';
+
+// Recharts를 dynamic import로 처리 (SSR 문제 해결)
+const BarChart = dynamic(() => import('recharts').then((mod) => ({ default: mod.BarChart })), { ssr: false });
+const Bar = dynamic(() => import('recharts').then((mod) => ({ default: mod.Bar })), { ssr: false });
+const XAxis = dynamic(() => import('recharts').then((mod) => ({ default: mod.XAxis })), { ssr: false });
+const YAxis = dynamic(() => import('recharts').then((mod) => ({ default: mod.YAxis })), { ssr: false });
+const CartesianGrid = dynamic(() => import('recharts').then((mod) => ({ default: mod.CartesianGrid })), { ssr: false });
+const Tooltip = dynamic(() => import('recharts').then((mod) => ({ default: mod.Tooltip })), { ssr: false });
+const ResponsiveContainer = dynamic(() => import('recharts').then((mod) => ({ default: mod.ResponsiveContainer })), { ssr: false });
+const LineChart = dynamic(() => import('recharts').then((mod) => ({ default: mod.LineChart })), { ssr: false });
+const Line = dynamic(() => import('recharts').then((mod) => ({ default: mod.Line })), { ssr: false });
 import { Building2, TrendingUp, Video, FileText, Clock, Activity } from 'lucide-react';
 
 interface PlatformData {
@@ -48,6 +59,11 @@ const PRODUCTIVITY_COLORS = {
 export function PlatformAnalysis() {
   const [data, setData] = useState<PlatformAnalysisData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const fetchPlatformData = async () => {
@@ -59,7 +75,7 @@ export function PlatformAnalysis() {
           setData(result.data);
         }
       } catch (error) {
-        console.error('플랫폼 분석 데이터 로드 실패:', error);
+        console.error('❌ 플랫폼 분석 데이터 로드 실패:', error);
       } finally {
         setLoading(false);
       }
@@ -185,28 +201,34 @@ export function PlatformAnalysis() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={platformChartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis 
-                  dataKey="name" 
-                  tick={{ fontSize: 10 }}
-                  angle={-45}
-                  textAnchor="end"
-                  height={80}
-                />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px'
-                  }}
-                />
-                <Bar dataKey="총아티클" fill="#DAA63E" name="총 아티클" />
-                <Bar dataKey="최근7일" fill="#3B82F6" name="최근 7일" />
-              </BarChart>
-            </ResponsiveContainer>
+            {mounted ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={platformChartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: 10 }}
+                    angle={-45}
+                    textAnchor="end"
+                    height={80}
+                  />
+                  <YAxis tick={{ fontSize: 12 }} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'white',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Bar dataKey="총아티클" fill="#DAA63E" name="총 아티클" />
+                  <Bar dataKey="최근7일" fill="#3B82F6" name="최근 7일" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="w-full h-[300px] flex items-center justify-center bg-gray-50 rounded">
+                <div className="text-gray-500">차트 로딩 중...</div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -222,31 +244,37 @@ export function PlatformAnalysis() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={hourlyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis 
-                  dataKey="hour" 
-                  tick={{ fontSize: 10 }}
-                  interval={2}
-                />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px'
-                  }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="count" 
-                  stroke="#DAA63E" 
-                  strokeWidth={2}
-                  dot={{ fill: '#DAA63E', strokeWidth: 2, r: 4 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            {mounted ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={hourlyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis 
+                    dataKey="hour" 
+                    tick={{ fontSize: 10 }}
+                    interval={2}
+                  />
+                  <YAxis tick={{ fontSize: 12 }} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'white',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="count" 
+                    stroke="#DAA63E" 
+                    strokeWidth={2}
+                    dot={{ fill: '#DAA63E', strokeWidth: 2, r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="w-full h-[300px] flex items-center justify-center bg-gray-50 rounded">
+                <div className="text-gray-500">차트 로딩 중...</div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

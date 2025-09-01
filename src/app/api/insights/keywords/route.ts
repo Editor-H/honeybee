@@ -62,15 +62,23 @@ function calculateMarketScore(keyword: string, frequency: number, totalArticles:
 
 export async function GET(request: NextRequest) {
   try {
-    // RSS 수집 API를 통해 최신 아티클 가져오기
-    const articlesResponse = await fetch(`${request.nextUrl.origin}/api/feeds/all`);
-    const articlesData = await articlesResponse.json();
+    // 캐시된 데이터만 사용 (사용자 요청에 의한 수집 없음)
+    const { CacheManager } = await import('@/lib/cache-manager');
+    const articles = await CacheManager.getCachedArticles();
     
-    if (!articlesData.success || !articlesData.articles) {
-      return NextResponse.json({ error: 'Failed to fetch articles' }, { status: 500 });
+    if (!articles || articles.length === 0) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          totalArticles: 0,
+          totalKeywords: 0,
+          topKeywords: [],
+          categories: {},
+          trending: [],
+          emerging: []
+        }
+      });
     }
-
-    const articles = articlesData.articles;
     const keywordFrequency: { [key: string]: number } = {};
     const keywordByPlatform: { [key: string]: { [platform: string]: number } } = {};
     

@@ -28,20 +28,16 @@ export class CacheManager {
       const data = await fs.readFile(ARTICLES_CACHE_FILE, 'utf-8');
       const cacheData: CacheData = JSON.parse(data);
       
-      // 캐시가 24시간 이내인지 확인
+      // 캐시 사용 전용 모드: 만료 여부와 관계없이 항상 캐시된 데이터 반환
       const now = Date.now();
       const timeDiff = now - cacheData.lastUpdated;
+      const hoursAgo = Math.floor(timeDiff / (1000 * 60 * 60));
       
-      if (timeDiff < CACHE_DURATION) {
-        console.log(`캐시된 데이터 사용 (${Math.floor(timeDiff / (1000 * 60 * 60))}시간 전 수집)`);
-        return cacheData.articles.map(article => ({
-          ...article,
-          publishedAt: new Date(article.publishedAt)
-        }));
-      } else {
-        console.log('캐시가 만료되었습니다 (24시간 초과)');
-        return null;
-      }
+      console.log(`캐시된 데이터 사용 (${hoursAgo}시간 전 수집, 만료 여부 무시)`);
+      return cacheData.articles.map(article => ({
+        ...article,
+        publishedAt: new Date(article.publishedAt)
+      }));
     } catch (error) {
       console.log('캐시 파일이 없거나 읽기 실패:', error);
       return null;

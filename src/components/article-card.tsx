@@ -57,7 +57,7 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
   const handleSaveClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       showToast('아티클을 저장하려면 먼저 로그인해 주세요 😊', 'info');
       return;
     }

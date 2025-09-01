@@ -15,23 +15,18 @@ export function RefreshButton() {
     setIsRefreshing(true);
     
     try {
-      const response = await fetch('/api/feeds/refresh', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
+      // 강제 새로고침 파라미터를 사용하여 최신 데이터 요청
+      const response = await fetch('/api/feeds/all?refresh=true');
       const data = await response.json();
       
       if (data.success) {
         // 페이지 새로고침으로 업데이트된 데이터 표시
-        router.refresh();
+        window.location.reload();
         
-        // 성공 알림 (선택사항)
-        alert(`${data.articlesCount}개의 새로운 기사가 업데이트되었습니다!`);
+        // 성공 알림은 새로고침 후 사라지므로 콘솔에만 로그
+        console.log(`✅ ${data.totalArticles}개의 최신 기사가 업데이트되었습니다!`);
       } else {
-        alert('업데이트에 실패했습니다: ' + data.message);
+        alert('업데이트에 실패했습니다: ' + data.error);
       }
     } catch (error) {
       console.error('새로고침 실패:', error);

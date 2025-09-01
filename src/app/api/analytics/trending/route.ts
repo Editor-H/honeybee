@@ -66,11 +66,40 @@ export async function GET() {
       video: allArticlesForTags.filter(a => a.contentType === 'video').length
     };
 
-    // 트렌딩 아티클 선별 (조회수나 트렌딩 마크 기준)
+    // 트렌딩 아티클 선별 (더 관대한 기준으로 변경)
     const trendingArticlesList = allArticlesForTags
-      .filter(article => article.trending || (article.viewCount && article.viewCount > 1000))
-      .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
-      .slice(0, 10);
+      .filter(article => {
+        // 1. 트렌딩 마크가 있거나
+        if (article.trending) return true;
+        
+        // 2. 조회수가 있고 100 이상이거나 
+        if (article.viewCount && article.viewCount > 100) return true;
+        
+        // 3. 최근 3일 내의 아티클이거나
+        const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+        if (new Date(article.publishedAt) >= threeDaysAgo) return true;
+        
+        // 4. 특정 인기 태그를 포함하고 있거나
+        const hotTags = ['React', 'AI', 'ChatGPT', 'JavaScript', 'TypeScript', '개발', '기술'];
+        if (article.tags.some(tag => hotTags.includes(tag))) return true;
+        
+        return false;
+      })
+      .sort((a, b) => {
+        // 복합 점수로 정렬: 최신성(40%) + 조회수(30%) + 태그 점수(30%)
+        const getScore = (article: any) => {
+          const daysSincePublished = Math.max(0, 7 - Math.floor((now.getTime() - new Date(article.publishedAt).getTime()) / (24 * 60 * 60 * 1000)));
+          const recentScore = daysSincePublished * 40; // 최신성 점수
+          const viewScore = Math.min(30, (article.viewCount || 0) / 100); // 조회수 점수
+          const hotTags = ['React', 'AI', 'ChatGPT', 'JavaScript', 'TypeScript'];
+          const tagScore = article.tags.filter((tag: string) => hotTags.includes(tag)).length * 10;
+          
+          return recentScore + viewScore + tagScore;
+        };
+        
+        return getScore(b) - getScore(a);
+      })
+      .slice(0, 12); // 12개로 증가
 
     return NextResponse.json({
       success: true,

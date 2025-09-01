@@ -5,9 +5,13 @@ import { authOptions } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('💾 POST /api/articles/save 호출됨');
+    
     const session = await getServerSession(authOptions);
+    console.log('📱 세션 상태:', session ? '로그인됨' : '로그인 안됨');
     
     if (!session?.user?.email) {
+      console.log('❌ 인증 실패 - 401 반환');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -43,20 +47,23 @@ export async function POST(request: NextRequest) {
         article_excerpt: article.excerpt || null,
         article_image: article.image || null,
         article_published_at: article.publishedAt || null,
-        article_platform: article.platform || null,
+        article_platform: article.platform || 'Unknown Platform',
       })
       .select()
       .single();
 
     if (error) {
       console.error('Supabase save error:', error);
-      return NextResponse.json({ error: 'Failed to save article' }, { status: 500 });
+      console.error('Error details:', JSON.stringify(error, null, 2));
+      console.error('Article data:', JSON.stringify(article, null, 2));
+      return NextResponse.json({ error: 'Failed to save article', details: error.message }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error('Save article error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Catch error details:', JSON.stringify(error, null, 2));
+    return NextResponse.json({ error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }
 
