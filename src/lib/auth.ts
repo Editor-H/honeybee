@@ -19,12 +19,12 @@ export const authOptions: NextAuthOptions = {
     maxAge: 7 * 24 * 60 * 60, // 7일 (초 단위)
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account?.provider === "google" && user.email) {
         // Supabase에 사용자 정보 저장 (환경변수가 있을 때만)
         if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
           try {
-            const { data, error } = await supabase
+            const { error } = await supabase
               .from('user_profiles')
               .upsert({
                 google_id: user.id,

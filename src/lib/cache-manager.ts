@@ -1,7 +1,7 @@
 import { Article } from '@/types/article';
 import { supabase } from './supabase';
 
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24시간 (밀리초)
+// const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24시간 (밀리초) - 현재 미사용
 const MAX_CACHED_ARTICLES = 300; // 최신 300개 아티클만 캐시 유지
 
 interface CacheData {
