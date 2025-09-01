@@ -87,7 +87,7 @@ export async function GET() {
       })
       .sort((a, b) => {
         // 복합 점수로 정렬: 최신성(40%) + 조회수(30%) + 태그 점수(30%)
-        const getScore = (article: any) => {
+        const getScore = (article: Article) => {
           const daysSincePublished = Math.max(0, 7 - Math.floor((now.getTime() - new Date(article.publishedAt).getTime()) / (24 * 60 * 60 * 1000)));
           const recentScore = daysSincePublished * 40; // 최신성 점수
           const viewScore = Math.min(30, (article.viewCount || 0) / 100); // 조회수 점수

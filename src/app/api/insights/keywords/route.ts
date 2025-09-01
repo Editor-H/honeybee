@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { CacheManager } from '@/lib/cache-manager';
 
 // 기술 키워드 목록 (확장 가능)
 const techKeywords = [
