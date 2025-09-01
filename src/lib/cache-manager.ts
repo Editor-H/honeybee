@@ -1,7 +1,7 @@
 import { Article } from '@/types/article';
 import { supabaseServer } from '@/lib/supabase-server';
 
-const MAX_CACHED_ARTICLES = 300; // 최신 300개 아티클만 캐시 유지
+const MAX_CACHED_ARTICLES = 50000; // 최대한 많은 아티클 캐시 유지
 
 interface CacheData {
   articles: Article[];
@@ -45,8 +45,18 @@ export class CacheManager {
 
   static async setCachedArticles(articles: Article[]): Promise<void> {
     try {
+      // 기존 캐시된 아티클 가져오기
+      const existingArticles = await this.getCachedArticles() || [];
+      
+      // URL 기준으로 중복 제거하여 새 아티클만 추가
+      const existingUrls = new Set(existingArticles.map(article => article.url));
+      const newArticles = articles.filter(article => !existingUrls.has(article.url));
+      
+      // 기존 + 새 아티클 합치기
+      const allArticles = [...existingArticles, ...newArticles];
+      
       // 최신 날짜순으로 정렬 후 최대 개수만 유지
-      const sortedArticles = articles
+      const sortedArticles = allArticles
         .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
         .slice(0, MAX_CACHED_ARTICLES);
       
@@ -69,7 +79,7 @@ export class CacheManager {
         throw error;
       }
       
-      console.log(`✅ ${sortedArticles.length}개 기사를 DB 캐시에 저장했습니다 (전체 ${articles.length}개 중 최신순 선별)`);
+      console.log(`✅ ${sortedArticles.length}개 기사를 DB 캐시에 저장했습니다 (새로 추가: ${newArticles.length}개, 전체: ${allArticles.length}개 중 최신순 선별)`);
       
     } catch (error) {
       console.error('캐시 저장 실패:', error);
