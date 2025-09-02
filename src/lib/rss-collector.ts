@@ -626,6 +626,26 @@ const platforms = {
     description: 'HashiCorp 인프라 이벤트',
     isActive: true,
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC-AdvAxaagE9W2f0webyNUQ'
+  },
+  philipp_schmid: {
+    id: 'philipp_schmid',
+    name: 'Philipp Schmid Blog',
+    type: 'personal' as const,
+    baseUrl: 'https://www.philschmid.de',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=philschmid.de&sz=64',
+    description: 'Google DeepMind 시니어 AI 릴레이션 엔지니어 블로그',
+    isActive: true,
+    rssUrl: 'https://www.philschmid.de/rss'
+  },
+  hacker_news: {
+    id: 'hacker_news',
+    name: 'Hacker News',
+    type: 'community' as const,
+    baseUrl: 'https://news.ycombinator.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=news.ycombinator.com&sz=64',
+    description: '지적 호기심을 자극하는 기술 뉴스',
+    isActive: true,
+    rssUrl: 'https://news.ycombinator.com/rss'
   }
 };
 
@@ -956,7 +976,11 @@ function curateArticles(articles: Article[]): Article[] {
     samsung_developers: { quality: 1.1, maxExposure: 2, type: 'docs' },
     lg_developers: { quality: 1.0, maxExposure: 2, type: 'docs' },
     nhn_developers: { quality: 1.1, maxExposure: 2, type: 'docs' },
-    kt_developers: { quality: 1.0, maxExposure: 2, type: 'docs' }
+    kt_developers: { quality: 1.0, maxExposure: 2, type: 'docs' },
+    
+    // AI/ML 전문 소스들
+    philipp_schmid: { quality: 1.4, maxExposure: 5, type: 'corporate' }, // Google DeepMind 고품질
+    hacker_news: { quality: 1.1, maxExposure: 8, type: 'community' } // 다양한 기술 뉴스
   };
 
   // 4. 다양성 보장을 위한 스마트 라운드 로빈
