@@ -34,6 +34,14 @@ function HomeContent() {
       setActiveTab('home');
     }
   }, [searchParams]);
+
+  // URL에서 category 초기화
+  useEffect(() => {
+    const category = searchParams.get('category');
+    if (category) {
+      setActiveCategory(category);
+    }
+  }, [searchParams]);
   const [showHeaderSearch, setShowHeaderSearch] = useState(false);
   const mainSearchRef = useRef<HTMLDivElement>(null);
   
@@ -165,6 +173,12 @@ function HomeContent() {
   };
 
   const handleCategoryChange = (category: string) => {
+    // 추천 서비스 페이지로 이동
+    if (category === 'recommendations') {
+      router.push('/recommendations');
+      return;
+    }
+    
     setActiveCategory(category);
     // 인사이트 탭에 있을 때 카테고리를 변경하면 홈 탭으로 돌아가기
     if (['trending', 'keywords', 'authors', 'platforms'].includes(activeTab)) {

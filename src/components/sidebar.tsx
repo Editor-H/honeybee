@@ -119,6 +119,11 @@ export function Sidebar({ activeCategory, onCategoryChange, onLogoClick }: Sideb
         { id: "tools-docs", name: "개발도구" }
       ]
     },
+    { 
+      id: "recommendations", 
+      name: "추천 서비스", 
+      subcategories: []
+    },
   ];
 
   const handleCategoryClick = (categoryId: string, hasSubcategories: boolean) => {
