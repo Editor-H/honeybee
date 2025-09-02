@@ -21,7 +21,7 @@ function extractThumbnail(item: Parser.Item): string | undefined {
   }
   
   // 3. 본문 내용에서 이미지 추출 (여러 패턴 시도)
-  const contentSources = [item['content:encoded'], item.content, item.summary, item.description];
+  const contentSources = [item['content:encoded'], item.content, item.summary, (item as any).description];
   
   for (const content of contentSources) {
     if (!content) continue;

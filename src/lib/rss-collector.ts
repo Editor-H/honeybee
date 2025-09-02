@@ -647,6 +647,39 @@ const platforms = {
     description: '지적 호기심을 자극하는 기술 뉴스',
     isActive: true,
     rssUrl: 'https://news.ycombinator.com/rss'
+  },
+  jocoding: {
+    id: 'jocoding',
+    name: 'YouTube',
+    type: 'education' as const,
+    baseUrl: 'https://www.youtube.com/@jocoding',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '조코딩',
+    description: '코딩 1위 유튜버의 쉬운 프로그래밍 강의',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCQNE2JmbasNYbjGAcuBiRRg'
+  },
+  coding_apple: {
+    id: 'coding_apple',
+    name: 'YouTube',
+    type: 'education' as const,
+    baseUrl: 'https://www.youtube.com/@codingapple',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '코딩 애플',
+    description: '실무에 필요한 웹개발 강의',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCSLrpBAzr-ROVGHQ5EmxnUg'
+  },
+  nomad_coders: {
+    id: 'nomad_coders',
+    name: 'YouTube',
+    type: 'education' as const,
+    baseUrl: 'https://www.youtube.com/@nomadcoders',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
+    channelName: '노마드코더',
+    description: '클론 코딩으로 배우는 실무 개발',
+    isActive: true,
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCUpJs89fSBXNolQGOYKn0YQ'
   }
 };
 
@@ -940,8 +973,9 @@ function curateArticles(articles: Article[]): Article[] {
     toast: { quality: 0.8, maxExposure: 2, type: 'corporate' },
     
     // 교육 유튜브 채널들 (교육 가치 높음)
-    jocoding: { quality: 1.0, maxExposure: 3, type: 'educational' },
-    codingapple: { quality: 1.0, maxExposure: 3, type: 'educational' },
+    jocoding: { quality: 1.2, maxExposure: 4, type: 'educational' },
+    coding_apple: { quality: 1.2, maxExposure: 4, type: 'educational' },
+    nomad_coders: { quality: 1.2, maxExposure: 4, type: 'educational' },
     yalco: { quality: 1.0, maxExposure: 3, type: 'educational' },
     wony_coding: { quality: 0.9, maxExposure: 2, type: 'educational' },
     winterlood: { quality: 1.0, maxExposure: 3, type: 'educational' },
@@ -981,7 +1015,7 @@ function curateArticles(articles: Article[]): Article[] {
     
     // AI/ML 전문 소스들
     philipp_schmid: { quality: 1.4, maxExposure: 5, type: 'corporate' }, // Google DeepMind 고품질
-    hacker_news: { quality: 1.1, maxExposure: 8, type: 'community' } // 다양한 기술 뉴스
+    hacker_news: { quality: 1.0, maxExposure: 4, type: 'community' } // 다양한 기술 뉴스
   };
 
   // 4. 다양성 보장을 위한 스마트 라운드 로빈

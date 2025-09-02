@@ -68,10 +68,13 @@ export async function GET() {
       viewCount: Math.floor(Math.random() * 5000) + 1000,
       likeCount: Math.floor(Math.random() * 200) + 50,
       commentCount: Math.floor(Math.random() * 50) + 5,
-      readingTime: Math.floor(Math.random() * 15) + 5,
       trending: Math.random() > 0.7,
       featured: Math.random() > 0.8,
-      url: item.link || 'https://medium.com/daangn'
+      url: item.link || 'https://medium.com/daangn',
+      contentType: 'article' as const,
+      readTime: Math.floor(Math.random() * 15) + 5,
+      readingTime: Math.floor(Math.random() * 15) + 5,
+      isBookmarked: false
       };
     });
 
