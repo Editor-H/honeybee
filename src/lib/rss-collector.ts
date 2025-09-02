@@ -1,6 +1,7 @@
 import Parser from 'rss-parser';
 import { Article, Author, Platform } from '@/types/article';
 import { CacheManager } from './cache-manager';
+import { collectScrapedArticles } from './web-scraper';
 
 const parser = new Parser();
 
@@ -1255,7 +1256,10 @@ export async function collectFreshFeeds(): Promise<Article[]> {
         samsung_developers: 6, // Samsung Developers
         lg_developers: 6,    // LG Developers
         nhn_developers: 8,   // NHN Developers
-        kt_developers: 6     // KT Developers
+        kt_developers: 6,    // KT Developers
+        // AI/ML 전문 소스들
+        philipp_schmid: 8,   // Philipp Schmid Blog (고품질)
+        hacker_news: 12      // Hacker News (다양한 기술 뉴스)
       };
       
       const maxArticles = maxArticlesPerPlatform[platformKey as keyof typeof maxArticlesPerPlatform] || 15;
@@ -1356,6 +1360,16 @@ export async function collectFreshFeeds(): Promise<Article[]> {
   }, {} as Record<string, number>);
   
   console.log('플랫폼별 분포:', platformDistribution);
+  
+  // 웹 스크래핑 추가 수집
+  console.log('=== 웹 스크래핑 시작 ===');
+  try {
+    const scrapedArticles = await collectScrapedArticles();
+    allArticles.push(...scrapedArticles);
+    console.log(`웹 스크래핑 수집: ${scrapedArticles.length}개 아티클`);
+  } catch (error) {
+    console.error('웹 스크래핑 실패:', error);
+  }
   
   // 큐레이션 알고리즘: 다양성과 품질을 고려한 정렬
   const curatedArticles = curateArticles(allArticles);
