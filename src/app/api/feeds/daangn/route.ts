@@ -72,9 +72,7 @@ export async function GET() {
       featured: Math.random() > 0.8,
       url: item.link || 'https://medium.com/daangn',
       contentType: 'article' as const,
-      readTime: Math.floor(Math.random() * 15) + 5,
-      readingTime: Math.floor(Math.random() * 15) + 5,
-      isBookmarked: false
+      readingTime: Math.floor(Math.random() * 15) + 5
       };
     });
 

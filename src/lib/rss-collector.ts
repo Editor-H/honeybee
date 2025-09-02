@@ -1,5 +1,5 @@
 import Parser from 'rss-parser';
-import { Article, Author, Platform } from '@/types/article';
+import { Article, Author, Platform, ArticleCategory } from '@/types/article';
 import { CacheManager } from './cache-manager';
 import { collectScrapedArticles } from './web-scraper';
 import { calculateQualityScore, filterHighQualityArticles, suggestTags } from './content-quality-scorer';
@@ -649,21 +649,10 @@ const platforms = {
     isActive: true,
     rssUrl: 'https://news.ycombinator.com/rss'
   },
-  jocoding: {
-    id: 'jocoding',
-    name: 'YouTube',
-    type: 'education' as const,
-    baseUrl: 'https://www.youtube.com/@jocoding',
-    logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
-    channelName: '조코딩',
-    description: '코딩 1위 유튜버의 쉬운 프로그래밍 강의',
-    isActive: true,
-    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCQNE2JmbasNYbjGAcuBiRRg'
-  },
   coding_apple: {
     id: 'coding_apple',
     name: 'YouTube',
-    type: 'education' as const,
+    type: 'educational' as const,
     baseUrl: 'https://www.youtube.com/@codingapple',
     logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
     channelName: '코딩 애플',
@@ -674,7 +663,7 @@ const platforms = {
   nomad_coders: {
     id: 'nomad_coders',
     name: 'YouTube',
-    type: 'education' as const,
+    type: 'educational' as const,
     baseUrl: 'https://www.youtube.com/@nomadcoders',
     logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=64',
     channelName: '노마드코더',
@@ -1133,8 +1122,8 @@ export async function collectFreshFeeds(): Promise<Article[]> {
   console.log('활성화된 플랫폼:', Object.keys(platforms).filter(key => platforms[key as keyof typeof platforms].isActive));
   
   for (const [platformKey, platformData] of Object.entries(platforms)) {
-    const logDisplayName = platformData.name === 'YouTube' && platformData.channelName 
-      ? `YouTube • ${platformData.channelName}` 
+    const logDisplayName = platformData.name === 'YouTube' && 'channelName' in platformData 
+      ? `YouTube • ${(platformData as Record<string, unknown>).channelName}` 
       : platformData.name;
       
     try {
@@ -1298,18 +1287,18 @@ export async function collectFreshFeeds(): Promise<Article[]> {
       };
       
       const maxArticles = maxArticlesPerPlatform[platformKey as keyof typeof maxArticlesPerPlatform] || 15;
-      const maxDisplayName = platformData.name === 'YouTube' && platformData.channelName 
-        ? `YouTube • ${platformData.channelName}` 
+      const maxDisplayName = platformData.name === 'YouTube' && 'channelName' in platformData 
+        ? `YouTube • ${(platformData as Record<string, unknown>).channelName}` 
         : platformData.name;
       console.log(`${maxDisplayName} 최대 수집 개수: ${maxArticles}, 실제 처리할 아이템: ${Math.min(maxArticles, itemsToProcess.length)}`);
       const articles = itemsToProcess.slice(0, maxArticles).map((item, index) => {
-        const authorCompanyName = platformData.name === 'YouTube' && platformData.channelName 
-          ? platformData.channelName 
+        const authorCompanyName = platformData.name === 'YouTube' && 'channelName' in platformData 
+          ? (platformData as Record<string, unknown>).channelName 
           : platformData.name;
         const defaultAuthor: Author = {
           id: `${platformKey}-author`,
           name: item.creator || item.author || `${authorCompanyName} 작가`,
-          company: authorCompanyName,
+          company: String(authorCompanyName),
           expertise: ['Tech'],
           articleCount: 0
         };

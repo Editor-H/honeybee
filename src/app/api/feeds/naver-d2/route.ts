@@ -70,7 +70,8 @@ export async function GET() {
       readingTime: Math.floor(Math.random() * 20) + 8,
       trending: Math.random() > 0.6,
       featured: Math.random() > 0.7,
-      url: item.link || 'https://d2.naver.com'
+      url: item.link || 'https://d2.naver.com',
+      contentType: 'article' as const
       };
     });
 

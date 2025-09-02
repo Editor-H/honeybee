@@ -118,23 +118,33 @@ async function scrapeHuggingFacePapers(): Promise<Article[]> {
               const authorUrl = typeof paper.authorUrl === 'string' ? paper.authorUrl : 'https://huggingface.co';
               
               articles.push({
+                id: `huggingface-${articles.length}`,
                 title,
                 content: summary,
+                excerpt: summary.substring(0, 200) + '...',
                 url: url.startsWith('http') ? url : `https://huggingface.co${url}`,
                 publishedAt,
                 author: {
+                  id: 'huggingface-author',
                   name: authorName,
-                  url: authorUrl
+                  company: 'Hugging Face',
+                  expertise: ['AI', 'ML'],
+                  articleCount: 0
                 },
                 platform: {
                   id: 'huggingface_papers',
                   name: 'HuggingFace Papers',
-                  logoUrl: 'https://www.google.com/s2/favicons?domain=huggingface.co&sz=64'
+                  type: 'community' as const,
+                  baseUrl: 'https://huggingface.co',
+                  logoUrl: 'https://www.google.com/s2/favicons?domain=huggingface.co&sz=64',
+                  description: 'AI 및 ML 연구 논문',
+                  isActive: true
                 },
-                category: 'AI/ML',
+                category: 'ai-ml',
                 tags: ['AI', 'Machine Learning', 'Papers', 'Research'],
-                readTime: 10,
-                isBookmarked: false,
+                readingTime: 10,
+                trending: false,
+                featured: false,
                 contentType: 'article' as const
               });
             }
@@ -189,23 +199,33 @@ async function scrapeGptersNewsletter(): Promise<Article[]> {
         links.add(url);
         
         articles.push({
+          id: `gpters-${articles.length}`,
           title: title,
           content: 'GPTers 뉴스레터에서 제공하는 AI/GPT 관련 최신 소식',
+          excerpt: 'GPTers 뉴스레터에서 제공하는 AI/GPT 관련 최신 소식',
           url: url.startsWith('http') ? url : `https://www.gpters.org${url}`,
           publishedAt: new Date(),
           author: {
+            id: 'gpters-author',
             name: 'GPTers',
-            url: 'https://www.gpters.org'
+            company: 'GPTers',
+            expertise: ['AI', 'GPT'],
+            articleCount: 0
           },
           platform: {
             id: 'gpters_newsletter',
             name: 'GPTers 뉴스레터',
-            logoUrl: 'https://www.google.com/s2/favicons?domain=gpters.org&sz=64'
+            type: 'community' as const,
+            baseUrl: 'https://www.gpters.org',
+            logoUrl: 'https://www.google.com/s2/favicons?domain=gpters.org&sz=64',
+            description: 'AI/GPT 관련 뉴스레터',
+            isActive: true
           },
-          category: 'AI/ML',
+          category: 'ai-ml',
           tags: ['AI', 'GPT', 'Newsletter', '뉴스레터'],
-          readTime: 5,
-          isBookmarked: false,
+          readingTime: 5,
+          trending: false,
+          featured: false,
           contentType: 'article' as const
         });
         
@@ -258,23 +278,33 @@ async function scrapeHackerNewsTrending(): Promise<Article[]> {
           
           if (isProgrammingRelated) {
             articles.push({
+              id: `hackernews-${story.id}`,
               title: story.title,
               content: (typeof story.text === 'string' ? story.text : '') || `Hacker News에서 ${story.score}점을 받은 인기 프로그래밍 스토리`,
+              excerpt: (typeof story.text === 'string' ? story.text?.substring(0, 200) + '...' : '') || `Hacker News에서 ${story.score}점을 받은 인기 프로그래밍 스토리`,
               url: story.url,
               publishedAt: new Date((typeof story.time === 'number' ? story.time : Date.now() / 1000) * 1000),
               author: {
+                id: `hackernews-${story.by || 'unknown'}`,
                 name: (typeof story.by === 'string' ? story.by : '') || 'Hacker News User',
-                url: `https://news.ycombinator.com/user?id=${story.by || 'unknown'}`
+                company: 'Hacker News',
+                expertise: ['Programming'],
+                articleCount: 0
               },
               platform: {
                 id: 'hacker_news_trending',
                 name: 'Hacker News Trending',
-                logoUrl: 'https://www.google.com/s2/favicons?domain=news.ycombinator.com&sz=64'
+                type: 'community' as const,
+                baseUrl: 'https://news.ycombinator.com',
+                logoUrl: 'https://www.google.com/s2/favicons?domain=news.ycombinator.com&sz=64',
+                description: '프로그래머들의 인기 뉴스',
+                isActive: true
               },
-              category: 'Programming',
+              category: 'general',
               tags: ['Hacker News', 'Trending', 'Programming'],
-              readTime: 5,
-              isBookmarked: false,
+              readingTime: 5,
+              trending: true,
+              featured: false,
               contentType: 'article' as const,
               viewCount: typeof story.score === 'number' ? story.score : 0,
               likeCount: typeof story.score === 'number' ? story.score : 0,
@@ -325,23 +355,33 @@ async function scrapeGitHubTrending(): Promise<Article[]> {
           
           if (isProgRelevant) {
             articles.push({
+              id: `github-${repo.id}`,
               title: `${repo.name}: ${repo.description || '인기 프로그래밍 레포지토리'}`,
               content: repo.description || `GitHub에서 ⭐${repo.stargazers_count}개 별을 받은 인기 ${repo.language || 'Programming'} 프로젝트`,
+              excerpt: (repo.description || `GitHub에서 ⭐${repo.stargazers_count}개 별을 받은 인기 프로젝트`).substring(0, 200) + '...',
               url: repo.html_url,
               publishedAt: new Date(repo.created_at),
               author: {
+                id: `github-${repo.owner?.login || 'unknown'}`,
                 name: repo.owner?.login || 'GitHub User',
-                url: repo.owner?.html_url || 'https://github.com'
+                company: 'GitHub',
+                expertise: ['Programming', 'Open Source'],
+                articleCount: 0
               },
               platform: {
                 id: 'github_trending',
                 name: 'GitHub Trending',
-                logoUrl: 'https://www.google.com/s2/favicons?domain=github.com&sz=64'
+                type: 'community' as const,
+                baseUrl: 'https://github.com',
+                logoUrl: 'https://www.google.com/s2/favicons?domain=github.com&sz=64',
+                description: 'GitHub 트렌딩 레포지토리',
+                isActive: true
               },
-              category: 'Programming',
+              category: 'general',
               tags: ['GitHub', 'Trending', 'Open Source', repo.language || 'Programming'].filter(Boolean),
-              readTime: 3,
-              isBookmarked: false,
+              readingTime: 3,
+              trending: true,
+              featured: false,
               contentType: 'article' as const,
               viewCount: repo.stargazers_count,
               likeCount: repo.stargazers_count,
@@ -388,23 +428,33 @@ async function scrapeRedditProgramming(): Promise<Article[]> {
             !postData.is_self && !postData.stickied) {
           
           articles.push({
+            id: `reddit-${postData.id}`,
             title: postData.title,
             content: postData.selftext || `Reddit r/programming에서 ${postData.score}점을 받은 인기 포스트`,
+            excerpt: (postData.selftext || `Reddit r/programming에서 ${postData.score}점을 받은 인기 포스트`).substring(0, 200) + '...',
             url: postData.url,
             publishedAt: new Date(postData.created_utc * 1000),
             author: {
+              id: `reddit-${postData.author || 'unknown'}`,
               name: postData.author || 'Reddit User',
-              url: `https://www.reddit.com/user/${postData.author}`
+              company: 'Reddit',
+              expertise: ['Programming'],
+              articleCount: 0
             },
             platform: {
               id: 'reddit_programming',
               name: 'Reddit Programming',
-              logoUrl: 'https://www.google.com/s2/favicons?domain=reddit.com&sz=64'
+              type: 'community' as const,
+              baseUrl: 'https://www.reddit.com',
+              logoUrl: 'https://www.google.com/s2/favicons?domain=reddit.com&sz=64',
+              description: 'Reddit 프로그래밍 커뮤니티',
+              isActive: true
             },
-            category: 'Programming',
+            category: 'general',
             tags: ['Reddit', 'Programming', 'Community'],
-            readTime: 4,
-            isBookmarked: false,
+            readingTime: 4,
+            trending: true,
+            featured: false,
             contentType: 'article' as const,
             viewCount: postData.score,
             likeCount: postData.ups || postData.score,

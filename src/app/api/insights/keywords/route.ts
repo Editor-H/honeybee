@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CacheManager } from '@/lib/cache-manager';
+import { Article } from '@/types/article';
 
 // 기술 키워드 목록 (확장 가능)
 const techKeywords = [

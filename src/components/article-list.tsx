@@ -26,7 +26,7 @@ export function ArticleList({ initialArticles, searchQuery, activeCategory = "al
 
   // 저장된 아티클 목록 가져오기
   const fetchSavedArticles = useCallback(async () => {
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       setSavedArticleUrls(new Set());
       return;
     }
@@ -36,13 +36,13 @@ export function ArticleList({ initialArticles, searchQuery, activeCategory = "al
       const data = await response.json();
       
       if (data.success && data.articles) {
-        const urls = new Set(data.articles.map((article: Article) => article.url));
+        const urls = new Set((data.articles as Article[]).map(article => article.url).filter((url): url is string => Boolean(url)));
         setSavedArticleUrls(urls);
       }
     } catch (error) {
       console.error('Failed to fetch saved articles:', error);
     }
-  }, [session?.user?.id]);
+  }, [session?.user?.email]);
 
   // 세션이 변경될 때 저장된 아티클 목록 새로고침
   useEffect(() => {

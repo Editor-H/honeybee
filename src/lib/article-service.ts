@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { Article } from '@/types/article';
+import { Article, Platform, ArticleCategory } from '@/types/article';
 
 export interface ArticleFilters {
   platform_id?: string;
@@ -67,48 +67,48 @@ function articleToDbRecord(article: Article) {
 // DB 레코드를 Article 타입으로 변환
 function dbRecordToArticle(record: Record<string, unknown>): Article {
   return {
-    id: record.id,
-    title: record.title,
-    content: record.content || '',
-    excerpt: record.excerpt || '',
-    url: record.url,
+    id: String(record.id),
+    title: String(record.title),
+    content: String(record.content || ''),
+    excerpt: String(record.excerpt || ''),
+    url: String(record.url),
     
     author: {
-      id: record.author_id,
-      name: record.author_name,
-      company: record.author_company,
+      id: String(record.author_id),
+      name: String(record.author_name),
+      company: String(record.author_company),
       expertise: ['Tech'],
       articleCount: 0
     },
     
     platform: {
-      id: record.platform_id,
-      name: record.platform_name,
-      type: record.platform_type,
+      id: String(record.platform_id),
+      name: String(record.platform_name),
+      type: record.platform_type as Platform['type'],
       baseUrl: '',
       description: '',
       isActive: true,
       lastCrawled: new Date()
     },
     
-    contentType: record.content_type,
-    category: record.category,
-    tags: record.tags || [],
+    contentType: record.content_type as 'article' | 'video',
+    category: record.category as ArticleCategory,
+    tags: (record.tags as string[]) || [],
     
-    videoUrl: record.video_url,
-    videoDuration: record.video_duration,
-    thumbnailUrl: record.thumbnail_url,
+    videoUrl: record.video_url ? String(record.video_url) : undefined,
+    videoDuration: record.video_duration ? Number(record.video_duration) : undefined,
+    thumbnailUrl: record.thumbnail_url ? String(record.thumbnail_url) : undefined,
     
-    viewCount: record.view_count,
-    likeCount: record.like_count,
-    commentCount: record.comment_count,
-    watchCount: record.watch_count,
-    readingTime: record.reading_time,
+    viewCount: record.view_count ? Number(record.view_count) : undefined,
+    likeCount: record.like_count ? Number(record.like_count) : undefined,
+    commentCount: record.comment_count ? Number(record.comment_count) : undefined,
+    watchCount: record.watch_count ? Number(record.watch_count) : undefined,
+    readingTime: Number(record.reading_time || 0),
     
-    trending: record.trending,
-    featured: record.featured,
+    trending: Boolean(record.trending),
+    featured: Boolean(record.featured),
     
-    publishedAt: new Date(record.published_at)
+    publishedAt: new Date(record.published_at ? String(record.published_at) : Date.now())
   };
 }
 

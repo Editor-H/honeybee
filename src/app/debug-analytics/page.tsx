@@ -61,11 +61,11 @@ export default function DebugAnalytics() {
         <div className="mt-6">
           <h2 className="text-xl font-semibold mb-2">트렌딩 분석 결과</h2>
           <div className="bg-gray-100 p-4 rounded">
-            <p><strong>성공:</strong> {trendingData.success ? '✅' : '❌'}</p>
-            <p><strong>총 아티클:</strong> {trendingData.data?.totalArticles || 'N/A'}</p>
-            <p><strong>트렌딩 아티클:</strong> {trendingData.data?.trendingArticles?.length || 'N/A'}</p>
-            <p><strong>인기 태그:</strong> {trendingData.data?.topTags?.length || 'N/A'}</p>
-            <p><strong>플랫폼:</strong> {trendingData.data?.topPlatforms?.length || 'N/A'}</p>
+            <p><strong>성공:</strong> {(trendingData as Record<string, unknown>).success ? '✅' : '❌'}</p>
+            <p><strong>총 아티클:</strong> {String(((trendingData as Record<string, unknown>).data as Record<string, unknown>)?.totalArticles || 'N/A')}</p>
+            <p><strong>트렌딩 아티클:</strong> {String((((trendingData as Record<string, unknown>).data as Record<string, unknown>)?.trendingArticles as unknown[])?.length || 'N/A')}</p>
+            <p><strong>인기 태그:</strong> {String((((trendingData as Record<string, unknown>).data as Record<string, unknown>)?.topTags as unknown[])?.length || 'N/A')}</p>
+            <p><strong>플랫폼:</strong> {String((((trendingData as Record<string, unknown>).data as Record<string, unknown>)?.topPlatforms as unknown[])?.length || 'N/A')}</p>
           </div>
         </div>
       )}
@@ -74,11 +74,11 @@ export default function DebugAnalytics() {
         <div className="mt-6">
           <h2 className="text-xl font-semibold mb-2">플랫폼 분석 결과</h2>
           <div className="bg-gray-100 p-4 rounded">
-            <p><strong>성공:</strong> {platformData.success ? '✅' : '❌'}</p>
-            <p><strong>총 플랫폼:</strong> {platformData.data?.overview?.totalPlatforms || 'N/A'}</p>
-            <p><strong>활성 플랫폼:</strong> {platformData.data?.overview?.activePlatforms || 'N/A'}</p>
-            <p><strong>총 아티클:</strong> {platformData.data?.overview?.totalArticles || 'N/A'}</p>
-            <p><strong>플랫폼 수:</strong> {platformData.data?.platforms?.length || 'N/A'}</p>
+            <p><strong>성공:</strong> {(platformData as Record<string, unknown>).success ? '✅' : '❌'}</p>
+            <p><strong>총 플랫폼:</strong> {String((((platformData as Record<string, unknown>).data as Record<string, unknown>)?.overview as Record<string, unknown>)?.totalPlatforms || 'N/A')}</p>
+            <p><strong>활성 플랫폼:</strong> {String((((platformData as Record<string, unknown>).data as Record<string, unknown>)?.overview as Record<string, unknown>)?.activePlatforms || 'N/A')}</p>
+            <p><strong>총 아티클:</strong> {String((((platformData as Record<string, unknown>).data as Record<string, unknown>)?.overview as Record<string, unknown>)?.totalArticles || 'N/A')}</p>
+            <p><strong>플랫폼 수:</strong> {String((((platformData as Record<string, unknown>).data as Record<string, unknown>)?.platforms as unknown[])?.length || 'N/A')}</p>
           </div>
         </div>
       )}

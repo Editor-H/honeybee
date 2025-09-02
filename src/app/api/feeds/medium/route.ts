@@ -154,7 +154,9 @@ export async function GET() {
             readingTime: Math.floor(Math.random() * 15) + 5,
             trending: Math.random() > 0.7,
             featured: Math.random() > 0.8,
-            url: item.link || 'https://medium.com'
+            url: item.link || 'https://medium.com',
+            contentType: 'article' as const,
+            isBookmarked: false
           };
         });
         
@@ -195,7 +197,8 @@ export async function GET() {
         readingTime: 12,
         trending: true,
         featured: false,
-        url: 'https://medium.com/@mock/react-19-features'
+        url: 'https://medium.com/@mock/react-19-features',
+        contentType: 'article' as const
       },
       {
         id: 'medium-mock-2',
@@ -213,7 +216,8 @@ export async function GET() {
         readingTime: 15,
         trending: true,
         featured: true,
-        url: 'https://medium.com/@mock/nodejs-performance-guide'
+        url: 'https://medium.com/@mock/nodejs-performance-guide',
+        contentType: 'article' as const
       }
     ];
 

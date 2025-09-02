@@ -41,7 +41,7 @@ function extractThumbnail(item: Parser.Item): string | undefined {
   }
   
   // 3. 본문 내용에서 이미지 추출 (여러 패턴 시도)
-  const contentSources = [item['content:encoded'], item.content, item.summary, item.description];
+  const contentSources = [item['content:encoded'], item.content, item.summary, (item as Record<string, unknown>).description];
   
   for (const content of contentSources) {
     if (!content) continue;
@@ -136,7 +136,8 @@ export async function GET() {
       readingTime: Math.floor(Math.random() * 15) + 5,
       trending: Math.random() > 0.7,
       featured: Math.random() > 0.8,
-      url: item.link || 'https://toss.tech'
+      url: item.link || 'https://toss.tech',
+      contentType: 'article' as const
       };
     });
 

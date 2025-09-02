@@ -71,7 +71,8 @@ export async function GET() {
         readingTime: Math.floor(Math.random() * 13) + 4,
         trending: Math.random() > 0.75,
         featured: Math.random() > 0.85,
-        url: item.link || 'https://yozm.wishket.com'
+        url: item.link || 'https://yozm.wishket.com',
+        contentType: 'article' as const
       };
     });
 
@@ -103,7 +104,8 @@ export async function GET() {
         readingTime: 9,
         trending: false,
         featured: false,
-        url: 'https://yozm.wishket.com/@mock/startup-developer'
+        url: 'https://yozm.wishket.com/@mock/startup-developer',
+        contentType: 'article' as const
       },
       {
         id: 'yozm-mock-2',
@@ -121,7 +123,8 @@ export async function GET() {
         readingTime: 11,
         trending: true,
         featured: true,
-        url: 'https://yozm.wishket.com/@mock/ai-developer-skills'
+        url: 'https://yozm.wishket.com/@mock/ai-developer-skills',
+        contentType: 'article' as const
       },
       {
         id: 'yozm-mock-3',
@@ -139,7 +142,8 @@ export async function GET() {
         readingTime: 13,
         trending: false,
         featured: false,
-        url: 'https://yozm.wishket.com/@mock/frontend-performance-checklist'
+        url: 'https://yozm.wishket.com/@mock/frontend-performance-checklist',
+        contentType: 'article' as const
       }
     ];
 

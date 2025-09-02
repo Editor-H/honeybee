@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Article } from '@/types/article';
 
 interface AuthorData {
   name: string;

@@ -100,7 +100,7 @@ export const mockArticles: Article[] = [
     title: 'Next.js 15의 새로운 기능들과 마이그레이션 가이드',
     content: 'Next.js 15가 정식 릴리즈되면서 많은 새로운 기능들이 추가되었습니다...',
     excerpt: '실제 프로젝트에 적용해본 경험을 바탕으로 새로운 기능들을 자세히 살펴보고 마이그레이션 시 주의사항들을 정리했습니다.',
-    thumbnail: '/images/nextjs15.jpg',
+    thumbnailUrl: '/images/nextjs15.jpg',
     author: mockAuthors[0],
     platform: mockPlatforms[0],
     category: 'frontend',
@@ -112,14 +112,15 @@ export const mockArticles: Article[] = [
     readingTime: 8,
     trending: true,
     featured: true,
-    url: 'https://toss.tech/article/nextjs-15-migration-guide'
+    url: 'https://toss.tech/article/nextjs-15-migration-guide',
+    contentType: 'article' as const
   },
   {
     id: '2',
     title: 'React 19에서 달라진 것들: 완전 정리',
     content: 'React 19 릴리즈 후보가 공개되면서 많은 개발자들이 관심을 갖고 있습니다...',
     excerpt: 'React 19의 주요 변경사항과 새로운 기능들을 실습 예제와 함께 정리했습니다.',
-    thumbnail: '/images/react19.jpg',
+    thumbnailUrl: '/images/react19.jpg',
     author: mockAuthors[1],
     platform: mockPlatforms[1],
     category: 'frontend',
@@ -131,14 +132,15 @@ export const mockArticles: Article[] = [
     readingTime: 6,
     trending: true,
     featured: false,
-    url: 'https://medium.com/daangn/react-19-changes'
+    url: 'https://medium.com/daangn/react-19-changes',
+    contentType: 'article' as const
   },
   {
     id: '3',
     title: '타입스크립트 5.0 새로운 기능 총정리',
     content: '타입스크립트 5.0이 정식 출시되면서 성능 개선과 새로운 기능들이 대거 추가되었습니다...',
     excerpt: '타입스크립트 5.0의 새로운 기능들을 예제와 함께 살펴보고 실무에 어떻게 적용할 수 있는지 알아봅시다.',
-    thumbnail: '/images/typescript5.jpg',
+    thumbnailUrl: '/images/typescript5.jpg',
     author: mockAuthors[2],
     platform: mockPlatforms[2],
     category: 'frontend',
@@ -150,14 +152,15 @@ export const mockArticles: Article[] = [
     readingTime: 10,
     trending: false,
     featured: true,
-    url: 'https://d2.naver.com/helloworld/typescript-5'
+    url: 'https://d2.naver.com/helloworld/typescript-5',
+    contentType: 'article' as const
   },
   {
     id: '4',
     title: 'AI 도구를 활용한 개발 생산성 향상 방법',
     content: 'ChatGPT, GitHub Copilot 등 AI 도구들이 개발자의 일상을 바꾸고 있습니다...',
     excerpt: '실제 개발 업무에서 AI 도구들을 어떻게 활용하면 생산성을 높일 수 있는지 구체적인 방법들을 소개합니다.',
-    thumbnail: '/images/ai-productivity.jpg',
+    thumbnailUrl: '/images/ai-productivity.jpg',
     author: mockAuthors[3],
     platform: mockPlatforms[3],
     category: 'ai-ml',
@@ -169,17 +172,18 @@ export const mockArticles: Article[] = [
     readingTime: 12,
     trending: true,
     featured: true,
-    url: 'https://velog.io/@developer/ai-productivity-tools'
+    url: 'https://velog.io/@developer/ai-productivity-tools',
+    contentType: 'article' as const
   },
   {
     id: '5',
     title: 'Docker와 Kubernetes로 시작하는 DevOps',
     content: 'DevOps 문화와 컨테이너 기술이 현대 소프트웨어 개발에서 필수가 되었습니다...',
     excerpt: 'Docker와 Kubernetes를 활용해 DevOps 환경을 구축하는 방법을 단계별로 설명합니다.',
-    thumbnail: '/images/docker-k8s.jpg',
+    thumbnailUrl: '/images/docker-k8s.jpg',
     author: mockAuthors[4],
     platform: mockPlatforms[0],
-    category: 'devops',
+    category: 'cloud-infra',
     tags: ['Docker', 'Kubernetes', 'DevOps', 'Container'],
     publishedAt: new Date('2024-01-18T14:00:00Z'),
     viewCount: 2340,
@@ -188,14 +192,15 @@ export const mockArticles: Article[] = [
     readingTime: 15,
     trending: false,
     featured: false,
-    url: 'https://toss.tech/article/docker-kubernetes-devops'
+    url: 'https://toss.tech/article/docker-kubernetes-devops',
+    contentType: 'article' as const
   },
   {
     id: '6',
     title: '사용자 경험을 개선하는 디자인 시스템',
     content: '일관된 사용자 경험을 제공하기 위해서는 체계적인 디자인 시스템이 필요합니다...',
     excerpt: '대규모 서비스에서 디자인 시스템을 구축하고 운영하는 방법과 고려사항들을 정리했습니다.',
-    thumbnail: '/images/design-system.jpg',
+    thumbnailUrl: '/images/design-system.jpg',
     author: mockAuthors[3],
     platform: mockPlatforms[4],
     category: 'design',
@@ -207,14 +212,15 @@ export const mockArticles: Article[] = [
     readingTime: 7,
     trending: false,
     featured: false,
-    url: 'https://brunch.co.kr/@designer/design-system-guide'
+    url: 'https://brunch.co.kr/@designer/design-system-guide',
+    contentType: 'article' as const
   },
   {
     id: '7',
     title: 'GraphQL과 REST API 비교 분석',
     content: 'API 설계에서 GraphQL과 REST 중 어떤 것을 선택해야 할지 고민하는 개발자들을 위한 가이드...',
     excerpt: '실제 프로젝트 경험을 바탕으로 GraphQL과 REST API의 장단점을 비교분석하고 선택 기준을 제시합니다.',
-    thumbnail: '/images/graphql-rest.jpg',
+    thumbnailUrl: '/images/graphql-rest.jpg',
     author: mockAuthors[1],
     platform: mockPlatforms[1],
     category: 'backend',
@@ -226,14 +232,15 @@ export const mockArticles: Article[] = [
     readingTime: 9,
     trending: false,
     featured: true,
-    url: 'https://medium.com/daangn/graphql-vs-rest-api'
+    url: 'https://medium.com/daangn/graphql-vs-rest-api',
+    contentType: 'article' as const
   },
   {
     id: '8',
     title: 'Rust로 시작하는 시스템 프로그래밍',
     content: 'Rust 언어의 특징과 시스템 프로그래밍에서의 활용 방법을 알아봅시다...',
     excerpt: '메모리 안전성과 성능을 동시에 확보할 수 있는 Rust의 핵심 개념과 실무 적용 사례를 소개합니다.',
-    thumbnail: '/images/rust-programming.jpg',
+    thumbnailUrl: '/images/rust-programming.jpg',
     author: mockAuthors[4],
     platform: mockPlatforms[2],
     category: 'backend',
@@ -245,14 +252,15 @@ export const mockArticles: Article[] = [
     readingTime: 11,
     trending: false,
     featured: false,
-    url: 'https://d2.naver.com/helloworld/rust-programming'
+    url: 'https://d2.naver.com/helloworld/rust-programming',
+    contentType: 'article' as const
   },
   {
     id: '9',
     title: '모바일 앱 성능 최적화 전략',
     content: '모바일 앱의 성능을 극대화하기 위한 다양한 최적화 기법들을 살펴봅시다...',
     excerpt: 'React Native와 Flutter에서 실제로 적용 가능한 성능 최적화 방법들을 정리했습니다.',
-    thumbnail: '/images/mobile-performance.jpg',
+    thumbnailUrl: '/images/mobile-performance.jpg',
     author: mockAuthors[0],
     platform: mockPlatforms[0],
     category: 'mobile',
@@ -264,14 +272,15 @@ export const mockArticles: Article[] = [
     readingTime: 13,
     trending: true,
     featured: true,
-    url: 'https://toss.tech/article/mobile-performance-optimization'
+    url: 'https://toss.tech/article/mobile-performance-optimization',
+    contentType: 'article' as const
   },
   {
     id: '10',
     title: '마이크로서비스 아키텍처 패턴',
     content: '대규모 서비스를 위한 마이크로서비스 아키텍처 설계 패턴과 best practice...',
     excerpt: '실제 운영 환경에서 검증된 마이크로서비스 패턴들과 구현 시 주의사항들을 정리했습니다.',
-    thumbnail: '/images/microservices.jpg',
+    thumbnailUrl: '/images/microservices.jpg',
     author: mockAuthors[2],
     platform: mockPlatforms[2],
     category: 'backend',
@@ -283,14 +292,15 @@ export const mockArticles: Article[] = [
     readingTime: 15,
     trending: true,
     featured: true,
-    url: 'https://d2.naver.com/helloworld/microservices-patterns'
+    url: 'https://d2.naver.com/helloworld/microservices-patterns',
+    contentType: 'article' as const
   },
   {
     id: '11',
     title: 'CSS Grid와 Flexbox 마스터하기',
     content: 'CSS Grid와 Flexbox를 활용한 모던 웹 레이아웃 구축 방법...',
     excerpt: '복잡한 레이아웃도 쉽게 구현할 수 있는 CSS Grid와 Flexbox의 활용법을 예제와 함께 설명합니다.',
-    thumbnail: '/images/css-layout.jpg',
+    thumbnailUrl: '/images/css-layout.jpg',
     author: mockAuthors[3],
     platform: mockPlatforms[3],
     category: 'frontend',
@@ -302,14 +312,15 @@ export const mockArticles: Article[] = [
     readingTime: 8,
     trending: false,
     featured: false,
-    url: 'https://velog.io/@frontend/css-grid-flexbox-guide'
+    url: 'https://velog.io/@frontend/css-grid-flexbox-guide',
+    contentType: 'article' as const
   },
   {
     id: '12',
     title: '보안 취약점 분석과 대응 방안',
     content: '웹 애플리케이션에서 자주 발생하는 보안 취약점들과 예방 방법...',
     excerpt: 'OWASP Top 10을 기반으로 한 실무에서 꼭 알아야 할 보안 취약점 분석과 대응 전략을 소개합니다.',
-    thumbnail: '/images/web-security.jpg',
+    thumbnailUrl: '/images/web-security.jpg',
     author: mockAuthors[4],
     platform: mockPlatforms[0],
     category: 'security',
@@ -321,7 +332,8 @@ export const mockArticles: Article[] = [
     readingTime: 12,
     trending: true,
     featured: true,
-    url: 'https://toss.tech/article/web-security-vulnerabilities'
+    url: 'https://toss.tech/article/web-security-vulnerabilities',
+    contentType: 'article' as const
   }
 ];
 
@@ -360,7 +372,7 @@ export const mockTrendingKeywords: TrendingKeyword[] = [
     count: 24,
     growth: 15.6,
     relatedArticles: ['5'],
-    category: 'devops'
+    category: 'cloud-infra'
   }
 ];
 
