@@ -36,6 +36,39 @@ const scrapingConfigs: Record<string, ScrapingConfig> = {
     maxArticles: 5,
     category: 'AI/ML',
     scrapeFunction: scrapeGptersNewsletter
+  },
+  hacker_news_trending: {
+    id: 'hacker_news_trending',
+    name: 'Hacker News Trending',
+    baseUrl: 'https://news.ycombinator.com',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=news.ycombinator.com&sz=64',
+    description: 'Hacker News 고득점 프로그래밍 스토리',
+    isActive: true,
+    maxArticles: 4,
+    category: 'Programming',
+    scrapeFunction: scrapeHackerNewsTrending
+  },
+  github_trending: {
+    id: 'github_trending',
+    name: 'GitHub Trending',
+    baseUrl: 'https://github.com/trending',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=github.com&sz=64',
+    description: 'GitHub 트렌딩 프로그래밍 레포지토리',
+    isActive: true,
+    maxArticles: 6,
+    category: 'Programming',
+    scrapeFunction: scrapeGitHubTrending
+  },
+  reddit_programming: {
+    id: 'reddit_programming',
+    name: 'Reddit Programming',
+    baseUrl: 'https://www.reddit.com/r/programming',
+    logoUrl: 'https://www.google.com/s2/favicons?domain=reddit.com&sz=64',
+    description: 'Reddit 프로그래밍 커뮤니티 인기 포스트',
+    isActive: true,
+    maxArticles: 5,
+    category: 'Programming',
+    scrapeFunction: scrapeRedditProgramming
   }
 };
 
@@ -185,6 +218,209 @@ async function scrapeGptersNewsletter(): Promise<Article[]> {
     
   } catch (error) {
     console.error('❌ GPTers 뉴스레터 스크래핑 실패:', error);
+    return [];
+  }
+}
+
+// Hacker News 트렌딩 스토리 스크래핑 함수
+async function scrapeHackerNewsTrending(): Promise<Article[]> {
+  try {
+    console.log('--- Hacker News 트렌딩 스토리 스크래핑 시작 ---');
+    
+    // Hacker News API를 통해 top stories 가져오기
+    const topStoriesResponse = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json');
+    const topStoryIds = await topStoriesResponse.json() as number[];
+    
+    const articles: Article[] = [];
+    const minScore = 100; // 최소 100점 이상인 스토리만 수집
+    
+    // 상위 50개 스토리만 확인 (API 호출 최적화)
+    const storiesToCheck = topStoryIds.slice(0, 50);
+    
+    for (const storyId of storiesToCheck) {
+      try {
+        const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${storyId}.json`);
+        const story = await storyResponse.json() as Record<string, unknown>;
+        
+        // 점수 필터링 및 프로그래밍 관련 키워드 확인
+        if (story && typeof story.score === 'number' && story.score >= minScore && 
+            typeof story.title === 'string' && typeof story.url === 'string') {
+          const title = story.title.toLowerCase();
+          const programmingKeywords = [
+            'javascript', 'python', 'react', 'node', 'typescript', 'api', 'programming', 
+            'code', 'developer', 'software', 'web', 'frontend', 'backend', 'database',
+            'ai', 'ml', 'machine learning', 'algorithm', 'github', 'open source'
+          ];
+          
+          const isProgrammingRelated = programmingKeywords.some(keyword => 
+            title.includes(keyword)
+          );
+          
+          if (isProgrammingRelated) {
+            articles.push({
+              title: story.title,
+              content: (typeof story.text === 'string' ? story.text : '') || `Hacker News에서 ${story.score}점을 받은 인기 프로그래밍 스토리`,
+              url: story.url,
+              publishedAt: new Date((typeof story.time === 'number' ? story.time : Date.now() / 1000) * 1000),
+              author: {
+                name: (typeof story.by === 'string' ? story.by : '') || 'Hacker News User',
+                url: `https://news.ycombinator.com/user?id=${story.by || 'unknown'}`
+              },
+              platform: {
+                id: 'hacker_news_trending',
+                name: 'Hacker News Trending',
+                logoUrl: 'https://www.google.com/s2/favicons?domain=news.ycombinator.com&sz=64'
+              },
+              category: 'Programming',
+              tags: ['Hacker News', 'Trending', 'Programming'],
+              readTime: 5,
+              isBookmarked: false,
+              contentType: 'article' as const,
+              viewCount: typeof story.score === 'number' ? story.score : 0,
+              likeCount: typeof story.score === 'number' ? story.score : 0,
+              commentCount: typeof story.descendants === 'number' ? story.descendants : 0
+            });
+            
+            if (articles.length >= 4) break;
+          }
+        }
+      } catch (error) {
+        console.warn(`Hacker News 스토리 ${storyId} 처리 실패:`, error);
+      }
+    }
+    
+    console.log(`✅ Hacker News Trending: ${articles.length}개 수집 완료`);
+    return articles;
+    
+  } catch (error) {
+    console.error('❌ Hacker News Trending 스크래핑 실패:', error);
+    return [];
+  }
+}
+
+// GitHub 트렌딩 레포지토리 스크래핑 함수
+async function scrapeGitHubTrending(): Promise<Article[]> {
+  try {
+    console.log('--- GitHub 트렌딩 레포지토리 스크래핑 시작 ---');
+    
+    const response = await fetch('https://api.github.com/search/repositories?q=created:>2024-08-01&sort=stars&order=desc&per_page=20', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; HoneybeeBot/1.0)',
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`GitHub API HTTP ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const articles: Article[] = [];
+    
+    if (data.items && Array.isArray(data.items)) {
+      for (const repo of data.items.slice(0, 6)) {
+        if (repo.name && repo.html_url && repo.stargazers_count > 100) {
+          const programmingLanguages = ['JavaScript', 'TypeScript', 'Python', 'Go', 'Rust', 'Java', 'C++', 'C#', 'Swift', 'Kotlin'];
+          const isProgRelevant = !repo.language || programmingLanguages.includes(repo.language);
+          
+          if (isProgRelevant) {
+            articles.push({
+              title: `${repo.name}: ${repo.description || '인기 프로그래밍 레포지토리'}`,
+              content: repo.description || `GitHub에서 ⭐${repo.stargazers_count}개 별을 받은 인기 ${repo.language || 'Programming'} 프로젝트`,
+              url: repo.html_url,
+              publishedAt: new Date(repo.created_at),
+              author: {
+                name: repo.owner?.login || 'GitHub User',
+                url: repo.owner?.html_url || 'https://github.com'
+              },
+              platform: {
+                id: 'github_trending',
+                name: 'GitHub Trending',
+                logoUrl: 'https://www.google.com/s2/favicons?domain=github.com&sz=64'
+              },
+              category: 'Programming',
+              tags: ['GitHub', 'Trending', 'Open Source', repo.language || 'Programming'].filter(Boolean),
+              readTime: 3,
+              isBookmarked: false,
+              contentType: 'article' as const,
+              viewCount: repo.stargazers_count,
+              likeCount: repo.stargazers_count,
+              commentCount: repo.open_issues_count || 0
+            });
+          }
+        }
+      }
+    }
+    
+    console.log(`✅ GitHub Trending: ${articles.length}개 수집 완료`);
+    return articles;
+    
+  } catch (error) {
+    console.error('❌ GitHub Trending 스크래핑 실패:', error);
+    return [];
+  }
+}
+
+// Reddit 프로그래밍 서브레딧 스크래핑 함수
+async function scrapeRedditProgramming(): Promise<Article[]> {
+  try {
+    console.log('--- Reddit 프로그래밍 서브레딧 스크래핑 시작 ---');
+    
+    const response = await fetch('https://www.reddit.com/r/programming/hot.json?limit=20', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; HoneybeeBot/1.0)',
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Reddit API HTTP ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const articles: Article[] = [];
+    const minScore = 50; // 최소 50점 이상
+    
+    if (data.data?.children && Array.isArray(data.data.children)) {
+      for (const post of data.data.children) {
+        const postData = post.data;
+        
+        if (postData && postData.score >= minScore && postData.title && postData.url && 
+            !postData.is_self && !postData.stickied) {
+          
+          articles.push({
+            title: postData.title,
+            content: postData.selftext || `Reddit r/programming에서 ${postData.score}점을 받은 인기 포스트`,
+            url: postData.url,
+            publishedAt: new Date(postData.created_utc * 1000),
+            author: {
+              name: postData.author || 'Reddit User',
+              url: `https://www.reddit.com/user/${postData.author}`
+            },
+            platform: {
+              id: 'reddit_programming',
+              name: 'Reddit Programming',
+              logoUrl: 'https://www.google.com/s2/favicons?domain=reddit.com&sz=64'
+            },
+            category: 'Programming',
+            tags: ['Reddit', 'Programming', 'Community'],
+            readTime: 4,
+            isBookmarked: false,
+            contentType: 'article' as const,
+            viewCount: postData.score,
+            likeCount: postData.ups || postData.score,
+            commentCount: postData.num_comments || 0
+          });
+          
+          if (articles.length >= 5) break;
+        }
+      }
+    }
+    
+    console.log(`✅ Reddit Programming: ${articles.length}개 수집 완료`);
+    return articles;
+    
+  } catch (error) {
+    console.error('❌ Reddit Programming 스크래핑 실패:', error);
     return [];
   }
 }

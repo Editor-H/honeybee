@@ -2,6 +2,7 @@ import Parser from 'rss-parser';
 import { Article, Author, Platform } from '@/types/article';
 import { CacheManager } from './cache-manager';
 import { collectScrapedArticles } from './web-scraper';
+import { calculateQualityScore, filterHighQualityArticles, suggestTags } from './content-quality-scorer';
 
 const parser = new Parser();
 
@@ -1395,14 +1396,24 @@ export async function collectFreshFeeds(): Promise<Article[]> {
   
   console.log('플랫폼별 분포:', platformDistribution);
   
-  // 웹 스크래핑 추가 수집
-  console.log('=== 웹 스크래핑 시작 ===');
+  // 웹 스크래핑 추가 수집 (자동 품질 콘텐츠 발견)
+  console.log('=== 자동 품질 콘텐츠 발견 시작 ===');
   try {
     const scrapedArticles = await collectScrapedArticles();
-    allArticles.push(...scrapedArticles);
-    console.log(`웹 스크래핑 수집: ${scrapedArticles.length}개 아티클`);
+    
+    // 품질 점수 기반 필터링 적용
+    const highQualityArticles = filterHighQualityArticles(scrapedArticles, 4.0);
+    
+    // 태그 자동 제안 적용
+    const enhancedArticles = highQualityArticles.map(article => ({
+      ...article,
+      tags: suggestTags(article)
+    }));
+    
+    allArticles.push(...enhancedArticles);
+    console.log(`자동 발견된 고품질 콘텐츠: ${enhancedArticles.length}개 (원본: ${scrapedArticles.length}개)`);
   } catch (error) {
-    console.error('웹 스크래핑 실패:', error);
+    console.error('자동 품질 콘텐츠 발견 실패:', error);
   }
   
   // 큐레이션 알고리즘: 다양성과 품질을 고려한 정렬
