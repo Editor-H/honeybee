@@ -231,12 +231,12 @@ function categorizeArticle(title: string, content: string): string {
 // 플랫폼별 RSS 수집 함수 (타임아웃 및 에러 처리 강화)
 async function collectPlatformFeed(
   platformKey: string, 
-  platformData: any, 
+  platformData: typeof platforms[keyof typeof platforms], 
   timeout: number = 12000
 ): Promise<Article[]> {
   
   const logDisplayName = platformData.name === 'YouTube' && 'channelName' in platformData 
-    ? `YouTube • ${(platformData as any).channelName}` 
+    ? `YouTube • ${(platformData as Record<string, unknown>).channelName}` 
     : platformData.name;
 
   return new Promise(async (resolve) => {
@@ -313,10 +313,10 @@ function getMaxArticlesForPlatform(platformKey: string): number {
 }
 
 // 미디엄 필터링 (간소화)
-function applyMediumFiltering(items: any[]): any[] {
+function applyMediumFiltering(items: Record<string, unknown>[]): Record<string, unknown>[] {
   return items.filter(item => {
-    const title = (item.title || '').toLowerCase();
-    const content = (item.content || item.summary || '').toLowerCase();
+    const title = String(item.title || '').toLowerCase();
+    const content = String(item.content || item.summary || '').toLowerCase();
     const text = `${title} ${content}`;
     
     // 기본 스팸 체크
@@ -334,13 +334,13 @@ function applyMediumFiltering(items: any[]): any[] {
 
 // 아이템을 Article로 변환
 function convertItemToArticle(
-  item: any, 
+  item: Record<string, unknown>, 
   index: number, 
   platformKey: string, 
-  platformData: any
+  platformData: typeof platforms[keyof typeof platforms]
 ): Article {
   
-  const authorName = item.creator || item.author || platformData.name;
+  const authorName = String(item.creator || item.author || platformData.name);
   const author: Author = {
     id: `${platformKey}-author`,
     name: authorName,
@@ -354,10 +354,10 @@ function convertItemToArticle(
     lastCrawled: new Date()
   };
 
-  const title = item.title || '제목 없음';
-  const rawContent = item['content:encoded'] || item.content || item.summary || '';
+  const title = String(item.title || '제목 없음');
+  const rawContent = String(item['content:encoded'] || item.content || item.summary || '');
   const content = stripHtmlAndClean(rawContent);
-  const originalTags = item.categories || ['Tech'];
+  const originalTags = (item.categories as string[]) || ['Tech'];
   const category = categorizeArticle(title, content);
   const smartTags = generateSmartTags(title, content, originalTags);
   
@@ -367,7 +367,7 @@ function convertItemToArticle(
     'jocoding', 'codingapple', 'yalco', 'opentutorials'
   ].includes(platformKey);
   
-  const videoId = isYouTubeChannel && item.link ? extractVideoId(item.link) : null;
+  const videoId = isYouTubeChannel && item.link ? extractVideoId(String(item.link)) : null;
   
   const baseArticle: Article = {
     id: `${platformKey}-${index}`,
@@ -378,14 +378,14 @@ function convertItemToArticle(
     platform,
     category: category as ArticleCategory,
     tags: smartTags,
-    publishedAt: new Date(item.pubDate || Date.now()),
+    publishedAt: new Date(String(item.pubDate) || Date.now()),
     viewCount: Math.floor(Math.random() * 5000) + 1000,
     likeCount: Math.floor(Math.random() * 200) + 50,
     commentCount: Math.floor(Math.random() * 50) + 5,
     readingTime: Math.floor(Math.random() * 15) + 5,
     trending: Math.random() > 0.7,
     featured: Math.random() > 0.8,
-    url: item.link || platformData.baseUrl,
+    url: String(item.link || platformData.baseUrl),
     contentType: isYouTubeChannel ? 'video' : 'article'
   };
   
@@ -393,7 +393,7 @@ function convertItemToArticle(
   if (isYouTubeChannel && videoId) {
     return {
       ...baseArticle,
-      videoUrl: item.link,
+      videoUrl: String(item.link),
       videoDuration: estimateVideoDuration(),
       thumbnailUrl: getYoutubeThumbnail(videoId),
       watchCount: Math.floor(Math.random() * 50000) + 5000
