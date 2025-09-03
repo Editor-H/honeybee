@@ -201,6 +201,34 @@ const platforms = {
     description: '티스토리의 UX/UI 관련 블로그들',
     isActive: true,
     rssUrl: 'https://www.tistory.com/category/UX%2FUI/rss'
+  },
+  // 강의 플랫폼들 (현재는 mock 데이터, 추후 실제 API 연동)
+  inflearn: {
+    id: 'inflearn',
+    name: '인프런',
+    type: 'educational' as const,
+    baseUrl: 'https://www.inflearn.com',
+    description: '실무 중심의 프로그래밍 강의 플랫폼',
+    isActive: false, // 공개 RSS 없어서 비활성화
+    rssUrl: 'https://www.inflearn.com/courses' // mock
+  },
+  class101: {
+    id: 'class101',
+    name: '클래스101',
+    type: 'educational' as const,
+    baseUrl: 'https://class101.net',
+    description: '창작과 취미를 위한 온라인 클래스',
+    isActive: false, // 공개 RSS 없어서 비활성화
+    rssUrl: 'https://class101.net/categories/programming' // mock
+  },
+  coloso: {
+    id: 'coloso',
+    name: '콜로소',
+    type: 'educational' as const,
+    baseUrl: 'https://coloso.co.kr',
+    description: '실무진이 가르치는 창작 강의',
+    isActive: false, // 공개 RSS 없어서 비활성화
+    rssUrl: 'https://coloso.co.kr/categories/design' // mock
   }
 };
 
@@ -311,7 +339,8 @@ function categorizeArticle(title: string, content: string): string {
     'cloud-infra': ['cloud', 'aws', 'kubernetes', 'docker', '클라우드', '인프라'],
     'design': ['ui', 'ux', 'design', 'figma', 'sketch', '디자인', '유아이', '유엑스', '사용자경험', '사용자인터페이스', '디자이너', '프로덕트디자인'],
     'product': ['pm', 'product manager', 'product', 'planning', '프로덕트매니저', '프로덕트', '기획', '기획자', '서비스기획', '프로덕트오너'],
-    'events': ['conference', 'meetup', 'event', 'summit', '컨퍼런스', '행사', '세미나']
+    'events': ['conference', 'meetup', 'event', 'summit', '컨퍼런스', '행사', '세미나'],
+    'lecture': ['강의', '강좌', '수업', '교육', '코스', '클래스', '튜토리얼', 'course', 'lecture', 'class', 'tutorial', '온라인강의']
   };
   
   for (const [category, keywords] of Object.entries(categories)) {

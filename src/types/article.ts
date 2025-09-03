@@ -37,12 +37,19 @@ export interface Article {
   trending: boolean;
   featured: boolean;
   url: string;
-  // 영상 콘텐츠 지원
-  contentType: 'article' | 'video';
+  // 콘텐츠 타입별 지원
+  contentType: 'article' | 'video' | 'lecture';
   videoUrl?: string;
   videoDuration?: number; // seconds
   thumbnailUrl?: string;
   watchCount?: number; // 영상 조회수 (viewCount와 구분)
+  // 강의 전용 속성들
+  coursePrice?: number; // 강의 가격 (원)
+  courseDuration?: number; // 강의 총 시간 (분)
+  courseLevel?: 'beginner' | 'intermediate' | 'advanced'; // 강의 레벨
+  courseInstructor?: string; // 강사명
+  courseStudentCount?: number; // 수강생 수
+  courseRating?: number; // 강의 평점 (1-5)
 }
 
 export type ArticleCategory = 
@@ -59,6 +66,7 @@ export type ArticleCategory =
   | 'data'
   | 'security'
   | 'events'
+  | 'lecture'
   | 'general';
 
 export interface TrendingKeyword {

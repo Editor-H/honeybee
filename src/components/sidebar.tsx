@@ -120,6 +120,16 @@ export function Sidebar({ activeCategory, onCategoryChange, onLogoClick }: Sideb
       ]
     },
     { 
+      id: "lecture", 
+      name: "강의", 
+      subcategories: [
+        { id: "programming-lecture", name: "프로그래밍" },
+        { id: "design-lecture", name: "디자인" },
+        { id: "data-lecture", name: "데이터 분석" },
+        { id: "business-lecture", name: "비즈니스" }
+      ]
+    },
+    { 
       id: "docs", 
       name: "기술 문서", 
       subcategories: [

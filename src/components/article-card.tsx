@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, BookmarkCheck, Clock } from "lucide-react";
+import { Bookmark, BookmarkCheck, Clock, DollarSign, User, Star, Users } from "lucide-react";
 import { Article } from "@/types/article";
 import { useToastContext } from "@/contexts/toast-context";
 
@@ -52,6 +52,35 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const formatPrice = (price: number) => {
+    if (price === 0) return '무료';
+    if (price >= 10000) {
+      return `${Math.floor(price / 10000)}만${price % 10000 === 0 ? '' : Math.floor((price % 10000) / 1000) + '천'}원`;
+    }
+    if (price >= 1000) {
+      return `${Math.floor(price / 1000)}천${price % 1000 === 0 ? '' : price % 1000}원`;
+    }
+    return `${price}원`;
+  };
+
+  const getLevelColor = (level: string) => {
+    switch (level) {
+      case 'beginner': return 'bg-green-100 text-green-700 border-green-300';
+      case 'intermediate': return 'bg-yellow-100 text-yellow-700 border-yellow-300';
+      case 'advanced': return 'bg-red-100 text-red-700 border-red-300';
+      default: return 'bg-gray-100 text-gray-700 border-gray-300';
+    }
+  };
+
+  const getLevelText = (level: string) => {
+    switch (level) {
+      case 'beginner': return '초급';
+      case 'intermediate': return '중급';
+      case 'advanced': return '고급';
+      default: return level;
+    }
   };
 
   const handleSaveClick = async (e: React.MouseEvent) => {
@@ -210,6 +239,10 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
           <Badge className="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 border border-blue-300 font-medium">
             DOCS
           </Badge>
+        ) : article.contentType === 'lecture' ? (
+          <Badge className="bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0.5 border border-purple-300 font-medium">
+            LECTURE
+          </Badge>
         ) : article.contentType === 'video' ? (
           <Badge className="bg-blue-50 text-blue-600 text-[10px] px-1.5 py-0.5 border border-blue-200 font-medium">
             VIDEO
@@ -253,6 +286,15 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
                       </div>
                     </>
                   )}
+                  {article.contentType === 'lecture' && article.courseDuration && (
+                    <>
+                      <span>•</span>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span>{Math.floor(article.courseDuration / 60)}시간</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               
@@ -281,6 +323,52 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
         <CardTitle className="text-base mb-1.5 line-clamp-2 group-hover:text-[#DAA63E] transition-colors leading-tight font-semibold">
           {article.title}
         </CardTitle>
+
+        {/* 강의 전용 정보 */}
+        {article.contentType === 'lecture' && (
+          <div className="mb-2 space-y-1">
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              {/* 가격 */}
+              {article.coursePrice !== undefined && (
+                <div className="flex items-center gap-1 bg-green-50 text-green-700 px-2 py-0.5 rounded-full border border-green-200">
+                  <DollarSign className="w-3 h-3" />
+                  <span className="font-medium">{formatPrice(article.coursePrice)}</span>
+                </div>
+              )}
+              
+              {/* 레벨 */}
+              {article.courseLevel && (
+                <Badge className={`text-[10px] px-1.5 py-0.5 border ${getLevelColor(article.courseLevel)}`}>
+                  {getLevelText(article.courseLevel)}
+                </Badge>
+              )}
+              
+              {/* 수강생 수 */}
+              {article.courseStudentCount && (
+                <div className="flex items-center gap-1 text-gray-500">
+                  <Users className="w-3 h-3" />
+                  <span>{article.courseStudentCount.toLocaleString()}명</span>
+                </div>
+              )}
+
+              {/* 평점 */}
+              {article.courseRating && (
+                <div className="flex items-center gap-1 text-gray-500">
+                  <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                  <span>{article.courseRating.toFixed(1)}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* 강사명 */}
+            {article.courseInstructor && (
+              <div className="flex items-center gap-1 text-xs text-gray-600">
+                <User className="w-3 h-3" />
+                <span>강사: {article.courseInstructor}</span>
+              </div>
+            )}
+          </div>
+        )}
         
         <CardDescription className="mb-2 line-clamp-1 text-gray-600 text-xs">
           {article.excerpt}

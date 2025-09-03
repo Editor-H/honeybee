@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { ArticleCard } from "@/components/article-card";
 import { Article } from "@/types/article";
+import { isArticleInSubcategory, getMainCategoryForSubcategory, mainCategoryMapping } from "@/lib/category-mapping";
 
 interface ArticleListProps {
   initialArticles: Article[];
@@ -166,8 +167,26 @@ export function ArticleList({ initialArticles, searchQuery, activeCategory = "al
         targetArticles = targetArticles.filter(article => 
           ['kubernetes_docs', 'docker_docs', 'github_docs', 'kakao_developers', 'samsung_developers', 'lg_developers', 'kt_developers'].includes(article.platform.id));
       } else {
-        // 기존 카테고리 필터링
-        targetArticles = targetArticles.filter(article => article.category === activeCategory);
+        // 하위 카테고리인지 확인
+        const mainCategory = getMainCategoryForSubcategory(activeCategory);
+        
+        if (mainCategory) {
+          // 하위 카테고리: 태그 기반 필터링
+          targetArticles = targetArticles.filter(article => {
+            // 1. 메인 카테고리와 일치하는 아티클들 중에서
+            const articleMainCategory = mainCategoryMapping[mainCategory];
+            const belongsToMainCategory = article.category === articleMainCategory;
+            
+            // 2. 하위 카테고리 태그와 매칭되는 것들만
+            const belongsToSubcategory = isArticleInSubcategory(article, activeCategory);
+            
+            return belongsToMainCategory && belongsToSubcategory;
+          });
+        } else {
+          // 메인 카테고리: 기존 방식
+          const mappedCategory = mainCategoryMapping[activeCategory] || activeCategory;
+          targetArticles = targetArticles.filter(article => article.category === mappedCategory);
+        }
       }
     }
     
