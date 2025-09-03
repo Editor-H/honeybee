@@ -408,11 +408,47 @@ export default function EventsPage() {
                 
                 return article.category === 'events' || hasEventKeyword;
               })
-              .map((article: Article) => ({
-                ...article,
-                publishedAt: new Date(article.publishedAt),
-                category: 'events' // 강제로 events 카테고리로 설정
-              }));
+              .map((article: Article) => {
+                // RSS 이벤트에 썸네일이 없는 경우 기본 썸네일 할당
+                let thumbnailUrl = article.thumbnailUrl;
+                
+                if (!thumbnailUrl) {
+                  const title = article.title?.toLowerCase() || '';
+                  
+                  // 플랫폼/행사 종류별 기본 썸네일 할당
+                  if (title.includes('kakao') || title.includes('카카오')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&h=450&fit=crop&auto=format';
+                  } else if (title.includes('naver') || title.includes('네이버') || title.includes('deview')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=450&fit=crop&auto=format';
+                  } else if (title.includes('toss') || title.includes('토스') || title.includes('slash')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=450&fit=crop&auto=format';
+                  } else if (title.includes('우아') || title.includes('배달의민족')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=450&fit=crop&auto=format';
+                  } else if (title.includes('react') || title.includes('리액트')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=450&fit=crop&auto=format';
+                  } else if (title.includes('python') || title.includes('파이썬')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&h=450&fit=crop&auto=format';
+                  } else if (title.includes('ai') || title.includes('인공지능') || title.includes('머신러닝')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=450&fit=crop&auto=format';
+                  } else if (title.includes('데이터') || title.includes('data') || title.includes('analytics')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=450&fit=crop&auto=format';
+                  } else if (title.includes('클라우드') || title.includes('cloud') || title.includes('aws') || title.includes('azure')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=450&fit=crop&auto=format';
+                  } else if (title.includes('모바일') || title.includes('mobile') || title.includes('android') || title.includes('ios')) {
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=450&fit=crop&auto=format';
+                  } else {
+                    // 기본 기술 행사 썸네일
+                    thumbnailUrl = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=450&fit=crop&auto=format';
+                  }
+                }
+                
+                return {
+                  ...article,
+                  publishedAt: new Date(article.publishedAt),
+                  category: 'events', // 강제로 events 카테고리로 설정
+                  thumbnailUrl
+                };
+              });
             
             // RSS 이벤트들을 주요 이벤트와 합치기 (중복 제거)
             const allEvents = [...processedEvents, ...majorEvents]

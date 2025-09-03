@@ -54,6 +54,7 @@ export type ArticleCategory =
   | 'graphics'
   | 'office'
   | 'design'
+  | 'product'
   | 'mobile'
   | 'data'
   | 'security'

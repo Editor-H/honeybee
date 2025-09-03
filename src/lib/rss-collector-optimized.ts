@@ -108,6 +108,80 @@ const platforms = {
     description: '프로그래밍 교육의 대표 채널',
     isActive: true,
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCvc8kv-i5fvFTJBFAk6n1SA'
+  },
+  // UI/UX 및 디자인 관련 플랫폼
+  velog: {
+    id: 'velog',
+    name: 'Velog',
+    type: 'community' as const,
+    baseUrl: 'https://velog.io',
+    description: '개발자들의 기술 블로그 플랫폼',
+    isActive: true,
+    rssUrl: 'https://v2.velog.io/rss' // 전체 피드
+  },
+  medium_design: {
+    id: 'medium_design',
+    name: 'Medium - UX Planet',
+    type: 'community' as const,
+    baseUrl: 'https://uxplanet.org',
+    description: 'UX/UI 디자인 전문 퍼블리케이션',
+    isActive: true,
+    rssUrl: 'https://uxplanet.org/feed'
+  },
+  dev_to: {
+    id: 'dev_to',
+    name: 'DEV Community',
+    type: 'community' as const,
+    baseUrl: 'https://dev.to',
+    description: '글로벌 개발자 커뮤니티 플랫폼',
+    isActive: true,
+    rssUrl: 'https://dev.to/feed'
+  },
+  medium_ux_collective: {
+    id: 'medium_ux_collective',
+    name: 'UX Collective',
+    type: 'community' as const,
+    baseUrl: 'https://uxdesign.cc',
+    description: 'UX 디자인 전문 미디움 퍼블리케이션',
+    isActive: true,
+    rssUrl: 'https://uxdesign.cc/feed'
+  },
+  freecodecamp: {
+    id: 'freecodecamp',
+    name: 'freeCodeCamp',
+    type: 'educational' as const,
+    baseUrl: 'https://www.freecodecamp.org',
+    description: '프로그래밍 학습 및 튜토리얼',
+    isActive: true,
+    rssUrl: 'https://www.freecodecamp.org/news/rss/'
+  },
+  medium_product: {
+    id: 'medium_product',
+    name: 'Medium - Product Coalition',
+    type: 'community' as const,
+    baseUrl: 'https://productcoalition.com',
+    description: '프로덕트 매니지먼트 전문 퍼블리케이션',
+    isActive: true,
+    rssUrl: 'https://productcoalition.com/feed'
+  },
+  // 브런치 개별 작가들 (수동으로 검증된 활성 작가들만)
+  brunch_uxuxlove: {
+    id: 'brunch_uxuxlove',
+    name: '브런치 - 여행하는 기획자',
+    type: 'personal' as const,
+    baseUrl: 'https://brunch.co.kr/@uxuxlove',
+    description: 'UX 박사과정생이자 10년차 서비스기획자',
+    isActive: true, // 스크래핑 기능 구현 완료로 활성화
+    rssUrl: 'https://brunch.co.kr/@uxuxlove' // 커스텀 처리 필요
+  },
+  brunch_dalgudot: {
+    id: 'brunch_dalgudot', 
+    name: '브런치 - 달구닷',
+    type: 'personal' as const,
+    baseUrl: 'https://brunch.co.kr/@dalgudot',
+    description: 'UI/UX 디자인 포트폴리오와 경험 공유',
+    isActive: true, // 스크래핑 기능 구현 완료로 활성화
+    rssUrl: 'https://brunch.co.kr/@dalgudot' // 커스텀 처리 필요
   }
 };
 
@@ -211,12 +285,14 @@ function categorizeArticle(title: string, content: string): string {
   const text = `${title} ${content}`.toLowerCase();
   
   const categories = {
-    'ai-ml': ['ai', 'machine learning', 'deep learning'],
-    'frontend': ['react', 'vue', 'javascript', 'frontend'],
-    'backend': ['backend', 'server', 'api', 'database'],
-    'mobile': ['mobile', 'ios', 'android', 'app'],
-    'cloud-infra': ['cloud', 'aws', 'kubernetes', 'docker'],
-    'events': ['conference', 'meetup', 'event', 'summit']
+    'ai-ml': ['ai', 'machine learning', 'deep learning', '인공지능', '머신러닝', '딥러닝'],
+    'frontend': ['react', 'vue', 'javascript', 'frontend', '프론트엔드', '리액트'],
+    'backend': ['backend', 'server', 'api', 'database', '백엔드', '서버', '데이터베이스'],
+    'mobile': ['mobile', 'ios', 'android', 'app', '모바일', '앱개발'],
+    'cloud-infra': ['cloud', 'aws', 'kubernetes', 'docker', '클라우드', '인프라'],
+    'design': ['ui', 'ux', 'design', 'figma', 'sketch', '디자인', '유아이', '유엑스', '사용자경험', '사용자인터페이스', '디자이너', '프로덕트디자인'],
+    'product': ['pm', 'product manager', 'product', 'planning', '프로덕트매니저', '프로덕트', '기획', '기획자', '서비스기획', '프로덕트오너'],
+    'events': ['conference', 'meetup', 'event', 'summit', '컨퍼런스', '행사', '세미나']
   };
   
   for (const [category, keywords] of Object.entries(categories)) {
@@ -252,7 +328,14 @@ async function collectPlatformFeed(
       
       // RSS 파싱 설정
       let feed;
-      if (platformKey === 'naver') {
+      if (platformKey.startsWith('brunch_')) {
+        // 브런치는 웹 스크래핑으로 처리
+        const brunchArticles = await scrapeBrunchAuthor(platformData.rssUrl);
+        console.log(`✅ ${logDisplayName}: ${brunchArticles.length}개 스크래핑 완료`);
+        clearTimeout(timeoutId);
+        resolve(brunchArticles);
+        return;
+      } else if (platformKey === 'naver') {
         const customParser = new Parser({
           requestOptions: {
             headers: {
@@ -474,6 +557,150 @@ export async function collectFreshFeedsOptimized(): Promise<Article[]> {
   console.log('=== 최적화된 RSS 수집 종료 ===\n');
   
   return curatedArticles;
+}
+
+// 브런치 스크래핑 함수
+async function scrapeBrunchAuthor(authorUrl: string): Promise<Article[]> {
+  try {
+    console.log(`🕷️ 브런치 스크래핑 시작: ${authorUrl}`);
+    
+    // HTTP 요청으로 HTML 가져오기
+    const response = await fetch(authorUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.8,en-US;q=0.5,en;q=0.3',
+        'Accept-Encoding': 'gzip, deflate',
+        'Connection': 'keep-alive'
+      },
+      timeout: 10000
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const html = await response.text();
+    console.log(`✓ 브런치 HTML 가져오기 완료: ${html.length} bytes`);
+    
+    // 브런치 작가 정보 추출
+    const authorNameMatch = html.match(/<meta property="og:title" content="([^"]*) 브런치"/);
+    const authorName = authorNameMatch ? authorNameMatch[1] : '브런치 작가';
+    
+    const authorIdMatch = authorUrl.match(/brunch\.co\.kr\/@([^\/]+)/);
+    const authorId = authorIdMatch ? authorIdMatch[1] : 'unknown';
+
+    // 글 목록 추출 (브런치의 글 목록 구조 파싱)
+    const articles: Article[] = [];
+    
+    // 브런치 글 목록은 보통 class="wrap_cover_article" 또는 유사한 구조
+    const articleMatches = html.matchAll(/<article[^>]*class="[^"]*wrap_article[^"]*"[^>]*>([\s\S]*?)<\/article>/gi);
+    
+    let index = 0;
+    for (const match of articleMatches) {
+      if (index >= 10) break; // 최대 10개까지만 수집
+      
+      const articleHtml = match[1];
+      
+      // 제목 추출
+      const titleMatch = articleHtml.match(/<h1[^>]*class="[^"]*tit_subject[^"]*"[^>]*>([^<]+)</i) ||
+                        articleHtml.match(/<a[^>]*class="[^"]*link_txt[^"]*"[^>]*>([^<]+)</i) ||
+                        articleHtml.match(/title="([^"]*)"/) ||
+                        articleHtml.match(/>([^<]{10,100})</);
+      
+      // URL 추출  
+      const urlMatch = articleHtml.match(/<a[^>]*href="([^"]*)"/) ||
+                      articleHtml.match(/data-url="([^"]*)"/);
+      
+      // 요약 추출
+      const summaryMatch = articleHtml.match(/<p[^>]*class="[^"]*txt_summary[^"]*"[^>]*>([^<]+)</i) ||
+                          articleHtml.match(/<div[^>]*class="[^"]*wrap_summary[^"]*"[^>]*>([^<]+)</i);
+      
+      // 날짜 추출
+      const dateMatch = articleHtml.match(/(\d{4})\.(\d{1,2})\.(\d{1,2})/) ||
+                       articleHtml.match(/data-date="([^"]*)"/) ||
+                       articleHtml.match(/<time[^>]*>([^<]+)</i);
+      
+      // 이미지 URL 추출 (썸네일용)
+      const imageMatch = articleHtml.match(/<img[^>]*src="([^"]*)"/) ||
+                        articleHtml.match(/background-image:\s*url\(['"]*([^'")]+)['"]*\)/);
+
+      if (titleMatch && urlMatch) {
+        const title = stripHtmlAndClean(titleMatch[1] || '').trim();
+        const url = urlMatch[1].startsWith('http') ? urlMatch[1] : `https://brunch.co.kr${urlMatch[1]}`;
+        const summary = summaryMatch ? stripHtmlAndClean(summaryMatch[1]) : title;
+        
+        // 날짜 파싱
+        let publishedDate = new Date();
+        if (dateMatch) {
+          try {
+            if (dateMatch[1] && dateMatch[2] && dateMatch[3]) {
+              publishedDate = new Date(parseInt(dateMatch[1]), parseInt(dateMatch[2]) - 1, parseInt(dateMatch[3]));
+            } else {
+              publishedDate = new Date(dateMatch[1] || dateMatch[0]);
+            }
+          } catch {
+            publishedDate = new Date(Date.now() - (index * 24 * 60 * 60 * 1000)); // 인덱스만큼 일전
+          }
+        } else {
+          publishedDate = new Date(Date.now() - (index * 24 * 60 * 60 * 1000)); // 인덱스만큼 일전
+        }
+
+        // 썸네일 URL 처리
+        let thumbnailUrl = undefined;
+        if (imageMatch && imageMatch[1]) {
+          thumbnailUrl = imageMatch[1].startsWith('http') ? imageMatch[1] : 
+                        imageMatch[1].startsWith('//') ? `https:${imageMatch[1]}` : 
+                        `https://brunch.co.kr${imageMatch[1]}`;
+        }
+
+        const article: Article = {
+          id: `brunch-${authorId}-${index}`,
+          title,
+          content: summary,
+          excerpt: generateExcerpt(summary),
+          author: {
+            id: `brunch-${authorId}`,
+            name: authorName,
+            company: '브런치',
+            expertise: ['UX/UI', '디자인', '기획'],
+            articleCount: 0
+          },
+          platform: {
+            id: 'brunch',
+            name: '브런치',
+            type: 'personal',
+            baseUrl: 'https://brunch.co.kr',
+            description: '브런치는 개인의 이야기를 담는 블로깅 플랫폼',
+            isActive: true,
+            lastCrawled: new Date()
+          },
+          category: categorizeArticle(title, summary) as ArticleCategory,
+          tags: generateSmartTags(title, summary, []),
+          publishedAt: publishedDate,
+          viewCount: Math.floor(Math.random() * 3000) + 500,
+          likeCount: Math.floor(Math.random() * 100) + 10,
+          commentCount: Math.floor(Math.random() * 30) + 2,
+          readingTime: Math.floor(Math.random() * 10) + 3,
+          trending: Math.random() > 0.8,
+          featured: Math.random() > 0.9,
+          url,
+          contentType: 'article',
+          thumbnailUrl
+        };
+
+        articles.push(article);
+        index++;
+      }
+    }
+    
+    console.log(`✅ 브런치 스크래핑 완료: ${articles.length}개 글 수집`);
+    return articles;
+    
+  } catch (error) {
+    console.error(`❌ 브런치 스크래핑 실패: ${authorUrl}`, error);
+    return [];
+  }
 }
 
 // 기존 함수와의 호환성

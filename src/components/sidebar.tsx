@@ -90,6 +90,16 @@ export function Sidebar({ activeCategory, onCategoryChange, onLogoClick }: Sideb
       ]
     },
     { 
+      id: "product", 
+      name: "프로덕트", 
+      subcategories: [
+        { id: "product-management", name: "프로덕트 매니지먼트" },
+        { id: "product-strategy", name: "프로덕트 전략" },
+        { id: "service-planning", name: "서비스 기획" },
+        { id: "growth-hacking", name: "그로스 해킹" }
+      ]
+    },
+    { 
       id: "game", 
       name: "게임", 
       subcategories: [

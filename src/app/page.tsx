@@ -301,17 +301,6 @@ function HomeContent() {
                     <AnimatedStats onStatClick={handleStatClick} />
                   </div>
                   
-                  {/* Cache Info */}
-                  {cacheInfo.fromCache && cacheInfo.cacheAge !== undefined && (
-                    <div className="flex justify-center items-center mb-3">
-                      <span className="text-xs text-slate-400">
-                        {cacheInfo.cacheAge < 24 ? 
-                          `${cacheInfo.cacheAge}시간 전 업데이트` : 
-                          '오늘 업데이트됨'
-                        }
-                      </span>
-                    </div>
-                  )}
 
                   {/* Search Section */}
                   <div ref={mainSearchRef} className="text-center">
