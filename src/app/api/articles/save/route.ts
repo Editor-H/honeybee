@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 import { authOptions } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 기존 저장된 아티클 확인
-    const { data: existingArticle } = await supabase
+    const { data: existingArticle } = await supabaseAdmin
       .from('saved_articles')
       .select('id')
       .eq('user_google_id', session.user.email)
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 아티클 저장
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('saved_articles')
       .insert({
         user_google_id: session.user.email,
@@ -83,7 +83,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // 아티클 삭제
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('saved_articles')
       .delete()
       .eq('user_google_id', session.user.email)

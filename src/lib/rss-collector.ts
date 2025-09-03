@@ -1114,18 +1114,19 @@ export async function collectAllFeeds(): Promise<Article[]> {
   return await collectFreshFeeds();
 }
 
-// 실제 RSS 수집 함수
-export async function collectFreshFeeds(): Promise<Article[]> {
-  const allArticles: Article[] = [];
-  
-  console.log('=== RSS 수집 시작 ===');
-  console.log('활성화된 플랫폼:', Object.keys(platforms).filter(key => platforms[key as keyof typeof platforms].isActive));
-  
-  for (const [platformKey, platformData] of Object.entries(platforms)) {
-    const logDisplayName = platformData.name === 'YouTube' && 'channelName' in platformData 
-      ? `YouTube • ${(platformData as Record<string, unknown>).channelName}` 
-      : platformData.name;
-      
+// 플랫폼별 RSS 수집 함수 (타임아웃 적용)
+async function collectPlatformFeed(platformKey: string, platformData: any, timeout: number = 15000): Promise<Article[]> {
+  const logDisplayName = platformData.name === 'YouTube' && 'channelName' in platformData 
+    ? `YouTube • ${(platformData as Record<string, unknown>).channelName}` 
+    : platformData.name;
+
+  return new Promise(async (resolve) => {
+    // 타임아웃 설정
+    const timeoutId = setTimeout(() => {
+      console.log(`⏱️ ${logDisplayName} 타임아웃 (${timeout/1000}초)`);
+      resolve([]);
+    }, timeout);
+
     try {
       console.log(`\n--- ${logDisplayName} 수집 시작 ---`);
       console.log(`RSS URL: ${platformData.rssUrl}`);
@@ -1142,12 +1143,20 @@ export async function collectFreshFeeds(): Promise<Article[]> {
             headers: {
               'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
               'Accept': 'application/rss+xml, application/atom+xml, text/xml, */*'
-            }
+            },
+            timeout: timeout - 2000 // 파싱 타임아웃을 전체보다 2초 짧게
           }
         });
         feed = await customParser.parseURL(platformData.rssUrl);
       } else {
-        feed = await parser.parseURL(platformData.rssUrl);
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const Parser = require('rss-parser');
+        const customParser = new Parser({
+          requestOptions: {
+            timeout: timeout - 2000
+          }
+        });
+        feed = await customParser.parseURL(platformData.rssUrl);
       }
       
       const fetchTime = Date.now() - startTime;
@@ -1155,12 +1164,92 @@ export async function collectFreshFeeds(): Promise<Article[]> {
       console.log(`RSS 파싱 완료 (${fetchTime}ms)`);
       console.log(`총 RSS 아이템 수: ${feed.items?.length || 0}`);
       
-      // 미디엄만 엄격한 필터링 적용
-      let itemsToProcess = feed.items;
+      // 나머지 처리 로직은 그대로 유지...
+      const articles = await processPlatformItems(platformKey, platformData, feed.items || [], logDisplayName);
       
-      if (platformKey === 'medium') {
-        console.log('미디엄 필터링 시작...');
-        const beforeFilter = feed.items.length;
+      clearTimeout(timeoutId);
+      console.log(`✅ ${logDisplayName}: ${articles.length}개 수집 완료`);
+      resolve(articles);
+      
+    } catch (error) {
+      clearTimeout(timeoutId);
+      console.error(`❌ ${logDisplayName} 수집 실패:`, error);
+      resolve([]);
+    }
+  });
+}
+
+// 실제 RSS 수집 함수 (병렬 처리 및 최적화)
+export async function collectFreshFeeds(): Promise<Article[]> {
+  console.log('=== RSS 수집 시작 ===');
+  const activePlatforms = Object.entries(platforms).filter(([, platformData]) => platformData.isActive);
+  console.log(`활성화된 플랫폼: ${activePlatforms.length}개`);
+  
+  // 플랫폼들을 병렬로 처리 (최대 10개씩 배치)
+  const batchSize = 10;
+  const allArticles: Article[] = [];
+  
+  for (let i = 0; i < activePlatforms.length; i += batchSize) {
+    const batch = activePlatforms.slice(i, i + batchSize);
+    console.log(`\n배치 ${Math.floor(i/batchSize) + 1}: ${batch.length}개 플랫폼 처리`);
+    
+    const batchPromises = batch.map(([platformKey, platformData]) => 
+      collectPlatformFeed(platformKey, platformData)
+    );
+    
+    const batchResults = await Promise.allSettled(batchPromises);
+    
+    batchResults.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        allArticles.push(...result.value);
+      } else {
+        const [platformKey] = batch[index];
+        console.error(`❌ 배치 처리 실패 (${platformKey}):`, result.reason);
+      }
+    });
+    
+    // 배치 간 잠시 대기 (서버 부하 분산)
+    if (i + batchSize < activePlatforms.length) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+  
+  console.log(`총 수집된 기사 수: ${allArticles.length}`);
+  
+  // 웹 스크래핑 추가 수집 (시간이 남으면)
+  try {
+    console.log('=== 자동 품질 콘텐츠 발견 시작 ===');
+    const scrapedArticles = await collectScrapedArticles();
+    const highQualityArticles = filterHighQualityArticles(scrapedArticles, 4.0);
+    const enhancedArticles = highQualityArticles.map(article => ({
+      ...article,
+      tags: suggestTags(article)
+    }));
+    
+    allArticles.push(...enhancedArticles);
+    console.log(`자동 발견된 고품질 콘텐츠: ${enhancedArticles.length}개`);
+  } catch (error) {
+    console.error('자동 품질 콘텐츠 발견 실패:', error);
+  }
+  
+  // 큐레이션 및 캐시 저장
+  const curatedArticles = curateArticles(allArticles);
+  await CacheManager.setCachedArticles(curatedArticles);
+  
+  console.log(`큐레이션 후 기사 수: ${curatedArticles.length}`);
+  console.log('=== 수집 프로세스 완료 ===\n');
+  
+  return curatedArticles;
+}
+
+// 플랫폼별 아이템 처리 함수 분리
+async function processPlatformItems(platformKey: string, platformData: any, items: any[], logDisplayName: string): Promise<Article[]> {
+  // 미디엄만 엄격한 필터링 적용
+  let itemsToProcess = items;
+  
+  if (platformKey === 'medium') {
+    console.log('미디엄 필터링 시작...');
+    const beforeFilter = items.length;
         itemsToProcess = feed.items.filter(item => {
           const title = item.title?.toLowerCase() || '';
           const content = item.content?.toLowerCase() || '';

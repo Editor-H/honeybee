@@ -4,6 +4,12 @@
       "maxDuration": 120
     }
   },
+  "crons": [
+    {
+      "path": "/api/cron/collect-feeds",
+      "schedule": "0 21 * * *"
+    }
+  ],
   "env": {
     "NODE_ENV": "production"
   },

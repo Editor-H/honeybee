@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 import { authOptions } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 저장된 아티클 조회
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('saved_articles')
       .select('*')
       .eq('user_google_id', session.user.email)
