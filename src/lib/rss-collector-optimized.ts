@@ -164,14 +164,14 @@ const platforms = {
     isActive: true,
     rssUrl: 'https://productcoalition.com/feed'
   },
-  // 브런치 개별 작가들 (수동으로 검증된 활성 작가들만)
+  // 브런치 개별 작가들 (브런치는 JS 동적로딩으로 스크래핑 어려워 임시 비활성화)
   brunch_uxuxlove: {
     id: 'brunch_uxuxlove',
     name: '브런치 - 여행하는 기획자',
     type: 'personal' as const,
     baseUrl: 'https://brunch.co.kr/@uxuxlove',
     description: 'UX 박사과정생이자 10년차 서비스기획자',
-    isActive: true, // 스크래핑 기능 구현 완료로 활성화
+    isActive: false, // 브런치 동적 로딩으로 인해 임시 비활성화
     rssUrl: 'https://brunch.co.kr/@uxuxlove' // 커스텀 처리 필요
   },
   brunch_dalgudot: {
@@ -180,8 +180,27 @@ const platforms = {
     type: 'personal' as const,
     baseUrl: 'https://brunch.co.kr/@dalgudot',
     description: 'UI/UX 디자인 포트폴리오와 경험 공유',
-    isActive: true, // 스크래핑 기능 구현 완료로 활성화
+    isActive: false, // 브런치 동적 로딩으로 인해 임시 비활성화
     rssUrl: 'https://brunch.co.kr/@dalgudot' // 커스텀 처리 필요
+  },
+  // 대안: 미디엄 개인 작가들
+  medium_ux_writer: {
+    id: 'medium_ux_writer',
+    name: 'Medium - UX 실무자들',
+    type: 'personal' as const,
+    baseUrl: 'https://medium.com',
+    description: 'Medium의 한국 UX/UI 디자이너 및 기획자들',
+    isActive: true,
+    rssUrl: 'https://medium.com/feed/tag/ux-design'
+  },
+  tistory_design: {
+    id: 'tistory_design',
+    name: '티스토리 - UX/UI',
+    type: 'community' as const,
+    baseUrl: 'https://www.tistory.com',
+    description: '티스토리의 UX/UI 관련 블로그들',
+    isActive: true,
+    rssUrl: 'https://www.tistory.com/category/UX%2FUI/rss'
   }
 };
 
