@@ -116,7 +116,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://io.google/2024/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'apple-wwdc-2024',
@@ -132,7 +133,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://developer.apple.com/videos/wwdc2024/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'microsoft-build-2024',
@@ -148,7 +150,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://build.microsoft.com/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'figma-config-2024',
@@ -164,7 +167,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://config.figma.com/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'aws-reinvent-2024',
@@ -180,7 +184,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://reinvent.awsevents.com/on-demand/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'github-universe-2024',
@@ -196,7 +201,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://githubuniverse.com/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1618477388954-7852f32655ec?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'react-conf-2024',
@@ -212,7 +218,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://conf2024.react.dev/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=450&fit=crop&auto=format'
     },
     
     // 국내 하이브리드 행사
@@ -230,7 +237,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://dan.naver.com/24',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'ifkakaoai24',
@@ -246,7 +254,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://if.kakao.com/2024',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'pycon-korea-2024',
@@ -262,7 +271,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://2024.pycon.kr/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&h=450&fit=crop&auto=format'
     }
   ];
 
@@ -282,7 +292,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://io.google/2025/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'apple-wwdc-2025',
@@ -298,7 +309,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://developer.apple.com/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'microsoft-build-2025',
@@ -314,7 +326,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://build.microsoft.com/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'react-conf-2025',
@@ -330,7 +343,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://conf.react.dev/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'figma-config-2025',
@@ -346,7 +360,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://config.figma.com/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&h=450&fit=crop&auto=format'
     },
     {
       id: 'aws-reinvent-2025',
@@ -362,7 +377,8 @@ export default function EventsPage() {
       trending: false,
       featured: true,
       url: 'https://reinvent.awsevents.com/',
-      contentType: 'article' as const
+      contentType: 'article' as const,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=450&fit=crop&auto=format'
     }
   ];
 
