@@ -425,28 +425,13 @@ export default function EventsPage() {
     loadEvents();
   }, []);
 
-  const now = new Date();
-  
-  // 선택된 연도에 해당하는 행사들만 필터링
-  const filteredEvents = events.filter(event => {
-    const eventYear = new Date(event.publishedAt).getFullYear();
-    return eventYear === selectedYear;
-  });
-  
-  const ongoingEvents = filteredEvents.filter(event => {
-    const eventDate = new Date(event.publishedAt);
-    return eventDate <= now && eventDate >= new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 일주일 내
-  });
-
-  const upcomingEvents = filteredEvents.filter(event => {
-    const eventDate = new Date(event.publishedAt);
-    return eventDate > now;
-  });
-
-  const pastEvents = filteredEvents.filter(event => {
-    const eventDate = new Date(event.publishedAt);
-    return eventDate < new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 일주일 전
-  });
+  // 선택된 연도에 해당하는 행사들만 필터링하고 날짜순 정렬
+  const filteredEvents = events
+    .filter(event => {
+      const eventYear = new Date(event.publishedAt).getFullYear();
+      return eventYear === selectedYear;
+    })
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
   return (
     <div className="min-h-screen bg-[#FAEFD9]">
@@ -494,56 +479,25 @@ export default function EventsPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* 진행중인 행사 */}
-            {ongoingEvents.length > 0 && (
-              <section>
-                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  진행중인 행사
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {ongoingEvents.map((event) => (
-                    <EventCard key={event.id} event={event} />
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* 예정된 행사 */}
+            {/* 전체 행사 목록 */}
             <section>
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                예정된 행사
+              <h2 className="text-xl font-bold text-gray-900 mb-6">
+                {selectedYear}년 기술 행사
               </h2>
-              {upcomingEvents.length > 0 ? (
+              {filteredEvents.length > 0 ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {upcomingEvents.map((event) => (
+                  {filteredEvents.map((event) => (
                     <EventCard key={event.id} event={event} />
                   ))}
                 </div>
               ) : (
                 <div className="text-center py-12 bg-white rounded-2xl border border-gray-200">
                   <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500 mb-2">예정된 행사가 없습니다.</p>
+                  <p className="text-gray-500 mb-2">{selectedYear}년 행사 정보가 없습니다.</p>
                   <p className="text-sm text-gray-400">개발자, 디자이너, 기획자 행사 정보를 수집중입니다.</p>
                 </div>
               )}
             </section>
-
-            {/* 지난 행사들 */}
-            {pastEvents.length > 0 && (
-              <section>
-                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-                  {selectedYear}년 주요 행사
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {pastEvents.map((event) => (
-                    <EventCard key={event.id} event={event} />
-                  ))}
-                </div>
-              </section>
-            )}
 
             {/* 행사 플랫폼 안내 */}
             <section className="bg-white rounded-2xl border border-gray-200 p-6">
