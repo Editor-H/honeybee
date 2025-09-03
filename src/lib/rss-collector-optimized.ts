@@ -564,7 +564,10 @@ async function scrapeBrunchAuthor(authorUrl: string): Promise<Article[]> {
   try {
     console.log(`🕷️ 브런치 스크래핑 시작: ${authorUrl}`);
     
-    // HTTP 요청으로 HTML 가져오기
+    // HTTP 요청으로 HTML 가져오기 (AbortController로 타임아웃 처리)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    
     const response = await fetch(authorUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -573,8 +576,10 @@ async function scrapeBrunchAuthor(authorUrl: string): Promise<Article[]> {
         'Accept-Encoding': 'gzip, deflate',
         'Connection': 'keep-alive'
       },
-      timeout: 10000
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
