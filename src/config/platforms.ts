@@ -59,9 +59,10 @@ export const PLATFORM_CONFIGS: Record<string, PlatformConfig> = {
     baseUrl: 'https://d2.naver.com',
     description: '네이버 개발자들의 기술 이야기',
     isActive: true,
-    collectionMethod: 'rss',
-    rssUrl: 'https://d2.naver.com/d2.atom',
-    limit: 6
+    collectionMethod: 'crawler',
+    crawlerType: 'naver-d2',
+    limit: 6,
+    timeout: 30000
   },
   woowahan: {
     id: 'woowahan',
@@ -80,10 +81,11 @@ export const PLATFORM_CONFIGS: Record<string, PlatformConfig> = {
     type: 'corporate',
     baseUrl: 'https://engineering.linecorp.com/ko',
     description: 'LINE의 기술과 개발 문화',
-    isActive: false, // RSS 접근 차단됨 (403)
-    collectionMethod: 'rss',
-    rssUrl: 'https://engineering.linecorp.com/ko/rss.xml',
-    limit: 8
+    isActive: true, // 웹 크롤링으로 활성화
+    collectionMethod: 'crawler',
+    crawlerType: 'line-engineering',
+    limit: 8,
+    timeout: 45000
   },
   banksalad: {
     id: 'banksalad',

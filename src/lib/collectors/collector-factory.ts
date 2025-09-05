@@ -2,6 +2,8 @@ import { Article } from '@/types/article';
 import { EOCollector } from '../eo-collector';
 import { GPTERSCollector } from '../gpters-collector';
 import { SmartGPTERSCollector } from '../playwright/smart-gpters-collector';
+import { SmartNaverD2Collector } from '../playwright/smart-naver-d2-collector';
+import { SmartLINECollector } from '../playwright/smart-line-collector';
 import { InflearnCrawler } from '../crawlers/inflearn-crawler';
 import { Class101Crawler } from '../crawlers/class101-crawler';
 import { ColosoCrawler } from '../crawlers/coloso-crawler';
@@ -19,6 +21,8 @@ export class CollectorFactory {
     eo: () => new EOCollector(),
     gpters: () => new SmartGPTERSCollector(), // 스마트 크롤러로 업그레이드
     'gpters-legacy': () => new GPTERSCollector(), // 레거시 버전 유지
+    'naver-d2': () => new SmartNaverD2Collector(), // 네이버 D2 웹 크롤러
+    'line-engineering': () => new SmartLINECollector(), // LINE Engineering 웹 크롤러
     inflearn: () => new InflearnCrawler(),
     class101: () => new Class101Crawler(),
     coloso: () => new ColosoCrawler()
@@ -28,6 +32,8 @@ export class CollectorFactory {
     eo: 'collectArticles',
     gpters: 'collectArticles',
     'gpters-legacy': 'collectArticles',
+    'naver-d2': 'collectArticles',
+    'line-engineering': 'collectArticles',
     inflearn: 'collectCourses',
     class101: 'collectCourses',
     coloso: 'collectCourses'

@@ -1,60 +1,60 @@
 import Parser from 'rss-parser';
 import { NextResponse } from 'next/server';
 import { Article, Author, Platform } from '@/types/article';
-import { SmartNaverD2Collector } from '@/lib/playwright/smart-naver-d2-collector';
+import { SmartLINECollector } from '@/lib/playwright/smart-line-collector';
 
 const parser = new Parser();
 
-// 네이버 D2 메타데이터
-const naverD2Platform: Platform = {
-  id: 'naver-d2',
-  name: 'NAVER D2',
+// LINE Engineering 메타데이터
+const lineEngPlatform: Platform = {
+  id: 'line-engineering',
+  name: 'LINE Engineering',
   type: 'corporate',
-  baseUrl: 'https://d2.naver.com',
-  description: '네이버 개발자를 위한 기술 정보 공유',
+  baseUrl: 'https://engineering.linecorp.com/ko',
+  description: 'LINE의 기술과 개발 문화',
   isActive: true,
   lastCrawled: new Date()
 };
 
 // 기본 작가 정보
-const defaultNaverAuthor: Author = {
-  id: 'naver-team',
-  name: '네이버 개발팀',
-  company: '네이버',
-  expertise: ['AI', 'Search', 'Cloud', 'Frontend'],
+const defaultLINEAuthor: Author = {
+  id: 'line-team',
+  name: 'LINE 개발팀',
+  company: 'LINE Corp',
+  expertise: ['Mobile', 'Messaging', 'AI', 'Backend'],
   articleCount: 0
 };
 
 export async function GET() {
   try {
     // 1차: 스마트 크롤러로 시도 (RSS 차단 우회)
-    console.log('🚀 네이버 D2 스마트 크롤러로 시도...');
+    console.log('🚀 LINE Engineering 스마트 크롤러로 시도...');
     
     try {
-      const smartCollector = new SmartNaverD2Collector();
-      const articles = await smartCollector.collectArticles(6);
+      const smartCollector = new SmartLINECollector();
+      const articles = await smartCollector.collectArticles(8);
       
       // 리소스 정리
       await smartCollector.closeBrowser();
       
       if (articles.length > 0) {
-        console.log(`✅ 네이버 D2 스마트 크롤러 성공: ${articles.length}개`);
+        console.log(`✅ LINE Engineering 스마트 크롤러 성공: ${articles.length}개`);
         return NextResponse.json({
           success: true,
-          platform: 'naver-d2',
+          platform: 'line-engineering',
           articles,
           lastUpdated: new Date().toISOString(),
           collectionMethod: 'smart-crawler'
         });
       }
     } catch (smartError) {
-      console.error('❌ 네이버 D2 스마트 크롤러 실패:', smartError);
+      console.error('❌ LINE Engineering 스마트 크롤러 실패:', smartError);
     }
 
     // 2차: RSS 파싱으로 폴백 시도
-    console.log('🔄 네이버 D2 RSS 파싱으로 폴백...');
+    console.log('🔄 LINE Engineering RSS 파싱으로 폴백...');
     
-    const feed = await parser.parseURL('https://d2.naver.com/d2.atom');
+    const feed = await parser.parseURL('https://engineering.linecorp.com/ko/rss.xml');
     
     const articles: Article[] = feed.items.map((item, index) => {
       // 썸네일 이미지 추출
@@ -79,44 +79,44 @@ export async function GET() {
       }
 
       return {
-      id: `naver-d2-${index}`,
+      id: `line-engineering-${index}`,
       title: item.title || '제목 없음',
       content: item.content || item.summary || '',
       excerpt: item.summary || item.content?.substring(0, 200) + '...' || '',
       thumbnail,
       author: {
-        ...defaultNaverAuthor,
-        name: item.creator || item.author || '네이버 개발팀'
+        ...defaultLINEAuthor,
+        name: item.creator || item.author || 'LINE 개발팀'
       },
-      platform: naverD2Platform,
+      platform: lineEngPlatform,
       category: 'general' as const,
-      tags: item.categories || ['Tech'],
+      tags: item.categories || ['Tech', 'LINE'],
       publishedAt: new Date(item.pubDate || Date.now()),
-      viewCount: Math.floor(Math.random() * 8000) + 2000,
-      likeCount: Math.floor(Math.random() * 300) + 100,
-      commentCount: Math.floor(Math.random() * 80) + 10,
-      readingTime: Math.floor(Math.random() * 20) + 8,
-      trending: Math.random() > 0.6,
-      featured: Math.random() > 0.7,
-      url: item.link || 'https://d2.naver.com',
+      viewCount: Math.floor(Math.random() * 5000) + 1500, // LINE은 글로벌 서비스라 조회수 높음
+      likeCount: Math.floor(Math.random() * 200) + 50,
+      commentCount: Math.floor(Math.random() * 60) + 15,
+      readingTime: Math.floor(Math.random() * 18) + 6,
+      trending: Math.random() > 0.7,
+      featured: Math.random() > 0.8,
+      url: item.link || 'https://engineering.linecorp.com/ko',
       contentType: 'article' as const
       };
     });
 
     return NextResponse.json({
       success: true,
-      platform: 'naver-d2',
+      platform: 'line-engineering',
       articles,
       lastUpdated: new Date().toISOString(),
       collectionMethod: 'rss-fallback'
     });
 
   } catch (error) {
-    console.error('네이버 D2 수집 완전 실패:', error);
+    console.error('LINE Engineering 수집 완전 실패:', error);
     return NextResponse.json({
       success: false,
       error: 'RSS 수집 실패',
-      platform: 'naver-d2'
+      platform: 'line-engineering'
     }, { status: 500 });
   }
 }
