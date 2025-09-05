@@ -1,6 +1,7 @@
 import { Article } from '@/types/article';
 import { EOCollector } from '../eo-collector';
 import { GPTERSCollector } from '../gpters-collector';
+import { SmartGPTERSCollector } from '../playwright/smart-gpters-collector';
 import { InflearnCrawler } from '../crawlers/inflearn-crawler';
 import { Class101Crawler } from '../crawlers/class101-crawler';
 import { ColosoCrawler } from '../crawlers/coloso-crawler';
@@ -16,7 +17,8 @@ export interface ContentCollector {
 export class CollectorFactory {
   private static collectors: Record<string, () => ContentCollector> = {
     eo: () => new EOCollector(),
-    gpters: () => new GPTERSCollector(),
+    gpters: () => new SmartGPTERSCollector(), // 스마트 크롤러로 업그레이드
+    'gpters-legacy': () => new GPTERSCollector(), // 레거시 버전 유지
     inflearn: () => new InflearnCrawler(),
     class101: () => new Class101Crawler(),
     coloso: () => new ColosoCrawler()
@@ -24,7 +26,8 @@ export class CollectorFactory {
 
   private static methods: Record<string, 'collectArticles' | 'collectCourses'> = {
     eo: 'collectArticles',
-    gpters: 'collectArticles', 
+    gpters: 'collectArticles',
+    'gpters-legacy': 'collectArticles',
     inflearn: 'collectCourses',
     class101: 'collectCourses',
     coloso: 'collectCourses'
