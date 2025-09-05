@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { Article } from '@/types/article';
 import { CacheManager } from '@/lib/cache-manager';
 import { enhanceArticlesWithProfiles, generateEnhancedPlatformStats } from '@/lib/article-profile-enhancer';
 
@@ -66,7 +67,7 @@ export async function POST() {
 /**
  * 개선사항 분석 함수
  */
-function analyzeImprovements(originalArticles: any[], enhancedArticles: any[]) {
+function analyzeImprovements(originalArticles: Article[], enhancedArticles: Article[]) {
   let enhancedAuthors = 0;
   let enhancedPlatforms = 0;
   let improvedCategories = 0;
@@ -88,7 +89,7 @@ function analyzeImprovements(originalArticles: any[], enhancedArticles: any[]) {
     }
     
     // 카테고리 개선 확인
-    if (enhanced.category !== original.category && enhanced.category !== 'tech') {
+    if (enhanced.category !== original.category && enhanced.category !== 'general') {
       improvedCategories++;
     }
     
@@ -136,8 +137,8 @@ export async function GET() {
     let articlesWithBio = 0;
     const debugInfo = [];
 
-    // 샘플 아티클 3개 디버깅
-    const sampleArticles = articles.slice(0, 3);
+    // 샘플 아티클 3개 디버깅 (참조용)
+    // const sampleArticles = articles.slice(0, 3);
     
     articles.forEach((article, index) => {
       // 플랫폼 메타데이터 확인
@@ -150,13 +151,9 @@ export async function GET() {
         }
       }
       
-      // 품질 점수 확인 (객체 형태와 숫자 형태 모두 지원)
-      if (article.qualityScore) {
-        if (typeof article.qualityScore === 'object' && article.qualityScore.finalScore > 0) {
-          articlesWithQualityScores++;
-        } else if (typeof article.qualityScore === 'number' && article.qualityScore > 0) {
-          articlesWithQualityScores++;
-        }
+      // 품질 점수 확인 (숫자 형태만 지원)
+      if (article.qualityScore && typeof article.qualityScore === 'number' && article.qualityScore > 0) {
+        articlesWithQualityScores++;
       }
       
       // 향상된 태그 수 확인 (3개 이상이면 향상된 것으로 간주)

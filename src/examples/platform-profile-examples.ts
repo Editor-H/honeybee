@@ -292,7 +292,7 @@ const response = await fetch('/api/platforms/add', {
 export const testingExamples = {
   
   // 프로필 유효성 검사
-  validateProfile(profile: any) {
+  validateProfile(profile: Record<string, unknown>) {
     console.log('📍 프로필 유효성 검사');
     
     const requiredFields = ['id', 'name', 'type', 'baseUrl', 'isActive', 'collectionMethod'];

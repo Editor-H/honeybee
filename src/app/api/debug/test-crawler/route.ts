@@ -7,9 +7,9 @@ export async function GET() {
   console.log('🧪 크롤러 테스트 시작...');
   
   const results = {
-    inflearn: { success: false, count: 0, error: null as any, sample: null as any },
-    coloso: { success: false, count: 0, error: null as any, sample: null as any },
-    class101: { success: false, count: 0, error: null as any, sample: null as any }
+    inflearn: { success: false, count: 0, error: null as string | null, sample: null as object | null },
+    coloso: { success: false, count: 0, error: null as string | null, sample: null as object | null },
+    class101: { success: false, count: 0, error: null as string | null, sample: null as object | null }
   };
 
   // 인프런 테스트 (간단한 테스트)

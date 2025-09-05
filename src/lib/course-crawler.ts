@@ -164,3 +164,58 @@ export function parseStudentCount(countText: string): number {
   if (countText.includes('천')) return num * 1000;
   return num;
 }
+
+// CourseData를 Article로 변환하는 함수
+export function convertCourseDataToArticle(courseData: CourseData): Article {
+  const author: Author = {
+    id: `course-${courseData.platform}-${courseData.instructor}`,
+    name: courseData.instructor,
+    company: courseData.platform,
+    expertise: [courseData.category],
+    articleCount: 0
+  };
+
+  const platform: Platform = {
+    id: courseData.platform.toLowerCase(),
+    name: courseData.platform,
+    type: 'educational' as const,
+    baseUrl: courseData.courseUrl.split('/').slice(0, 3).join('/'),
+    description: `${courseData.platform} 온라인 강의 플랫폼`,
+    isActive: true
+  };
+
+  const categoryMapping: Record<string, ArticleCategory> = {
+    'programming': 'general',
+    'frontend': 'frontend',
+    'backend': 'backend',
+    'design': 'design',
+    'data': 'data',
+    'ai': 'ai-ml',
+    'mobile': 'mobile'
+  };
+
+  return {
+    id: `course-${courseData.platform}-${Date.now()}`,
+    title: courseData.title,
+    content: courseData.description,
+    excerpt: courseData.description.substring(0, 200),
+    author,
+    platform,
+    category: categoryMapping[courseData.category.toLowerCase()] || 'lecture',
+    tags: courseData.tags,
+    publishedAt: new Date(),
+    readingTime: courseData.duration || 60, // 분 단위
+    trending: (courseData.studentCount || 0) > 1000,
+    featured: (courseData.rating || 0) > 4.5,
+    url: courseData.courseUrl,
+    contentType: 'lecture' as const,
+    coursePrice: courseData.price,
+    courseDuration: courseData.duration,
+    courseLevel: courseData.level,
+    courseInstructor: courseData.instructor,
+    courseStudentCount: courseData.studentCount,
+    courseRating: courseData.rating,
+    thumbnailUrl: courseData.thumbnailUrl,
+    qualityScore: Math.min(90, 50 + (courseData.rating || 0) * 8 + Math.log10((courseData.studentCount || 1) + 1) * 5)
+  };
+}

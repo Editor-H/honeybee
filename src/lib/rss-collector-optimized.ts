@@ -6,6 +6,7 @@ import { calculateQualityScore, filterHighQualityArticles, suggestTags } from '.
 import { InflearnCrawler } from './crawlers/inflearn-crawler';
 import { ColosoCrawler } from './crawlers/coloso-crawler';
 import { Class101Crawler } from './crawlers/class101-crawler';
+import { convertCourseDataToArticle } from './course-crawler';
 import YouTubeCollector from './youtube-collector';
 import { EOCollector } from './eo-collector';
 import { GPTERSCollector } from './gpters-collector';
@@ -472,24 +473,33 @@ async function collectPlatformFeed(
         return;
       } else if (platformKey === 'inflearn') {
         const inflearnCrawler = new InflearnCrawler();
-        const inflearnCourses = await inflearnCrawler.collectCourses(getMaxArticlesForPlatform(platformKey));
-        console.log(`✅ ${logDisplayName}: ${inflearnCourses.length}개 크롤링 완료`);
+        await inflearnCrawler.initBrowser();
+        const inflearnCourses = await inflearnCrawler.crawlCourses();
+        await inflearnCrawler.closeBrowser();
+        const inflearnArticles = inflearnCourses.map(convertCourseDataToArticle);
+        console.log(`✅ ${logDisplayName}: ${inflearnArticles.length}개 크롤링 완료`);
         clearTimeout(timeoutId);
-        resolve(inflearnCourses);
+        resolve(inflearnArticles);
         return;
       } else if (platformKey === 'class101') {
         const class101Crawler = new Class101Crawler();
-        const class101Courses = await class101Crawler.collectCourses(getMaxArticlesForPlatform(platformKey));
-        console.log(`✅ ${logDisplayName}: ${class101Courses.length}개 크롤링 완료`);
+        await class101Crawler.initBrowser();
+        const class101Courses = await class101Crawler.crawlCourses();
+        await class101Crawler.closeBrowser();
+        const class101Articles = class101Courses.map(convertCourseDataToArticle);
+        console.log(`✅ ${logDisplayName}: ${class101Articles.length}개 크롤링 완료`);
         clearTimeout(timeoutId);
-        resolve(class101Courses);
+        resolve(class101Articles);
         return;
       } else if (platformKey === 'coloso') {
         const colosoCrawler = new ColosoCrawler();
-        const colosoCourses = await colosoCrawler.collectCourses(getMaxArticlesForPlatform(platformKey));
-        console.log(`✅ ${logDisplayName}: ${colosoCourses.length}개 크롤링 완료`);
+        await colosoCrawler.initBrowser();
+        const colosoCourses = await colosoCrawler.crawlCourses();
+        await colosoCrawler.closeBrowser();
+        const colosoArticles = colosoCourses.map(convertCourseDataToArticle);
+        console.log(`✅ ${logDisplayName}: ${colosoArticles.length}개 크롤링 완료`);
         clearTimeout(timeoutId);
-        resolve(colosoCourses);
+        resolve(colosoArticles);
         return;
       }
       

@@ -1,5 +1,36 @@
 import { Article, Author, Platform, ArticleCategory } from '@/types/article';
+import Parser from 'rss-parser';
 import { calculateQualityScore, filterHighQualityArticles, suggestTags } from './content-quality-scorer';
+
+// Velog API types
+interface VelogUser {
+  username: string;
+  profile?: {
+    display_name?: string;
+    thumbnail?: string;
+  };
+}
+
+interface VelogTag {
+  name: string;
+}
+
+interface VelogPost {
+  id: string;
+  title: string;
+  short_description?: string;
+  url_slug: string;
+  released_at?: string;
+  updated_at: string;
+  likes?: number;
+  comments_count?: number;
+  stats?: {
+    total?: number;
+  };
+  user?: VelogUser;
+  tags?: VelogTag[];
+  thumbnail?: string;
+}
 
 export class VelogCollector {
   private baseUrl = 'https://v2.velog.io';
@@ -18,7 +49,7 @@ export class VelogCollector {
     }
   }
 
-  private isHighQualityPost(post: any): boolean {
+  private isHighQualityPost(post: VelogPost): boolean {
     // 고품질 글 판별 기준
     const likes = post.likes || 0;
     const commentsCount = post.comments_count || 0;
@@ -43,18 +74,24 @@ export class VelogCollector {
     return hasEngagement && hasDescription && hasTechTags;
   }
 
-  private transformToArticle(post: any): Article {
+  private transformToArticle(post: VelogPost): Article {
     const author: Author = {
+      id: `velog-${post.user?.username || 'unknown'}`,
       name: post.user?.profile?.display_name || post.user?.username || 'Unknown',
-      username: post.user?.username,
-      avatarUrl: post.user?.profile?.thumbnail
+      company: 'Velog',
+      expertise: ['Tech'],
+      articleCount: 0,
+      avatar: post.user?.profile?.thumbnail
     };
 
     const platform: Platform = {
       id: 'velog',
       name: 'Velog',
+      type: 'community' as const,
       baseUrl: 'https://velog.io',
-      logoUrl: '/icons/velog.svg'
+      logoUrl: '/icons/velog.svg',
+      description: 'Velog 기술 블로그 플랫폼',
+      isActive: true
     };
 
     const url = `https://velog.io/@${post.user?.username}/${post.url_slug}`;
@@ -63,6 +100,7 @@ export class VelogCollector {
       id: `velog-${post.id}`,
       title: post.title,
       content: post.short_description || '',
+      excerpt: (post.short_description || '').substring(0, 200),
       summary: post.short_description || '',
       url,
       publishedAt: new Date(post.released_at || post.updated_at),
@@ -70,7 +108,10 @@ export class VelogCollector {
       platform,
       tags: post.tags?.map(tag => tag.name) || [],
       category: this.categorizePost(post.tags),
-      contentType: 'article',
+      contentType: 'article' as const,
+      readingTime: Math.max(1, Math.ceil((post.short_description || '').length / 200)),
+      trending: (post.likes || 0) > 10,
+      featured: (post.likes || 0) > 20,
       qualityScore: this.calculateVelogQualityScore(post),
       thumbnailUrl: post.thumbnail,
       viewCount: post.stats?.total,
@@ -79,8 +120,8 @@ export class VelogCollector {
     };
   }
 
-  private categorizePost(tags: any[]): ArticleCategory {
-    if (!tags || tags.length === 0) return 'tech';
+  private categorizePost(tags: VelogTag[]): ArticleCategory {
+    if (!tags || tags.length === 0) return 'general';
     
     const tagNames = tags.map(tag => tag.name.toLowerCase());
     
@@ -94,13 +135,13 @@ export class VelogCollector {
       return 'design';
     }
     if (tagNames.some(tag => ['ai', 'ml', 'machine learning', '인공지능'].includes(tag))) {
-      return 'ai';
+      return 'ai-ml';
     }
     
-    return 'tech';
+    return 'general';
   }
 
-  private calculateVelogQualityScore(post: any): number {
+  private calculateVelogQualityScore(post: VelogPost): number {
     let score = 50; // 기본 점수
     
     // 좋아요 기반 점수 (최대 +25점)
@@ -120,7 +161,6 @@ export class VelogCollector {
   // RSS 폴백 방식 (기존 방식)
   private async collectFromRSS(limit: number): Promise<Article[]> {
     try {
-      const Parser = require('rss-parser');
       const parser = new Parser();
       
       const feed = await parser.parseURL('https://v2.velog.io/rss');
@@ -147,37 +187,48 @@ export class VelogCollector {
       
       return items.map((item, index) => {
         const author: Author = {
-          name: item.creator || item.author || 'Velog User'
+          id: `velog-${item.creator || item.author || 'unknown'}`,
+          name: item.creator || item.author || 'Velog User',
+          company: 'Velog',
+          expertise: ['Tech'],
+          articleCount: 0
         };
 
         const platform: Platform = {
           id: 'velog',
           name: 'Velog',
+          type: 'community' as const,
           baseUrl: 'https://velog.io',
-          logoUrl: '/icons/velog.svg'
+          logoUrl: '/icons/velog.svg',
+          description: 'Velog 기술 블로그 플랫폼',
+          isActive: true
         };
 
         const article: Article = {
           id: `velog-rss-${Date.now()}-${index}`,
           title: item.title || 'Untitled',
           content: item.contentSnippet || item.content || '',
+          excerpt: (item.contentSnippet || item.content || '').substring(0, 200),
           summary: item.contentSnippet?.substring(0, 200) || '',
           url: item.link || '',
           publishedAt: new Date(item.pubDate || Date.now()),
           author,
           platform,
           tags: [], // 임시로 빈 배열
-          category: 'tech' as ArticleCategory,
-          contentType: 'article',
-          qualityScore: calculateQualityScore({
-            title: item.title || '',
-            content: item.contentSnippet || '',
-            author: author.name || 'Anonymous'
-          })
+          category: 'general' as ArticleCategory,
+          contentType: 'article' as const,
+          readingTime: Math.max(1, Math.ceil((item.contentSnippet || '').length / 200)),
+          trending: false,
+          featured: false,
+          qualityScore: 50 // Default quality score for Velog articles
         };
 
         // 태그 추가
         article.tags = suggestTags(article);
+
+        // 품질 점수 계산 (Article 객체가 완전히 구성된 후)
+        const qualityMetrics = calculateQualityScore(article);
+        article.qualityScore = qualityMetrics.finalScore;
         
         return article;
       });

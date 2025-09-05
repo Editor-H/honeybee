@@ -1,5 +1,14 @@
 import { PlatformConfig, PlatformType } from '@/config/platforms';
 
+// Website metadata interface
+interface WebsiteMetadata {
+  title?: string;
+  description?: string;
+  favicon?: string;
+  logo?: string;
+  themeColor?: string;
+}
+
 // 플랫폼 프로필 확장 정보
 export interface ExtendedPlatformProfile extends PlatformConfig {
   // 회사/기관 정보
@@ -216,13 +225,7 @@ export class PlatformProfileManager {
   }
   
   // 웹사이트 메타데이터 수집 (로고 포함)
-  private static async fetchWebsiteMetadata(url: string): Promise<{
-    title?: string;
-    description?: string;
-    favicon?: string;
-    logo?: string;
-    themeColor?: string;
-  }> {
+  private static async fetchWebsiteMetadata(url: string): Promise<WebsiteMetadata> {
     try {
       // 기본 URL 정리
       const baseUrl = url.replace(/\/$/, '');
@@ -298,7 +301,7 @@ export class PlatformProfileManager {
   }
   
   // 플랫폼 타입 자동 추론
-  private static inferPlatformType(url: string, metadata: any): PlatformType {
+  private static inferPlatformType(url: string, metadata: WebsiteMetadata): PlatformType {
     const domain = extractDomain(url).toLowerCase();
     
     // 도메인 기반 분류

@@ -1,4 +1,13 @@
 import { Article, Author, Platform, ArticleCategory } from '@/types/article';
+
+// GPTERS article raw data interface
+interface GPTERSArticleRaw {
+  title: string;
+  content: string;
+  url: string;
+  authorName: string;
+  publishedAt: string;
+}
 import { calculateQualityScore, suggestTags } from './content-quality-scorer';
 import * as playwright from 'playwright';
 
@@ -149,7 +158,7 @@ export class GPTERSCollector {
               console.log(`✅ ${selector}로 ${articles.length}개 아티클 발견`);
               break;
             }
-          } catch (error) {
+          } catch {
             // 이 선택자로는 찾을 수 없음, 다음 시도
             continue;
           }
@@ -223,40 +232,51 @@ export class GPTERSCollector {
     }
   }
   
-  private transformToArticle(item: any, index: number): Article {
+  private transformToArticle(item: GPTERSArticleRaw, index: number): Article {
     const author: Author = {
-      name: item.authorName || 'GPTERS'
+      id: `gpters-${item.authorName || 'gpters'}`,
+      name: item.authorName || 'GPTERS',
+      company: 'GPTERS',
+      expertise: ['AI', 'GPT'],
+      articleCount: 0
     };
 
     const platform: Platform = {
       id: 'gpters',
       name: 'GPTERS 뉴스레터',
+      type: 'community' as const,
       baseUrl: 'https://www.gpters.org',
-      logoUrl: '/icons/gpters.svg'
+      logoUrl: '/icons/gpters.svg',
+      description: 'GPTERS AI 뉴스레터',
+      isActive: true
     };
 
     const article: Article = {
       id: `gpters-${Date.now()}-${index}`,
       title: item.title,
       content: item.content || item.title,
+      excerpt: (item.content || item.title).substring(0, 200),
       summary: (item.content || item.title).substring(0, 200),
       url: item.url,
       publishedAt: new Date(item.publishedAt),
       author,
       platform,
       tags: ['AI', 'GPT', '뉴스레터', '인공지능'],
-      category: 'ai' as ArticleCategory,
-      contentType: 'article',
-      qualityScore: calculateQualityScore({
-        title: item.title,
-        content: item.content || item.title,
-        author: author.name
-      })
+      category: 'ai-ml' as ArticleCategory,
+      contentType: 'article' as const,
+      readingTime: Math.max(1, Math.ceil((item.content || item.title).length / 200)),
+      trending: false,
+      featured: false,
+      qualityScore: 50 // Default quality score for GPTERS articles
     };
 
     // 내용 기반 추가 태그 제안
     const additionalTags = suggestTags(article);
     article.tags = [...new Set([...article.tags, ...additionalTags])];
+
+    // 품질 점수 계산 (Article 객체가 완전히 구성된 후)
+    const qualityMetrics = calculateQualityScore(article);
+    article.qualityScore = qualityMetrics.finalScore;
     
     return article;
   }

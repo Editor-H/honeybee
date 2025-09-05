@@ -1,5 +1,42 @@
 import { Article, Author, Platform, ArticleCategory } from '@/types/article';
 
+// YouTube API types
+interface YouTubeSnippet {
+  title: string;
+  description: string;
+  channelId: string;
+  channelTitle: string;
+  publishedAt: string;
+  thumbnails: {
+    default?: { url: string };
+    medium?: { url: string };
+    high?: { url: string };
+  };
+}
+
+interface YouTubeStatistics {
+  viewCount?: string;
+  likeCount?: string;
+  commentCount?: string;
+  subscriberCount?: string;
+  videoCount?: string;
+}
+
+interface YouTubeContentDetails {
+  duration: string;
+}
+
+interface YouTubeVideo {
+  id: string;
+  snippet: YouTubeSnippet;
+  statistics?: YouTubeStatistics;
+  contentDetails?: YouTubeContentDetails;
+}
+
+interface YouTubeChannel {
+  statistics?: YouTubeStatistics;
+}
+
 // YouTube Data API를 활용한 IT 카테고리 수집기
 export class YouTubeCollector {
   private apiKey: string;
@@ -77,7 +114,7 @@ export class YouTubeCollector {
   /**
    * YouTube 검색 API 호출
    */
-  private async searchVideos(query: string, maxResults: number = 20) {
+  private async searchVideos(query: string, maxResults: number = 20): Promise<YouTubeVideo[]> {
     const params = new URLSearchParams({
       part: 'id,snippet',
       q: query,
@@ -95,11 +132,11 @@ export class YouTubeCollector {
       throw new Error(`YouTube API 에러: ${response.status}`);
     }
 
-    const data = await response.json();
+    const data: { items?: Array<{ id: { videoId: string } }> } = await response.json();
     
     // 비디오 상세 정보 (조회수, 좋아요 등) 추가 조회
     if (data.items && data.items.length > 0) {
-      const videoIds = data.items.map((item: any) => item.id.videoId).join(',');
+      const videoIds = data.items.map(item => item.id.videoId).join(',');
       return this.getVideoDetails(videoIds);
     }
     
@@ -109,7 +146,7 @@ export class YouTubeCollector {
   /**
    * 비디오 상세 정보 조회 (조회수, 좋아요, 등)
    */
-  private async getVideoDetails(videoIds: string) {
+  private async getVideoDetails(videoIds: string): Promise<YouTubeVideo[]> {
     const params = new URLSearchParams({
       part: 'snippet,statistics,contentDetails',
       id: videoIds,
@@ -121,14 +158,14 @@ export class YouTubeCollector {
       throw new Error(`YouTube API 에러: ${response.status}`);
     }
 
-    const data = await response.json();
+    const data: { items?: YouTubeVideo[] } = await response.json();
     return data.items || [];
   }
 
   /**
    * YouTube 비디오를 Article 형태로 변환
    */
-  private async convertVideoToArticle(video: any): Promise<Article | null> {
+  private async convertVideoToArticle(video: YouTubeVideo): Promise<Article | null> {
     try {
       const snippet = video.snippet;
       const statistics = video.statistics;
@@ -190,7 +227,7 @@ export class YouTubeCollector {
   /**
    * 채널 정보 조회
    */
-  private async getChannelInfo(channelId: string) {
+  private async getChannelInfo(channelId: string): Promise<YouTubeChannel | null> {
     try {
       const params = new URLSearchParams({
         part: 'snippet,statistics',
@@ -201,7 +238,7 @@ export class YouTubeCollector {
       const response = await fetch(`${this.baseUrl}/channels?${params}`);
       if (!response.ok) return null;
 
-      const data = await response.json();
+      const data: { items?: YouTubeChannel[] } = await response.json();
       return data.items?.[0] || null;
     } catch {
       return null;
@@ -211,7 +248,7 @@ export class YouTubeCollector {
   /**
    * 비디오 품질 평가
    */
-  private isHighQualityVideo(video: any): boolean {
+  private isHighQualityVideo(video: YouTubeVideo): boolean {
     const stats = video.statistics;
     const snippet = video.snippet;
     
@@ -249,7 +286,7 @@ export class YouTubeCollector {
     return description.substring(0, 200) + '...';
   }
 
-  private extractExpertiseFromVideo(snippet: any): string[] {
+  private extractExpertiseFromVideo(snippet: YouTubeSnippet): string[] {
     const text = (snippet.title + ' ' + snippet.description).toLowerCase();
     const expertise = [];
     
@@ -269,7 +306,7 @@ export class YouTubeCollector {
     return expertise.length > 0 ? expertise : ['Tech'];
   }
 
-  private categorizeVideo(snippet: any): ArticleCategory {
+  private categorizeVideo(snippet: YouTubeSnippet): ArticleCategory {
     const text = (snippet.title + ' ' + snippet.description).toLowerCase();
     
     if (text.includes('react') || text.includes('vue') || text.includes('frontend') || text.includes('javascript')) {
@@ -294,7 +331,7 @@ export class YouTubeCollector {
     return 'general';
   }
 
-  private extractTags(snippet: any): string[] {
+  private extractTags(snippet: YouTubeSnippet): string[] {
     const text = (snippet.title + ' ' + snippet.description).toLowerCase();
     const tags = ['YouTube', 'Video'];
     
@@ -335,17 +372,17 @@ export class YouTubeCollector {
     return hours * 3600 + minutes * 60 + seconds;
   }
 
-  private isTrending(statistics: any): boolean {
+  private isTrending(statistics?: YouTubeStatistics): boolean {
     const viewCount = parseInt(statistics?.viewCount || '0');
     const likeCount = parseInt(statistics?.likeCount || '0');
     
     return viewCount >= 10000 || likeCount >= 100;
   }
 
-  private isFeatured(statistics: any, snippet: any): boolean {
+  private isFeatured(statistics?: YouTubeStatistics, snippet?: YouTubeSnippet): boolean {
     const viewCount = parseInt(statistics?.viewCount || '0');
     const likeCount = parseInt(statistics?.likeCount || '0');
-    const daysSincePublished = (Date.now() - new Date(snippet.publishedAt).getTime()) / (1000 * 60 * 60 * 24);
+    const daysSincePublished = snippet ? (Date.now() - new Date(snippet.publishedAt).getTime()) / (1000 * 60 * 60 * 24) : 999;
     
     // 최근 발행되고 높은 인기를 얻은 영상
     return viewCount >= 50000 && likeCount >= 500 && daysSincePublished <= 30;

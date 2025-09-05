@@ -37,7 +37,7 @@ export class ArticleProfileEnhancer {
   /**
    * 플랫폼 정보에 프로필 데이터 추가
    */
-  private static enhancePlatformInfo(platform: any, profile: ExtendedPlatformProfile): any {
+  private static enhancePlatformInfo(platform: Platform, profile: ExtendedPlatformProfile): Platform {
     // 기존 플랫폼이 간단한 구조인 경우 확장
     const basePlatform = {
       id: platform.id || profile.id,
@@ -57,7 +57,7 @@ export class ArticleProfileEnhancer {
       ...basePlatform,
       // 기존 플랫폼 정보 유지하면서 프로필 정보 추가
       description: profile.description,
-      logoUrl: profile.logoUrl || basePlatform.logoUrl || profile.automated?.logo || profile.automated?.favicon,
+      logoUrl: basePlatform.logoUrl || profile.automated?.logo || profile.automated?.favicon,
       
       // 확장된 플랫폼 메타데이터 추가
       metadata: {
@@ -72,7 +72,7 @@ export class ArticleProfileEnhancer {
         qualityScore: profile.automated?.contentQualityScore,
         links: profile.links,
         favicon: profile.automated?.favicon,
-        logo: profile.logoUrl || profile.automated?.logo || profile.automated?.favicon,
+        logo: profile.automated?.logo || profile.automated?.favicon,
         primaryColor: profile.automated?.primaryColor
       }
     };
@@ -81,7 +81,7 @@ export class ArticleProfileEnhancer {
   /**
    * 작성자 정보에 플랫폼 프로필 데이터 반영
    */
-  private static enhanceAuthorInfo(author: any, profile: ExtendedPlatformProfile): any {
+  private static enhanceAuthorInfo(author: Author, profile: ExtendedPlatformProfile): Author {
     const companyName = profile.company?.name || profile.name;
     
     // 기존 author가 단순 객체인 경우 확장
@@ -155,7 +155,7 @@ export class ArticleProfileEnhancer {
     const enhancements: Partial<Article> = {};
     
     // 카테고리 개선
-    if (!article.category || article.category === 'tech') {
+    if (!article.category || article.category === 'general') {
       const primaryTopic = profile.content?.primaryTopics?.[0];
       if (primaryTopic) {
         enhancements.category = this.mapTopicToCategory(primaryTopic);
@@ -202,23 +202,23 @@ export class ArticleProfileEnhancer {
   /**
    * 주제를 카테고리로 매핑
    */
-  private static mapTopicToCategory(topic: string): string {
-    const topicCategoryMap: Record<string, string> = {
+  private static mapTopicToCategory(topic: string): import('@/types/article').ArticleCategory {
+    const topicCategoryMap: Record<string, import('@/types/article').ArticleCategory> = {
       'frontend': 'frontend',
-      'backend': 'backend',
+      'backend': 'backend', 
       'mobile': 'mobile',
       'ai': 'ai-ml',
-      'data': 'data-science',
-      'devops': 'devops',
-      'fintech': 'fintech',
-      'architecture': 'architecture',
-      'tutorial': 'education',
-      'programming': 'programming',
+      'data': 'data',
+      'devops': 'cloud-infra',
+      'fintech': 'general',
+      'architecture': 'general',
+      'tutorial': 'lecture',
+      'programming': 'general',
       'design': 'design',
-      'career': 'career'
+      'career': 'general'
     };
     
-    return topicCategoryMap[topic.toLowerCase()] || 'tech';
+    return topicCategoryMap[topic.toLowerCase()] || 'general';
   }
   
   /**
@@ -238,7 +238,14 @@ export class ArticleProfileEnhancer {
     company?: string;
     industry?: string;
   }> {
-    const stats: Record<string, any> = {};
+    const stats: Record<string, {
+      count: number;
+      totalQuality: number;
+      categories: Record<string, number>;
+      company?: string;
+      industry?: string;
+      avgQuality?: number;
+    }> = {};
     
     articles.forEach(article => {
       const platformId = article.platform.id;
@@ -260,14 +267,27 @@ export class ArticleProfileEnhancer {
       stats[platformId].categories[category] = (stats[platformId].categories[category] || 0) + 1;
     });
     
-    // 평균 계산
+    // 평균 계산 및 타입 변환
+    const finalStats: Record<string, {
+      count: number;
+      avgQuality: number;
+      categories: Record<string, number>;
+      company?: string;
+      industry?: string;
+    }> = {};
+    
     Object.keys(stats).forEach(platformId => {
       const stat = stats[platformId];
-      stat.avgQuality = stat.totalQuality / stat.count;
-      delete stat.totalQuality;
+      finalStats[platformId] = {
+        count: stat.count,
+        avgQuality: stat.totalQuality / stat.count,
+        categories: stat.categories,
+        company: stat.company,
+        industry: stat.industry
+      };
     });
     
-    return stats;
+    return finalStats;
   }
 }
 

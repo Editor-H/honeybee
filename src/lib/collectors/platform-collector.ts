@@ -136,7 +136,9 @@ export class PlatformCollector {
       publishedAt: new Date(item.pubDate || item.isoDate || Date.now()),
       author: {
         id: `${platform.id}-author`,
-        name: item.creator || item.author || logDisplayName,
+        name: (item as Parser.Item & { creator?: string; author?: string }).creator || 
+              (item as Parser.Item & { creator?: string; author?: string }).author || 
+              logDisplayName,
         company: logDisplayName,
         expertise: ['Tech'],
         articleCount: 0
@@ -149,11 +151,12 @@ export class PlatformCollector {
         baseUrl: platform.baseUrl,
         isActive: platform.isActive,
         description: platform.description,
-        lastCrawled: new Date().toISOString()
+        lastCrawled: new Date()
       },
       tags: this.extractTags(item, platform),
       category: this.categorizeContent(item, platform),
       contentType: this.determineContentType(platform),
+      excerpt: this.generateExcerpt(item.contentSnippet || item.content || item.summary || ''),
       featured: false,
       trending: false,
       likeCount: 0,
@@ -207,11 +210,11 @@ export class PlatformCollector {
     return [...new Set(tags)];
   }
 
-  private categorizeContent(item: Parser.Item, platform: PlatformConfig): string {
+  private categorizeContent(item: Parser.Item, platform: PlatformConfig): import('@/types/article').ArticleCategory {
     const text = `${item.title} ${item.contentSnippet}`.toLowerCase();
     
     if (platform.type === 'educational') {
-      return 'education';
+      return 'lecture';
     }
     
     if (text.includes('ai') || text.includes('artificial intelligence') || text.includes('인공지능')) {
@@ -227,18 +230,18 @@ export class PlatformCollector {
       return 'design';
     }
     if (text.includes('devops') || text.includes('deployment') || text.includes('docker')) {
-      return 'devops';
+      return 'cloud-infra';
     }
     
-    return 'tech';
+    return 'general';
   }
 
-  private determineContentType(platform: PlatformConfig): 'article' | 'video' | 'course' {
+  private determineContentType(platform: PlatformConfig): 'article' | 'video' | 'lecture' {
     if (platform.channelName) {
       return 'video';
     }
     if (platform.type === 'educational' && platform.collectionMethod === 'crawler') {
-      return 'course';
+      return 'lecture';
     }
     return 'article';
   }

@@ -118,11 +118,8 @@ export class ContentCollectionService {
     // 품질 점수 계산
     const scoredArticles = uniqueArticles.map(article => {
       if (!article.qualityScore) {
-        article.qualityScore = calculateQualityScore({
-          title: article.title,
-          content: article.content,
-          author: article.author.name
-        });
+        const qualityMetrics = calculateQualityScore(article);
+        article.qualityScore = qualityMetrics.finalScore;
       }
       return article;
     });

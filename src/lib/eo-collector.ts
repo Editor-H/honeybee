@@ -1,4 +1,15 @@
 import { Article, Author, Platform, ArticleCategory } from '@/types/article';
+
+// EO article raw data interface
+interface EOArticleRaw {
+  title: string;
+  url: string;
+  authorName: string;
+  tags: string[];
+  thumbnailUrl: string;
+  summary: string;
+  publishedAt: string;
+}
 import { calculateQualityScore, suggestTags } from './content-quality-scorer';
 import * as playwright from 'playwright';
 
@@ -121,22 +132,30 @@ export class EOCollector {
     }
   }
   
-  private transformToArticle(item: any, index: number): Article {
+  private transformToArticle(item: EOArticleRaw, index: number): Article {
     const author: Author = {
-      name: item.authorName || 'EO Editor'
+      id: `eo-${item.authorName || 'editor'}`,
+      name: item.authorName || 'EO Editor',
+      company: 'EO 매거진',
+      expertise: ['Tech'],
+      articleCount: 0
     };
 
     const platform: Platform = {
       id: 'eo',
       name: 'EO 매거진',
+      type: 'media' as const,
       baseUrl: this.baseUrl,
-      logoUrl: '/icons/eo.svg'
+      logoUrl: '/icons/eo.svg',
+      description: 'EO 매거진 기술 아티클',
+      isActive: true
     };
 
     const article: Article = {
       id: `eo-${Date.now()}-${index}`,
       title: item.title,
       content: item.summary || item.title,
+      excerpt: (item.summary || item.title).substring(0, 200),
       summary: item.summary || item.title.substring(0, 200),
       url: item.url,
       publishedAt: new Date(item.publishedAt),
@@ -144,12 +163,11 @@ export class EOCollector {
       platform,
       tags: item.tags || [],
       category: this.categorizeArticle(item.tags),
-      contentType: 'article',
-      qualityScore: calculateQualityScore({
-        title: item.title,
-        content: item.summary || item.title,
-        author: author.name
-      }),
+      contentType: 'article' as const,
+      readingTime: Math.max(1, Math.ceil((item.summary || item.title).length / 200)),
+      trending: false,
+      featured: false,
+      qualityScore: 50, // Default quality score for EO articles
       thumbnailUrl: item.thumbnailUrl || undefined
     };
 
@@ -157,12 +175,16 @@ export class EOCollector {
     if (!article.tags || article.tags.length === 0) {
       article.tags = suggestTags(article);
     }
+
+    // 품질 점수 계산 (Article 객체가 완전히 구성된 후)
+    const qualityMetrics = calculateQualityScore(article);
+    article.qualityScore = qualityMetrics.finalScore;
     
     return article;
   }
   
   private categorizeArticle(tags: string[]): ArticleCategory {
-    if (!tags || tags.length === 0) return 'tech';
+    if (!tags || tags.length === 0) return 'general';
     
     const tagStr = tags.join(' ').toLowerCase();
     
@@ -176,12 +198,12 @@ export class EOCollector {
       return 'design';
     }
     if (tagStr.includes('ai') || tagStr.includes('ml') || tagStr.includes('인공지능') || tagStr.includes('머신러닝')) {
-      return 'ai';
+      return 'ai-ml';
     }
     if (tagStr.includes('devops') || tagStr.includes('인프라') || tagStr.includes('배포') || tagStr.includes('docker')) {
-      return 'devops';
+      return 'cloud-infra';
     }
     
-    return 'tech';
+    return 'general';
   }
 }

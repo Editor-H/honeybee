@@ -13,7 +13,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://toss.tech/rss.xml',
     limit: 10,
-    logoUrl: 'https://toss.tech/favicon.ico',
     
     company: {
       name: '토스',
@@ -50,7 +49,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://tech.kakao.com/feed/',
     limit: 10,
-    logoUrl: 'https://tech.kakao.com/favicon.ico',
     
     company: {
       name: '카카오',
@@ -87,7 +85,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://d2.naver.com/d2.atom',
     limit: 10,
-    logoUrl: 'https://d2.naver.com/favicon.ico',
     
     company: {
       name: '네이버',
@@ -124,7 +121,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://techblog.woowahan.com/feed/',
     limit: 10,
-    logoUrl: 'https://techblog.woowahan.com/favicon.ico',
     
     company: {
       name: '우아한형제들',
@@ -161,7 +157,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://medium.com/feed/daangn',
     limit: 10,
-    logoUrl: 'https://medium.com/daangn/favicon.ico',
     
     company: {
       name: '당근마켓',
@@ -195,7 +190,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://blog.banksalad.com/rss.xml',
     limit: 8,
-    logoUrl: 'https://blog.banksalad.com/favicon.ico',
     
     company: {
       name: '뱅크샐러드',
@@ -229,7 +223,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://tech.socarcorp.kr/feed',
     limit: 8,
-    logoUrl: 'https://tech.socarcorp.kr/favicon.ico',
     
     company: {
       name: '쏘카',
@@ -266,7 +259,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://medium.com/feed/coupang-engineering',
     limit: 8,
-    logoUrl: 'https://medium.com/coupang-engineering/favicon.ico',
     
     company: {
       name: '쿠팡',
@@ -335,7 +327,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCQNE2JmbasNYbjGAcuBiRRg',
     limit: 3,
-    logoUrl: 'https://yt3.ggpht.com/ytc/AOPolaQrJ7bwWJJjyRJj4kJGksT4RKgw0u6EvVFfJKL1_A=s800-c-k-c0x00ffffff-no-rj',
     
     content: {
       language: 'ko',
@@ -362,7 +353,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'crawler',
     crawlerType: 'eo',
     limit: 8,
-    logoUrl: 'https://eopla.net/favicon.ico',
     
     company: {
       name: 'EO',
@@ -397,7 +387,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://yozm.wishket.com/rss.xml',
     limit: 8,
-    logoUrl: 'https://yozm.wishket.com/favicon.ico',
     
     company: {
       name: '위시켓',
@@ -430,7 +419,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://outstanding.kr/feed',
     limit: 8,
-    logoUrl: 'https://outstanding.kr/favicon.ico',
     
     company: {
       name: '아웃스탠딩',
@@ -464,7 +452,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'crawler',
     crawlerType: 'gpters',
     limit: 6,
-    logoUrl: 'https://www.gpters.org/favicon.ico',
     
     company: {
       name: 'GPTERS',
@@ -499,7 +486,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     crawlerType: 'class101',
     limit: 8,
     timeout: 30000,
-    logoUrl: 'https://class101.net/favicon.ico',
     
     company: {
       name: '클래스101',
@@ -533,7 +519,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     crawlerType: 'coloso',
     limit: 8,
     timeout: 30000,
-    logoUrl: 'https://coloso.co.kr/favicon.ico',
     
     company: {
       name: '콜로소',
@@ -568,7 +553,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCvc8kv-i5fvFTJBFAk6n1SA',
     limit: 3,
-    logoUrl: 'https://yt3.ggpht.com/ytc/AOPolaS1nFJBOlYKhxB5jLNZ1rjPrKj_bfEF6JWw0FHMFA=s800-c-k-c0x00ffffff-no-rj',
     
     content: {
       language: 'ko',
@@ -595,7 +579,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCUpJs89fSBXNolQGOYKn0YQ',
     limit: 5,
-    logoUrl: 'https://yt3.ggpht.com/ytc/AOPolaQrULWaBFhYHb-JgHFREaGlbZpxZvFMGvYG5G7n0g=s800-c-k-c0x00ffffff-no-rj',
     
     content: {
       language: 'ko',
@@ -622,7 +605,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UC6V3E7ZYpfwZLMJoJgCqGGA',
     limit: 4,
-    logoUrl: 'https://yt3.ggpht.com/ytc/AOPolaT9Pj_eL4mC-OYN1_1CzrXfqkQ1zZ5C-EB8YVi7wA=s800-c-k-c0x00ffffff-no-rj',
     
     content: {
       language: 'en',
@@ -649,7 +631,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCWv7vMbMWH4-V0ZXdmDpPBA',
     limit: 5,
-    logoUrl: 'https://yt3.ggpht.com/ytc/AOPolaRK9TYZ_Q3fKN8pdPTvl8LSY5nHG8L4QHbpA8Jq5Q=s800-c-k-c0x00ffffff-no-rj',
     
     content: {
       language: 'en',
@@ -676,7 +657,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://medium.com/feed/tag/javascript',
     limit: 1,
-    logoUrl: 'https://medium.com/favicon.ico',
     
     content: {
       language: 'en',
@@ -702,7 +682,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://news.ycombinator.com/rss',
     limit: 1,
-    logoUrl: 'https://news.ycombinator.com/favicon.ico',
     
     content: {
       language: 'en',
@@ -728,7 +707,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://www.freecodecamp.org/news/rss/',
     limit: 1,
-    logoUrl: 'https://www.freecodecamp.org/favicon.ico',
     
     company: {
       name: 'freeCodeCamp',
@@ -762,7 +740,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://uxdesign.cc/feed',
     limit: 1,
-    logoUrl: 'https://uxdesign.cc/favicon.ico',
     
     content: {
       language: 'en',
@@ -788,7 +765,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://medium.com/feed/tag/ux-design',
     limit: 1,
-    logoUrl: 'https://medium.com/favicon.ico',
     
     content: {
       language: 'mixed',
@@ -814,7 +790,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://www.tistory.com/category/UX%2FUI/rss',
     limit: 1,
-    logoUrl: 'https://www.tistory.com/favicon.ico',
     
     content: {
       language: 'ko',
@@ -841,7 +816,6 @@ export const PLATFORM_PROFILES: Record<string, ExtendedPlatformProfile> = {
     collectionMethod: 'rss',
     rssUrl: 'https://dev.to/feed',
     limit: 1,
-    logoUrl: 'https://dev.to/favicon.ico',
     
     content: {
       language: 'en',
