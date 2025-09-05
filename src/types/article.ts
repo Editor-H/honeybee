@@ -6,6 +6,13 @@ export interface Author {
   expertise: string[];
   articleCount: number;
   followerCount?: number;
+  bio?: string;
+  socialLinks?: {
+    github?: string;
+    twitter?: string;
+    linkedin?: string;
+    website?: string;
+  };
 }
 
 export interface Platform {
@@ -18,6 +25,41 @@ export interface Platform {
   description: string;
   isActive: boolean;
   lastCrawled?: Date;
+  rssUrl?: string;
+  // 확장된 플랫폼 메타데이터
+  metadata?: {
+    company?: {
+      name: string;
+      industry: string;
+      size: 'startup' | 'medium' | 'large' | 'enterprise';
+      location: string;
+      founded?: number;
+    };
+    techStack?: string[];
+    content?: {
+      language: 'ko' | 'en' | 'mixed';
+      averageLength: 'short' | 'medium' | 'long';
+      postFrequency: 'daily' | 'weekly' | 'monthly' | 'irregular';
+      primaryTopics: string[];
+      targetAudience: 'beginner' | 'intermediate' | 'advanced' | 'all';
+    };
+    industry?: string;
+    size?: string;
+    location?: string;
+    founded?: number;
+    qualityScore?: number;
+    links?: {
+      github?: string;
+      linkedin?: string;
+      twitter?: string;
+      facebook?: string;
+      instagram?: string;
+      newsletter?: string;
+    };
+    favicon?: string;
+    logo?: string;
+    primaryColor?: string;
+  };
 }
 
 export interface Article {
@@ -50,6 +92,9 @@ export interface Article {
   courseInstructor?: string; // 강사명
   courseStudentCount?: number; // 수강생 수
   courseRating?: number; // 강의 평점 (1-5)
+  // 품질 및 메타데이터
+  qualityScore?: number;
+  summary?: string; // content와 구분되는 요약
 }
 
 export type ArticleCategory = 

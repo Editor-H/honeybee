@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { collectFreshFeedsOptimized } from '@/lib/rss-collector-optimized';
+import { ContentCollectionService } from '@/lib/rss-collector-refactored';
 import { CacheManager } from '@/lib/cache-manager';
 
 // Vercel Cron에서만 호출되는 API
@@ -15,31 +15,34 @@ export async function GET(request: Request) {
       }, { status: 401 });
     }
 
-    console.log('🕕 자동 RSS 수집 시작 - 매일 오전 6시 (KST)');
+    console.log('🕔 자동 콘텐츠 수집 시작 - 매일 오전 5시 (KST)');
     const startTime = Date.now();
     
     // 기존 캐시 정보 확인
     const { lastUpdated, hoursAgo } = await CacheManager.getCacheInfo();
     console.log(`이전 수집: ${lastUpdated ? lastUpdated.toLocaleString('ko-KR') : '없음'} (${hoursAgo}시간 전)`);
     
-    // 기존 캐시 삭제
-    await CacheManager.clearCache();
-    console.log('🗑️ 기존 캐시 삭제 완료');
+    // 누적 수집을 위해 캐시 삭제 제거
+    console.log('📚 기존 아티클에 새로운 콘텐츠 누적 추가');
     
-    // 새로운 RSS 데이터 수집 (최적화된 버전)
-    const articles = await collectFreshFeedsOptimized();
+    // 새로운 콘텐츠 수집 (리팩토링된 통합 시스템)
+    const collectionService = new ContentCollectionService();
+    const articles = await collectionService.collectAllContent();
     
     const endTime = Date.now();
     const duration = Math.round((endTime - startTime) / 1000);
     
-    console.log(`✅ 자동 RSS 수집 완료: ${articles.length}개 아티클 (${duration}초 소요)`);
+    console.log(`✅ 자동 콘텐츠 수집 완료: ${articles.length}개 아티클 (${duration}초 소요)`);
     
-    // 수집 결과 요약 생성
+    // 수집 결과 요약 생성  
     const platformStats = articles.reduce((acc, article) => {
       const platformName = article.platform.name;
       acc[platformName] = (acc[platformName] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
+
+    // 플랫폼 통계 정보 추가
+    const collectionStats = collectionService.getCollectionStats();
     
     const summary = {
       timestamp: new Date().toISOString(),
@@ -47,7 +50,10 @@ export async function GET(request: Request) {
       totalArticles: articles.length,
       duration: `${duration}초`,
       platforms: Object.keys(platformStats).length,
+      activePlatforms: collectionStats.activePlatforms,
       platformBreakdown: platformStats,
+      platformsByType: collectionStats.platformsByType,
+      platformsByMethod: collectionStats.platformsByMethod,
       previousUpdate: lastUpdated?.toLocaleString('ko-KR') || '없음',
       hoursAgo: hoursAgo
     };
@@ -56,18 +62,18 @@ export async function GET(request: Request) {
     
     return NextResponse.json({
       success: true,
-      message: '자동 RSS 수집이 성공적으로 완료되었습니다',
+      message: '자동 콘텐츠 수집이 성공적으로 완료되었습니다',
       summary
     });
     
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('❌ 자동 RSS 수집 실패:', error);
+    console.error('❌ 자동 콘텐츠 수집 실패:', error);
     
     // 에러 발생 시에도 기본 정보는 응답
     return NextResponse.json({
       success: false,
-      error: '자동 RSS 수집에 실패했습니다',
+      error: '자동 콘텐츠 수집에 실패했습니다',
       details: errorMessage,
       timestamp: new Date().toISOString(),
       kstTime: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })

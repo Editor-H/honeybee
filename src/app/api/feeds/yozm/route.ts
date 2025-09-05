@@ -27,7 +27,7 @@ const defaultYozmAuthor: Author = {
 export async function GET() {
   try {
     // 요즘IT RSS 피드 시도
-    const feed = await parser.parseURL('https://yozm.wishket.com/rss.xml');
+    const feed = await parser.parseURL('https://yozm.wishket.com/magazine/feed/');
     
     const articles: Article[] = feed.items.map((item, index) => {
       // 썸네일 이미지 추출

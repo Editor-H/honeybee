@@ -62,11 +62,6 @@ export const categoryTagMapping = {
   'computer-graphics': ['computer graphics', '컴퓨터그래픽스', '컴퓨터 그래픽스', 'cg'],
   'shader': ['shader', '셰이더', 'glsl', 'hlsl'],
 
-  // 강의 하위 카테고리
-  'programming-lecture': ['프로그래밍강의', '프로그래밍 강의', 'programming course', '코딩강의'],
-  'design-lecture': ['디자인강의', '디자인 강의', 'design course', 'ui/ux 강의'],
-  'data-lecture': ['데이터분석강의', '데이터 분석 강의', 'data analysis course'],
-  'business-lecture': ['비즈니스강의', '비즈니스 강의', 'business course', '경영강의']
 };
 
 // 메인 카테고리와 ArticleCategory 매핑
@@ -148,11 +143,6 @@ export function getMainCategoryForSubcategory(subcategoryId: string): string | n
     'computer-graphics': 'graphics',
     'shader': 'graphics',
     
-    // 강의
-    'programming-lecture': 'lecture',
-    'design-lecture': 'lecture',
-    'data-lecture': 'lecture',
-    'business-lecture': 'lecture'
   };
   
   return subcategoryToMainCategory[subcategoryId] || null;

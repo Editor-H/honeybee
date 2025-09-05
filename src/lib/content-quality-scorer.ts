@@ -12,6 +12,7 @@ interface QualityMetrics {
 
 // 신뢰할 수 있는 도메인 점수
 const TRUSTED_DOMAINS: Record<string, number> = {
+  // 🌍 글로벌 기술 플랫폼
   'github.com': 1.5,
   'stackoverflow.com': 1.4,
   'medium.com': 1.2,
@@ -31,11 +32,27 @@ const TRUSTED_DOMAINS: Record<string, number> = {
   'techcrunch.com': 1.1,
   'arstechnica.com': 1.1,
   'wired.com': 1.1,
-  'theverge.com': 1.0
+  'theverge.com': 1.0,
+  
+  // 🇰🇷 한국 기술 블로그
+  'toss.tech': 1.4,
+  'tech.kakao.com': 1.4,
+  'd2.naver.com': 1.4,
+  'techblog.woowahan.com': 1.3,
+  'blog.banksalad.com': 1.3,
+  'tech.socarcorp.kr': 1.3,
+  'engineering.linecorp.com': 1.3,
+  'yozm.wishket.com': 1.2,
+  'eopla.net': 1.2,
+  'inflearn.com': 1.2,
+  'class101.net': 1.2,
+  'coloso.co.kr': 1.2,
+  'gpters.org': 1.1
 };
 
-// 프로그래밍 관련 키워드 가중치
+// 프로그래밍 관련 키워드 가중치  
 const PROGRAMMING_KEYWORDS: Record<string, number> = {
+  // 🌍 영어 키워드
   'react': 1.3,
   'javascript': 1.2,
   'typescript': 1.3,
@@ -48,6 +65,20 @@ const PROGRAMMING_KEYWORDS: Record<string, number> = {
   'backend': 1.2,
   'nodejs': 1.2,
   'github': 1.1,
+  
+  // 🇰🇷 한국어 키워드
+  '개발': 1.3,
+  '프로그래밍': 1.2,
+  '인공지능': 1.4,
+  '머신러닝': 1.4,
+  '데이터베이스': 1.2,
+  '프론트엔드': 1.2,
+  '백엔드': 1.2,
+  '서버': 1.2,
+  '기술': 1.1,
+  '아키텍처': 1.3,
+  '성능': 1.2,
+  '최적화': 1.2,
   'open source': 1.2,
   'algorithm': 1.3,
   'data science': 1.3,
@@ -84,8 +115,8 @@ function calculateAuthorScore(article: Article): number {
     'google', 'facebook', 'microsoft', 'netflix', 'airbnb', 'uber'
   ];
   
-  const authorName = author.name.toLowerCase();
-  if (trustedAuthors.some(trusted => authorName.includes(trusted))) {
+  const authorName = (author.name || '').toLowerCase();
+  if (authorName && trustedAuthors.some(trusted => authorName.includes(trusted))) {
     score += 0.5;
   }
   
@@ -184,7 +215,7 @@ export function calculateQualityScore(article: Article): QualityMetrics {
 }
 
 // 품질 기준으로 아티클 필터링
-export function filterHighQualityArticles(articles: Article[], minScore: number = 5.0): Article[] {
+export function filterHighQualityArticles(articles: Article[], minScore: number = 3.0): Article[] {
   return articles
     .map(article => ({
       ...article,

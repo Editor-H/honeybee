@@ -117,4 +117,36 @@ export class CacheManager {
       console.log('캐시 삭제 실패:', error);
     }
   }
+
+  /**
+   * 캐시의 모든 아티클을 새로운 아티클로 교체 (프로필 강화용)
+   */
+  static async replaceCachedArticles(articles: Article[]): Promise<void> {
+    try {
+      const cacheData: CacheData = {
+        articles: articles,
+        lastUpdated: Date.now()
+      };
+      
+      // DB 캐시에 저장 (upsert - 기존 내용 덮어쓰기)
+      const { error } = await supabaseServer
+        .from('cache')
+        .upsert({
+          key: 'articles',
+          data: cacheData,
+          updated_at: new Date().toISOString()
+        });
+      
+      if (error) {
+        console.error('DB 캐시 교체 실패:', error);
+        throw error;
+      }
+      
+      console.log(`✅ ${articles.length}개 강화된 아티클로 캐시 교체 완료`);
+      
+    } catch (error) {
+      console.error('캐시 교체 실패:', error);
+      throw error;
+    }
+  }
 }

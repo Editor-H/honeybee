@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { collectFreshFeeds } from '@/lib/rss-collector';
+import { ContentCollectionService } from '@/lib/rss-collector-refactored';
 import { CacheManager } from '@/lib/cache-manager';
 
 // 이 API는 cron job이나 스케줄러에서만 호출되어야 함 (사용자 요청 차단)
@@ -10,10 +10,11 @@ export async function POST() {
     // 기존 캐시 삭제
     await CacheManager.clearCache();
     
-    // 새로운 RSS 데이터 수집 및 자동 캐시 저장
-    const articles = await collectFreshFeeds();
+    // 새로운 콘텐츠 수집 (리팩토링된 통합 시스템)
+    const collectionService = new ContentCollectionService();
+    const articles = await collectionService.collectAllContent();
     
-    console.log(`✅ 정기 RSS 수집 완료: ${articles.length}개 아티클`);
+    console.log(`✅ 정기 콘텐츠 수집 완료: ${articles.length}개 아티클`);
     
     return NextResponse.json({
       success: true,
