@@ -233,7 +233,7 @@ export class SelectorEngine {
         
       case 'role':
         const [role, options] = strategy.selector.split('|');
-        return this.page.getByRole(role as any, options ? JSON.parse(options) : {});
+        return this.page.getByRole(role as Parameters<typeof this.page.getByRole>[0], options ? JSON.parse(options) : {});
         
       case 'testid':
         return this.page.getByTestId(strategy.selector);

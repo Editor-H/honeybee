@@ -17,10 +17,10 @@ export async function GET(request: Request) {
   console.log('🧪 스마트 크롤러 테스트 시작...');
   
   const startTime = Date.now();
-  let smartResults: any = null;
-  let legacyResults: any = null;
-  let browserPoolStatus: any = null;
-  let monitorStats: any = null;
+  let smartResults: Record<string, unknown> | null = null;
+  let legacyResults: Record<string, unknown> | null = null;
+  let browserPoolStatus: Record<string, unknown> | null = null;
+  let monitorStats: Record<string, unknown> | null = null;
 
   try {
     // 스마트 크롤러 테스트
@@ -130,7 +130,7 @@ export async function GET(request: Request) {
 /**
  * 품질 개선도 계산
  */
-function calculateQualityImprovement(smartArticles: any[], legacyArticles?: any[]): string {
+function calculateQualityImprovement(smartArticles: Record<string, unknown>[], legacyArticles?: Record<string, unknown>[]): string {
   if (!legacyArticles || legacyArticles.length === 0) return 'N/A';
   
   const smartAvgQuality = smartArticles.reduce((sum, a) => sum + (a.qualityScore || 0), 0) / smartArticles.length;
@@ -145,7 +145,7 @@ function calculateQualityImprovement(smartArticles: any[], legacyArticles?: any[
 /**
  * 추천사항 생성
  */
-function generateRecommendations(smartResults: any, legacyResults: any, browserPoolStatus: any): string[] {
+function generateRecommendations(smartResults: Record<string, unknown>, legacyResults: Record<string, unknown> | null, browserPoolStatus: Record<string, unknown>): string[] {
   const recommendations: string[] = [];
   
   // 성능 기반 추천

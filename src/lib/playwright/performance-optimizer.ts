@@ -358,8 +358,8 @@ export class PerformanceOptimizer {
         const metrics: PerformanceMetrics = {
           pageLoadTime,
           domContentLoadedTime,
-          firstContentfulPaint: (vitals as any).firstContentfulPaint,
-          largestContentfulPaint: (vitals as any).largestContentfulPaint,
+          firstContentfulPaint: (vitals as Record<string, number>).firstContentfulPaint,
+          largestContentfulPaint: (vitals as Record<string, number>).largestContentfulPaint,
           totalBlockedRequests: stats.blockedRequests,
           memorySaved: this.calculateMemorySaved(stats),
           bandwidthSaved: stats.savedBandwidth,

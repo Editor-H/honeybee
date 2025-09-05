@@ -241,7 +241,7 @@ export class BrowserPool {
       Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
       
       // Chrome 객체 추가
-      (window as any).chrome = {
+      (window as Window & { chrome?: Record<string, unknown> }).chrome = {
         runtime: {},
         loadTimes: function() {},
         csi: function() {},

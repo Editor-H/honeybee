@@ -362,7 +362,7 @@ export class SmartCrawler {
    * 단일 아티클 추출
    */
   private async extractSingleArticle(
-    element: any, 
+    element: import('playwright').Locator, 
     selectorEngine: SelectorEngine, 
     index: number
   ): Promise<Record<string, string | string[]> | null> {

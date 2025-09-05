@@ -17,7 +17,7 @@ export interface CrawlStep {
   timestamp: number;
   step: string;
   duration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -41,7 +41,7 @@ export interface CrawlError {
   sessionId: string;
   error: string;
   step?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -151,7 +151,7 @@ export class CrawlerMonitor {
   /**
    * 크롤링 단계 기록
    */
-  public recordStep(sessionId: string, step: string, metadata?: Record<string, any>): void {
+  public recordStep(sessionId: string, step: string, metadata?: Record<string, unknown>): void {
     const steps = this.steps.get(sessionId);
     if (!steps) {
       console.warn(`Session not found for step recording: ${sessionId}`);
@@ -188,7 +188,7 @@ export class CrawlerMonitor {
   /**
    * 에러 기록
    */
-  public recordError(sessionId: string, error: string, step?: string, metadata?: Record<string, any>): void {
+  public recordError(sessionId: string, error: string, step?: string, metadata?: Record<string, unknown>): void {
     const errorInfo: CrawlError = {
       timestamp: Date.now(),
       sessionId,
