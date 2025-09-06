@@ -46,7 +46,15 @@ export class EOCollector {
         
         const articles = await page.evaluate((limit) => {
           const containers = document.querySelectorAll('.magazine-container');
-          const results = [];
+          const results: {
+            title: string;
+            url: string;
+            authorName: string;
+            tags: string[];
+            thumbnailUrl: string;
+            summary: string;
+            publishedAt: string;
+          }[] = [];
           
           for (let i = 0; i < Math.min(containers.length, limit); i++) {
             const container = containers[i];

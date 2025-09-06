@@ -85,7 +85,7 @@ export async function GET(request: Request) {
 
     // 모니터링 통계 확인
     const monitor = CrawlerMonitor.getInstance();
-    monitorStats = monitor.getStatistics();
+    monitorStats = monitor.getStatistics() as unknown as Record<string, unknown>;
 
     const totalDuration = Date.now() - startTime;
 
@@ -95,11 +95,21 @@ export async function GET(request: Request) {
         smart: smartResults,
         legacy: legacyResults,
         comparison: legacyResults ? {
-          speedImprovement: legacyResults.duration > 0 ? 
-            ((legacyResults.duration - smartResults.duration) / legacyResults.duration * 100).toFixed(1) + '%' 
+          speedImprovement: typeof legacyResults === 'object' && legacyResults !== null && 'duration' in legacyResults && 
+            typeof smartResults === 'object' && smartResults !== null && 'duration' in smartResults &&
+            typeof (legacyResults as { duration: unknown }).duration === 'number' && (legacyResults as { duration: number }).duration > 0 ? 
+            (((legacyResults as { duration: number }).duration - (smartResults as { duration: number }).duration) / (legacyResults as { duration: number }).duration * 100).toFixed(1) + '%' 
             : 'N/A',
-          qualityImprovement: calculateQualityImprovement(smartResults.articles, legacyResults.articles),
-          reliabilityImprovement: smartResults.success && !legacyResults.success ? 'Improved' : 'Same'
+          qualityImprovement: calculateQualityImprovement(
+            typeof smartResults === 'object' && smartResults !== null && 'articles' in smartResults && Array.isArray((smartResults as { articles: unknown }).articles) ? 
+              (smartResults as { articles: Record<string, unknown>[] }).articles : [],
+            typeof legacyResults === 'object' && legacyResults !== null && 'articles' in legacyResults && Array.isArray((legacyResults as { articles: unknown }).articles) ? 
+              (legacyResults as { articles: Record<string, unknown>[] }).articles : []
+          ),
+          reliabilityImprovement: (
+            typeof smartResults === 'object' && smartResults !== null && 'success' in smartResults && (smartResults as { success: boolean }).success && 
+            typeof legacyResults === 'object' && legacyResults !== null && 'success' in legacyResults && !(legacyResults as { success: boolean }).success
+          ) ? 'Improved' : 'Same'
         } : null
       },
       systemStatus: {
@@ -133,8 +143,8 @@ export async function GET(request: Request) {
 function calculateQualityImprovement(smartArticles: Record<string, unknown>[], legacyArticles?: Record<string, unknown>[]): string {
   if (!legacyArticles || legacyArticles.length === 0) return 'N/A';
   
-  const smartAvgQuality = smartArticles.reduce((sum, a) => sum + (a.qualityScore || 0), 0) / smartArticles.length;
-  const legacyAvgQuality = legacyArticles.reduce((sum, a) => sum + (a.qualityScore || 0), 0) / legacyArticles.length;
+  const smartAvgQuality = smartArticles.reduce((sum, a) => sum + (typeof a.qualityScore === 'number' ? a.qualityScore : 0), 0) / smartArticles.length;
+  const legacyAvgQuality = legacyArticles.reduce((sum, a) => sum + (typeof a.qualityScore === 'number' ? a.qualityScore : 0), 0) / legacyArticles.length;
   
   if (legacyAvgQuality === 0) return 'N/A';
   
@@ -149,31 +159,49 @@ function generateRecommendations(smartResults: Record<string, unknown>, legacyRe
   const recommendations: string[] = [];
   
   // 성능 기반 추천
-  if (smartResults.duration > 30000) {
+  if (typeof smartResults === 'object' && smartResults !== null && 'duration' in smartResults && 
+      typeof (smartResults as { duration: unknown }).duration === 'number' && 
+      (smartResults as { duration: number }).duration > 30000) {
     recommendations.push('크롤링 시간이 30초를 초과합니다. 성능 최적화 설정을 검토해보세요.');
   }
   
   // 메모리 기반 추천
-  if (browserPoolStatus.memoryUsage.heapUsed > 500 * 1024 * 1024) { // 500MB
+  if (typeof browserPoolStatus === 'object' && browserPoolStatus !== null && 'memoryUsage' in browserPoolStatus &&
+      typeof (browserPoolStatus as { memoryUsage: unknown }).memoryUsage === 'object' && 
+      (browserPoolStatus as { memoryUsage: unknown }).memoryUsage !== null &&
+      'heapUsed' in (browserPoolStatus as { memoryUsage: { heapUsed: unknown } }).memoryUsage &&
+      typeof ((browserPoolStatus as { memoryUsage: { heapUsed: unknown } }).memoryUsage.heapUsed) === 'number' &&
+      ((browserPoolStatus as { memoryUsage: { heapUsed: number } }).memoryUsage.heapUsed) > 500 * 1024 * 1024) { // 500MB
     recommendations.push('높은 메모리 사용량이 감지되었습니다. 브라우저 풀 정리를 고려해보세요.');
   }
   
   // 성공률 기반 추천
-  if (!smartResults.success) {
+  if (typeof smartResults === 'object' && smartResults !== null && 'success' in smartResults && 
+      !(smartResults as { success: boolean }).success) {
     recommendations.push('크롤링이 실패했습니다. 네트워크 연결 또는 사이트 구조 변경을 확인해보세요.');
-  } else if (smartResults.articleCount === 0) {
+  } else if (typeof smartResults === 'object' && smartResults !== null && 'articleCount' in smartResults &&
+             typeof (smartResults as { articleCount: unknown }).articleCount === 'number' &&
+             (smartResults as { articleCount: number }).articleCount === 0) {
     recommendations.push('아티클을 수집하지 못했습니다. 선택자 전략을 업데이트해야 할 수 있습니다.');
   }
   
   // 비교 기반 추천
-  if (legacyResults && smartResults.success && legacyResults.success) {
-    if (smartResults.articleCount < legacyResults.articleCount * 0.8) {
+  if (legacyResults && 
+      typeof smartResults === 'object' && smartResults !== null && 'success' in smartResults && (smartResults as { success: boolean }).success &&
+      typeof legacyResults === 'object' && legacyResults !== null && 'success' in legacyResults && (legacyResults as { success: boolean }).success) {
+    if (typeof smartResults === 'object' && smartResults !== null && 'articleCount' in smartResults &&
+        typeof legacyResults === 'object' && legacyResults !== null && 'articleCount' in legacyResults &&
+        typeof (smartResults as { articleCount: unknown }).articleCount === 'number' &&
+        typeof (legacyResults as { articleCount: unknown }).articleCount === 'number' &&
+        (smartResults as { articleCount: number }).articleCount < (legacyResults as { articleCount: number }).articleCount * 0.8) {
       recommendations.push('스마트 크롤러의 수집량이 기존 대비 20% 이상 감소했습니다. 선택자 설정을 확인해보세요.');
     }
   }
   
   // 브라우저 풀 기반 추천
-  if (browserPoolStatus.totalBrowsers > 5) {
+  if (typeof browserPoolStatus === 'object' && browserPoolStatus !== null && 'totalBrowsers' in browserPoolStatus &&
+      typeof (browserPoolStatus as { totalBrowsers: unknown }).totalBrowsers === 'number' &&
+      (browserPoolStatus as { totalBrowsers: number }).totalBrowsers > 5) {
     recommendations.push('브라우저 인스턴스가 너무 많습니다. 풀 크기를 줄이는 것을 고려해보세요.');
   }
   

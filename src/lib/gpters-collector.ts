@@ -68,7 +68,13 @@ export class GPTERSCollector {
             
             articles = await page.evaluate((selector, limit) => {
               const items = document.querySelectorAll(selector);
-              const results = [];
+              const results: {
+                title: string;
+                content: string;
+                url: string;
+                authorName: string;
+                publishedAt: string;
+              }[] = [];
               
               for (let i = 0; i < Math.min(items.length, limit); i++) {
                 const item = items[i];
@@ -169,7 +175,13 @@ export class GPTERSCollector {
           console.log('🔍 선택자로 찾지 못함, 텍스트 기반 추출 시도...');
           
           articles = await page.evaluate((limit) => {
-            const results = [];
+            const results: {
+              title: string;
+              content: string;
+              url: string;
+              authorName: string;
+              publishedAt: string;
+            }[] = [];
             
             // 페이지 제목을 기본 아티클로 추가
             const pageTitle = document.title || '';

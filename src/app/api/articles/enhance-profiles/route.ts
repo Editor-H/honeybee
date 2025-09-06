@@ -135,7 +135,19 @@ export async function GET() {
     let articlesWithQualityScores = 0;
     let articlesWithEnhancedTags = 0;
     let articlesWithBio = 0;
-    const debugInfo = [];
+    const debugInfo: {
+      id: string;
+      title: string;
+      platformId: string;
+      hasMetadata: boolean;
+      metadataKeys: string[];
+      hasCompany: boolean;
+      hasTechStack: boolean;
+      qualityScore: number | undefined;
+      tagsCount: number;
+      category: string;
+      hasAuthorBio: boolean;
+    }[] = [];
 
     // 샘플 아티클 3개 디버깅 (참조용)
     // const sampleArticles = articles.slice(0, 3);

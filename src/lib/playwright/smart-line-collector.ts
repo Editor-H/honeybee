@@ -48,15 +48,18 @@ export class SmartLINECollector {
           { type: 'css', selector: 'h1, h2, h3', priority: 15, description: '헤딩 요소들' },
           { type: 'css', selector: '[class*="title"], [class*="headline"]', priority: 14, description: '제목 포함 클래스' },
           { type: 'css', selector: 'a[href*="/ko/blog/"]', priority: 13, description: 'LINE 블로그 링크' },
-          { type: 'css', selector: '.post-title, .article-title', priority: 12, description: 'LINE 특화 제목' },
-          ...CommonSelectorStrategies.title()
+          { type: 'css', selector: '.post-title, .article-title', priority: 12, description: 'LINE 특화 제목' }
         ],
         
         content: [
           { type: 'css', selector: '.post-content, .article-content, .entry-content', priority: 15, description: 'LINE 포스트 내용' },
           { type: 'css', selector: '[class*="content"] p, [class*="post"] p', priority: 14, description: '콘텐츠 문단' },
-          { type: 'css', selector: '.excerpt, .summary, .description', priority: 13, description: '요약 콘텐츠' },
-          ...CommonSelectorStrategies.content()
+          { type: 'css', selector: '.excerpt, .summary, .description', priority: 13, description: '요약 콘텐츠' }
+        ],
+        
+        link: [
+          { type: 'css', selector: 'a[href*="/ko/blog/"]', priority: 15, description: 'LINE 블로그 링크' },
+          { type: 'css', selector: 'a[href]', priority: 10, description: '일반 링크' }
         ],
         
         date: [
@@ -119,23 +122,6 @@ export class SmartLINECollector {
         blockStylesheets: false, 
         blockFonts: true,
         networkTimeout: 45000
-      },
-      
-      // 재시도 전략 (LINE 특화)
-      retryStrategy: {
-        maxAttempts: 5,
-        baseDelay: 2000,
-        maxDelay: 30000,
-        backoffFactor: 2,
-        retryableErrors: [
-          'timeout',
-          'navigation timeout',
-          'net::err_connection_timed_out',
-          'net::err_network_changed',
-          'net::err_internet_disconnected',
-          'net::err_connection_refused',
-          '403', '406', '429', '503'
-        ]
       }
     };
 

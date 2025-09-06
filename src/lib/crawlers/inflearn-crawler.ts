@@ -35,7 +35,7 @@ export class InflearnCrawler extends CourseCrawler {
           
           // 강의 제목
           const titleElement = await card.$('.course_title, .course-title, h3, h4');
-          const title = titleElement ? await titleElement.textContent() : '';
+          const title = titleElement ? (await titleElement.textContent()) || '' : '';
           
           if (!title) continue;
 
@@ -46,21 +46,21 @@ export class InflearnCrawler extends CourseCrawler {
 
           // 강사명
           const instructorElement = await card.$('.instructor, .teacher, .author');
-          const instructor = instructorElement ? await instructorElement.textContent() : '인프런';
+          const instructor = instructorElement ? (await instructorElement.textContent()) || '인프런' : '인프런';
 
           // 가격 정보
           const priceElement = await card.$('.price, .course_price');
-          const priceText = priceElement ? await priceElement.textContent() : '무료';
+          const priceText = priceElement ? (await priceElement.textContent()) || '무료' : '무료';
           const price = priceText.includes('무료') ? 0 : parsePrice(priceText);
 
           // 평점
           const ratingElement = await card.$('.rating, .star-rating');
-          const ratingText = ratingElement ? await ratingElement.textContent() : '';
+          const ratingText = ratingElement ? (await ratingElement.textContent()) || '' : '';
           const rating = ratingText ? parseRating(ratingText) : 4.5;
 
           // 수강생 수
           const studentElement = await card.$('.student-count, .enrollment');
-          const studentText = studentElement ? await studentElement.textContent() : '';
+          const studentText = studentElement ? (await studentElement.textContent()) || '' : '';
           const studentCount = studentText ? parseStudentCount(studentText) : Math.floor(Math.random() * 10000) + 1000;
 
           // 썸네일
@@ -69,7 +69,7 @@ export class InflearnCrawler extends CourseCrawler {
 
           // 카테고리 추출 (태그나 카테고리 요소에서)
           const categoryElement = await card.$('.category, .tag');
-          const category = categoryElement ? await categoryElement.textContent() : '프로그래밍';
+          const category = categoryElement ? (await categoryElement.textContent()) || '프로그래밍' : '프로그래밍';
 
           const courseData: CourseData = {
             title: cleanText(title),

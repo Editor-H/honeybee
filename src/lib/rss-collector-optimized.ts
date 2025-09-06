@@ -507,7 +507,7 @@ async function collectPlatformFeed(
       let feed;
       if (platformKey.startsWith('brunch_')) {
         // 브런치는 웹 스크래핑으로 처리
-        const brunchArticles = await scrapeBrunchAuthor(platformData.rssUrl);
+        const brunchArticles = await scrapeBrunchAuthor(platformData.rssUrl || '');
         console.log(`✅ ${logDisplayName}: ${brunchArticles.length}개 스크래핑 완료`);
         clearTimeout(timeoutId);
         resolve(brunchArticles);
@@ -522,14 +522,14 @@ async function collectPlatformFeed(
             timeout: timeout - 2000
           }
         });
-        feed = await customParser.parseURL(platformData.rssUrl);
+        feed = await customParser.parseURL(platformData.rssUrl || '');
       } else {
         const customParser = new Parser({
           requestOptions: {
             timeout: timeout - 2000
           }
         });
-        feed = await customParser.parseURL(platformData.rssUrl);
+        feed = await customParser.parseURL(platformData.rssUrl || '');
       }
       
       const fetchTime = Date.now() - startTime;
@@ -737,6 +737,7 @@ function convertItemToArticle(
 
   const platform: Platform = {
     ...platformData,
+    rssUrl: platformData.rssUrl || undefined,
     lastCrawled: new Date()
   };
 
@@ -1094,7 +1095,7 @@ async function scrapeBrunchAuthor(authorUrl: string): Promise<Article[]> {
         }
 
         // 썸네일 URL 처리
-        let thumbnailUrl = undefined;
+        let thumbnailUrl: string | undefined = undefined;
         if (imageMatch && imageMatch[1]) {
           thumbnailUrl = imageMatch[1].startsWith('http') ? imageMatch[1] : 
                         imageMatch[1].startsWith('//') ? `https:${imageMatch[1]}` : 

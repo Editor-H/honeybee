@@ -207,13 +207,13 @@ export class YouTubeCollector {
         viewCount: statistics?.viewCount ? parseInt(statistics.viewCount) : 0,
         likeCount: statistics?.likeCount ? parseInt(statistics.likeCount) : 0,
         commentCount: statistics?.commentCount ? parseInt(statistics.commentCount) : 0,
-        readingTime: this.parseDuration(contentDetails?.duration),
+        readingTime: this.parseDuration(contentDetails?.duration || ''),
         trending: this.isTrending(statistics),
         featured: this.isFeatured(statistics, snippet),
         url: `https://www.youtube.com/watch?v=${video.id}`,
         contentType: 'video',
         videoUrl: `https://www.youtube.com/watch?v=${video.id}`,
-        videoDuration: this.parseDurationInSeconds(contentDetails?.duration),
+        videoDuration: this.parseDurationInSeconds(contentDetails?.duration || ''),
         thumbnailUrl: snippet.thumbnails?.high?.url || snippet.thumbnails?.medium?.url || snippet.thumbnails?.default?.url
       };
 
@@ -255,7 +255,7 @@ export class YouTubeCollector {
     // 기본 품질 기준
     const viewCount = parseInt(stats?.viewCount || '0');
     const likeCount = parseInt(stats?.likeCount || '0');
-    const duration = this.parseDurationInSeconds(video.contentDetails?.duration);
+    const duration = this.parseDurationInSeconds(video.contentDetails?.duration || '');
     
     // 품질 기준들
     const hasMinViews = viewCount >= 1000; // 최소 1천 조회
@@ -270,7 +270,7 @@ export class YouTubeCollector {
    * 유틸리티 메서드들
    */
   private chunkArray<T>(array: T[], size: number): T[][] {
-    const chunks = [];
+    const chunks: T[][] = [];
     for (let i = 0; i < array.length; i += size) {
       chunks.push(array.slice(i, i + size));
     }
@@ -288,7 +288,7 @@ export class YouTubeCollector {
 
   private extractExpertiseFromVideo(snippet: YouTubeSnippet): string[] {
     const text = (snippet.title + ' ' + snippet.description).toLowerCase();
-    const expertise = [];
+    const expertise: string[] = [];
     
     if (text.includes('react') || text.includes('vue') || text.includes('angular') || text.includes('frontend') || text.includes('프론트엔드')) {
       expertise.push('Frontend');

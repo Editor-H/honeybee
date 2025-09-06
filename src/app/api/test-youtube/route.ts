@@ -22,7 +22,27 @@ export async function GET() {
       }
     };
 
-    const results = [];
+    const results: ({
+      platform: string;
+      platformKey: string;
+      isEducational: boolean;
+      itemCount: number;
+      articles: {
+        id: string;
+        title: string;
+        contentType: string;
+        platform: string;
+        publishedAt: string | undefined;
+        videoUrl: string | undefined;
+        videoId: string | null;
+        isEducational: boolean;
+        platformKey: string;
+      }[];
+    } | {
+      platform: string;
+      platformKey: string;
+      error: string;
+    })[] = [];
 
     for (const [platformKey, platformData] of Object.entries(platforms)) {
       try {

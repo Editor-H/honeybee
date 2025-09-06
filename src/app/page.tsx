@@ -27,7 +27,7 @@ function HomeContent() {
   
   // URL에서 activeTab 초기화
   useEffect(() => {
-    const tab = searchParams.get('tab');
+    const tab = searchParams?.get('tab');
     if (tab && ['trending', 'keywords', 'authors', 'platforms'].includes(tab)) {
       setActiveTab(tab);
     } else {
@@ -37,7 +37,7 @@ function HomeContent() {
 
   // URL에서 category 초기화
   useEffect(() => {
-    const category = searchParams.get('category');
+    const category = searchParams?.get('category');
     if (category) {
       setActiveCategory(category);
     }

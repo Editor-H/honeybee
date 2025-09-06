@@ -54,7 +54,7 @@ export async function GET(request: Request) {
     // 기존 캐시에 강의 데이터 추가
     if (allCourses.length > 0) {
       const existingArticles = await CacheManager.getCachedArticles();
-      const combinedArticles = [...existingArticles, ...allCourses];
+      const combinedArticles = [...(existingArticles || []), ...allCourses];
       await CacheManager.setCachedArticles(combinedArticles);
       console.log('💾 강의 데이터를 기존 캐시에 추가 완료');
     }

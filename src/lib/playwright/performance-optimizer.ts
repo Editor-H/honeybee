@@ -534,12 +534,12 @@ export class PerformanceOptimizer {
           }
         );
 
-        const emptyTextNodes = [];
+        const emptyTextNodes: Node[] = [];
         let node;
         while (node = walker.nextNode()) {
           emptyTextNodes.push(node);
         }
-        emptyTextNodes.forEach(node => node.remove());
+        emptyTextNodes.forEach(node => node.parentNode?.removeChild(node));
       });
 
       console.log('🧹 부드러운 메모리 정리 완료');

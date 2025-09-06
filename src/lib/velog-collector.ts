@@ -71,7 +71,7 @@ export class VelogCollector {
       )
     ) || false;
 
-    return hasEngagement && hasDescription && hasTechTags;
+    return Boolean(hasEngagement && hasDescription && hasTechTags);
   }
 
   private transformToArticle(post: VelogPost): Article {
@@ -107,7 +107,7 @@ export class VelogCollector {
       author,
       platform,
       tags: post.tags?.map(tag => tag.name) || [],
-      category: this.categorizePost(post.tags),
+      category: this.categorizePost(post.tags || []),
       contentType: 'article' as const,
       readingTime: Math.max(1, Math.ceil((post.short_description || '').length / 200)),
       trending: (post.likes || 0) > 10,
@@ -145,10 +145,10 @@ export class VelogCollector {
     let score = 50; // 기본 점수
     
     // 좋아요 기반 점수 (최대 +25점)
-    score += Math.min(post.likes * 2, 25);
+    score += Math.min((post.likes || 0) * 2, 25);
     
     // 댓글 수 기반 점수 (최대 +15점)
-    score += Math.min(post.comments_count * 3, 15);
+    score += Math.min((post.comments_count || 0) * 3, 15);
     
     // 조회수 기반 점수 (최대 +10점)
     if (post.stats?.total) {

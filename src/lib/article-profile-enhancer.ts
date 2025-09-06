@@ -40,17 +40,15 @@ export class ArticleProfileEnhancer {
   private static enhancePlatformInfo(platform: Platform, profile: ExtendedPlatformProfile): Platform {
     // 기존 플랫폼이 간단한 구조인 경우 확장
     const basePlatform = {
+      ...platform,
       id: platform.id || profile.id,
       name: platform.name || profile.name,
       type: platform.type || profile.type,
       baseUrl: platform.baseUrl || profile.baseUrl,
       description: platform.description || profile.description,
       isActive: platform.isActive ?? profile.isActive,
-      lastCrawled: platform.lastCrawled,
       rssUrl: platform.rssUrl || profile.rssUrl,
-      logoUrl: platform.logoUrl,
-      channelName: platform.channelName || profile.channelName,
-      ...platform
+      channelName: platform.channelName || profile.channelName
     };
     
     return {
@@ -86,12 +84,12 @@ export class ArticleProfileEnhancer {
     
     // 기존 author가 단순 객체인 경우 확장
     const baseAuthor = {
+      ...author,
       id: author.id || `${profile.id}-author`,
       name: author.name || profile.name,
       company: author.company || companyName,
       expertise: author.expertise || [],
-      articleCount: author.articleCount || 0,
-      ...author
+      articleCount: author.articleCount || 0
     };
     
     return {
