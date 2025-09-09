@@ -55,7 +55,7 @@ export function InsightsNav({ activeTab, onTabChange }: InsightsNavProps) {
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
                 className={`
-                  group flex items-center gap-2 px-4 py-4 border-b-2 transition-all duration-200 whitespace-nowrap
+                  group flex items-center gap-3 px-5 py-4 border-b-2 transition-all duration-200 whitespace-nowrap
                   ${isActive 
                     ? 'border-[#DAA63E] text-[#DAA63E] bg-[#DAA63E]/5' 
                     : 'border-transparent text-gray-600 hover:text-[#DAA63E] hover:border-gray-300'
@@ -63,8 +63,8 @@ export function InsightsNav({ activeTab, onTabChange }: InsightsNavProps) {
                 `}
                 title={tab.description}
               >
-                <IconComponent className={`w-4 h-4 ${isActive ? 'text-[#DAA63E]' : 'text-gray-500 group-hover:text-[#DAA63E]'}`} />
-                <span className="font-medium text-sm">{tab.name}</span>
+                <IconComponent className={`w-5 h-5 ${isActive ? 'text-[#DAA63E]' : 'text-gray-500 group-hover:text-[#DAA63E]'}`} />
+                <span className="font-medium text-base">{tab.name}</span>
                 {tab.id === "trending" && (
                   <span className="ml-1 px-1.5 py-0.5 bg-red-100 text-red-600 text-xs rounded-full font-semibold">
                     HOT

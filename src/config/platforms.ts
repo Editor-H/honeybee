@@ -137,12 +137,13 @@ export const PLATFORM_CONFIGS: Record<string, PlatformConfig> = {
     id: 'outstanding',
     name: '아웃스탠딩',
     type: 'media',
-    baseUrl: 'https://outstanding.kr',
+    baseUrl: 'https://outstanding.kr/category/best',
     description: '비즈니스와 테크 트렌드를 다루는 미디어',
     isActive: true,
-    collectionMethod: 'rss',
-    rssUrl: 'https://outstanding.kr/feed',
-    limit: 5
+    collectionMethod: 'crawler',
+    crawlerType: 'outstanding',
+    limit: 5,
+    timeout: 30000
   },
   eo: {
     id: 'eo',
