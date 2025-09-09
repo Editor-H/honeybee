@@ -8,7 +8,15 @@ export async function GET() {
     success: false,
     count: 0,
     error: null as string | null,
-    articles: [] as any[],
+    articles: [] as Array<{
+      title: string;
+      url: string;
+      author: string;
+      category: string;
+      tags: string[];
+      qualityScore: number;
+      publishedAt: Date;
+    }>,
     performance: {
       duration: 0,
       startTime: Date.now()
