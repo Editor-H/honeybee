@@ -170,7 +170,7 @@ export class SmartOutstandingCollector {
     if (text.includes('ai') || text.includes('인공지능') || text.includes('머신러닝')) {
       category = 'ai-ml';
     } else if (text.includes('스타트업') || text.includes('투자') || text.includes('비즈니스')) {
-      category = 'business';
+      category = 'product';
     } else if (text.includes('개발') || text.includes('프로그래밍') || text.includes('기술')) {
       category = 'general';
     } else if (text.includes('데이터') || text.includes('분석')) {

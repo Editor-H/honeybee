@@ -37,9 +37,9 @@ export async function GET() {
       title: article.title,
       url: article.url,
       author: article.author.name,
-      category: article.category,
+      category: String(article.category),
       tags: article.tags.slice(0, 3), // 처음 3개 태그만
-      qualityScore: article.qualityScore,
+      qualityScore: article.qualityScore || 0,
       publishedAt: article.publishedAt
     }));
     result.performance.duration = duration;

@@ -26,7 +26,7 @@ function calculateRelevanceScore(article: Article, query: string): number {
   score += tagMatches * 2;
   
   // 작가명에서 매칭 (가중치 2)
-  if (article.author.name.toLowerCase().includes(queryLower)) {
+  if ((article.author.name || '').toLowerCase().includes(queryLower)) {
     score += 2;
   }
   
@@ -50,7 +50,7 @@ function searchArticles(articles: Article[], query: string, filters: SearchFilte
     const titleMatch = article.title.toLowerCase().includes(queryLower);
     const contentMatch = article.content.toLowerCase().includes(queryLower);
     const tagMatch = article.tags.some(tag => tag.toLowerCase().includes(queryLower));
-    const authorMatch = article.author.name.toLowerCase().includes(queryLower);
+    const authorMatch = (article.author.name || '').toLowerCase().includes(queryLower);
     const platformMatch = article.platform.name.toLowerCase().includes(queryLower);
     
     const textMatch = titleMatch || contentMatch || tagMatch || authorMatch || platformMatch;
@@ -58,7 +58,7 @@ function searchArticles(articles: Article[], query: string, filters: SearchFilte
     // 필터 적용
     const categoryMatch = !filters.category || article.category === filters.category;
     const platformFilter = !filters.platform || article.platform.id === filters.platform;
-    const authorFilter = !filters.author || article.author.name.includes(filters.author);
+    const authorFilter = !filters.author || (article.author.name || '').includes(filters.author);
     
     return textMatch && categoryMatch && platformFilter && authorFilter;
   });
@@ -169,9 +169,10 @@ function generateSearchSuggestions(articles: Article[], query: string): string[]
   
   // 작가명에서 제안
   articles.forEach(article => {
-    if (article.author.name.toLowerCase().includes(queryLower) && 
-        article.author.name.toLowerCase() !== queryLower) {
-      suggestions.add(article.author.name);
+    const authorName = article.author.name || '';
+    if (authorName.toLowerCase().includes(queryLower) && 
+        authorName.toLowerCase() !== queryLower) {
+      suggestions.add(authorName);
     }
   });
   

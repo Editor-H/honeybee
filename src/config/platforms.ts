@@ -1,4 +1,4 @@
-export type PlatformType = 'corporate' | 'educational' | 'media' | 'community' | 'personal';
+export type PlatformType = 'corporate' | 'educational' | 'media' | 'community' | 'personal' | 'docs';
 export type CollectionMethod = 'rss' | 'crawler' | 'api';
 
 export interface PlatformConfig {
@@ -350,6 +350,152 @@ export const PLATFORM_CONFIGS: Record<string, PlatformConfig> = {
     collectionMethod: 'rss',
     rssUrl: 'https://www.tistory.com/category/UX%2FUI/rss',
     limit: 1
+  },
+
+  // 📚 기술 문서 및 공식 문서
+  react_docs: {
+    id: 'react_docs',
+    name: 'React 공식 블로그',
+    type: 'docs',
+    baseUrl: 'https://react.dev',
+    description: 'React 공식 블로그 및 뉴스',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://react.dev/rss.xml',
+    limit: 3
+  },
+  
+  nextjs_blog: {
+    id: 'nextjs_blog',
+    name: 'Next.js 블로그',
+    type: 'docs',
+    baseUrl: 'https://nextjs.org',
+    description: 'Next.js 공식 블로그',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://nextjs.org/feed.xml',
+    limit: 3
+  },
+
+  vercel_blog: {
+    id: 'vercel_blog',
+    name: 'Vercel 블로그',
+    type: 'docs',
+    baseUrl: 'https://vercel.com',
+    description: 'Vercel 팀의 기술 블로그',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://vercel.com/atom',
+    limit: 3
+  },
+
+  github_blog: {
+    id: 'github_blog',
+    name: 'GitHub 블로그',
+    type: 'docs',
+    baseUrl: 'https://github.blog',
+    description: 'GitHub 공식 블로그',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://github.blog/feed/',
+    limit: 4
+  },
+
+  google_developers: {
+    id: 'google_developers',
+    name: 'Google Developers',
+    type: 'docs',
+    baseUrl: 'https://developers.googleblog.com',
+    description: 'Google 개발자 블로그',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://developers.googleblog.com/feeds/posts/default',
+    limit: 4
+  },
+
+  aws_blog: {
+    id: 'aws_blog',
+    name: 'AWS 기술 블로그',
+    type: 'docs',
+    baseUrl: 'https://aws.amazon.com/ko/blogs',
+    description: 'AWS 공식 기술 블로그',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://aws.amazon.com/ko/blogs/tech/feed/',
+    limit: 4
+  },
+
+  microsoft_devblogs: {
+    id: 'microsoft_devblogs',
+    name: 'Microsoft 개발자 블로그',
+    type: 'docs',
+    baseUrl: 'https://devblogs.microsoft.com',
+    description: 'Microsoft 개발자 커뮤니티 블로그',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://devblogs.microsoft.com/feed/',
+    limit: 4
+  },
+
+  // 🤖 AI 관련 대형 사이트
+  anthropic_news: {
+    id: 'anthropic_news',
+    name: 'Anthropic News',
+    type: 'corporate',
+    baseUrl: 'https://www.anthropic.com',
+    description: 'Anthropic (Claude) 공식 뉴스 및 연구',
+    isActive: false, // RSS URL 확인 필요로 임시 비활성화
+    collectionMethod: 'rss',
+    rssUrl: 'https://www.anthropic.com/news/rss.xml',
+    limit: 5
+  },
+
+  openai_blog: {
+    id: 'openai_blog',
+    name: 'OpenAI Blog',
+    type: 'corporate',
+    baseUrl: 'https://openai.com',
+    description: 'OpenAI 공식 블로그 및 연구',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://openai.com/blog/rss.xml',
+    limit: 5
+  },
+
+  huggingface_blog: {
+    id: 'huggingface_blog',
+    name: 'Hugging Face Blog',
+    type: 'corporate',
+    baseUrl: 'https://huggingface.co',
+    description: 'Hugging Face 기술 블로그 및 연구',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://huggingface.co/blog/feed.xml',
+    limit: 4
+  },
+
+  deepmind_blog: {
+    id: 'deepmind_blog',
+    name: 'DeepMind Blog',
+    type: 'corporate',
+    baseUrl: 'https://deepmind.google',
+    description: 'Google DeepMind 연구 블로그',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://deepmind.google/blog/rss.xml',
+    limit: 4
+  },
+
+  stability_ai: {
+    id: 'stability_ai',
+    name: 'Stability AI Blog',
+    type: 'corporate',
+    baseUrl: 'https://stability.ai',
+    description: 'Stability AI 공식 블로그',
+    isActive: false, // RSS URL 확인 필요로 임시 비활성화  
+    collectionMethod: 'rss',
+    rssUrl: 'https://stability.ai/blog/rss.xml',
+    limit: 3
   }
 };
 

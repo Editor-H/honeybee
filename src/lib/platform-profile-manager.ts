@@ -167,7 +167,7 @@ export class PlatformProfileManager {
   
   // 플랫폼 이름과 설명에서 기술 키워드 자동 추출
   private static detectTechKeywords(platform: PlatformConfig): string[] {
-    const text = `${platform.name} ${platform.description}`.toLowerCase();
+    const text = `${platform.name || ''} ${platform.description || ''}`.toLowerCase();
     
     const techKeywords = [
       'react', 'vue', 'angular', 'javascript', 'typescript',

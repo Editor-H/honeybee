@@ -4,6 +4,7 @@ import { PlatformConfig } from '@/config/platforms';
 import { collectFromCrawler } from './collector-factory';
 import { stripHtmlAndClean } from '../utils/text-utils';
 import { enhanceArticleWithProfile } from '../article-profile-enhancer';
+import { shouldIncludeArticle } from '../utils/language-detector';
 
 export interface CollectionResult {
   platformId: string;
@@ -107,7 +108,22 @@ export class PlatformCollector {
       }
 
       const feed = await parser.parseURL(platform.rssUrl);
-      const items = (feed.items || []).slice(0, platform.limit);
+      let items = (feed.items || []);
+
+      // 미디엄 플랫폼의 경우 한글 아티클만 필터링
+      if (this.isMediumPlatform(platform.id)) {
+        const beforeCount = items.length;
+        items = items.filter(item => {
+          const title = item.title || '';
+          const description = item.contentSnippet || item.content || item.summary || '';
+          return shouldIncludeArticle(title, description, platform.id);
+        });
+        const afterCount = items.length;
+        console.log(`📝 ${platform.name}: 한글 필터링 ${beforeCount}→${afterCount}개 (${beforeCount - afterCount}개 제외)`);
+      }
+
+      // limit 적용
+      items = items.slice(0, platform.limit);
 
       const articles: Article[] = items.map((item, index) => {
         const article = this.transformRSSItemToArticle(item, platform, index);
@@ -136,9 +152,9 @@ export class PlatformCollector {
       publishedAt: new Date(item.pubDate || item.isoDate || Date.now()),
       author: {
         id: `${platform.id}-author`,
-        name: (item as Parser.Item & { creator?: string; author?: string }).creator || 
+        name: String((item as Parser.Item & { creator?: string; author?: string }).creator || 
               (item as Parser.Item & { creator?: string; author?: string }).author || 
-              logDisplayName,
+              logDisplayName),
         company: logDisplayName,
         expertise: ['Tech'],
         articleCount: 0
@@ -244,5 +260,14 @@ export class PlatformCollector {
       return 'lecture';
     }
     return 'article';
+  }
+
+  private isMediumPlatform(platformId: string): boolean {
+    const mediumPlatforms = [
+      'medium',
+      'medium_ux_collective', 
+      'medium_ux_writer'
+    ];
+    return mediumPlatforms.includes(platformId);
   }
 }

@@ -161,7 +161,14 @@ export async function GET(request: Request) {
     console.log('📊 수집 요약:', JSON.stringify(summary, null, 2));
     
     // 자동 배포 트리거 (새 콘텐츠가 있을 때만)
-    let deployResult = null;
+    let deployResult: {
+      success: boolean;
+      method?: string;
+      deploymentId?: string;
+      status?: number;
+      timestamp?: string;
+      error?: string;
+    } | null = null;
     if (articles.length > 0) {
       try {
         console.log('🚀 새 콘텐츠 감지 - 자동 배포 시작');
