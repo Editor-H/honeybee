@@ -246,7 +246,7 @@ export class YouTubeCollector {
   }
 
   /**
-   * 비디오 품질 평가
+   * 비디오 품질 평가 (유튜브 쇼츠 제외)
    */
   private isHighQualityVideo(video: YouTubeVideo): boolean {
     const stats = video.statistics;
@@ -257,13 +257,33 @@ export class YouTubeCollector {
     const likeCount = parseInt(stats?.likeCount || '0');
     const duration = this.parseDurationInSeconds(video.contentDetails?.duration || '');
     
+    // 유튜브 쇼츠 제외 (60초 이하 또는 제목에 쇼츠 키워드)
+    const isNotShorts = duration > 60; // 60초 초과만 허용
+    const hasNoShortsKeywords = !this.hasShortsKeywords(snippet.title, snippet.description);
+    
     // 품질 기준들
     const hasMinViews = viewCount >= 1000; // 최소 1천 조회
     const hasEngagement = likeCount >= 10; // 최소 10 좋아요
     const hasReasonableDuration = duration >= 300 && duration <= 3600; // 5분~1시간
     const isRecentEnough = (Date.now() - new Date(snippet.publishedAt).getTime()) <= 90 * 24 * 60 * 60 * 1000; // 90일 이내
     
-    return hasMinViews && hasEngagement && hasReasonableDuration && isRecentEnough;
+    // 쇼츠가 아니고 다른 조건들을 만족해야 함
+    return isNotShorts && hasNoShortsKeywords && hasMinViews && hasEngagement && hasReasonableDuration && isRecentEnough;
+  }
+
+  /**
+   * 쇼츠 관련 키워드 검사
+   */
+  private hasShortsKeywords(title: string, description: string): boolean {
+    const text = (title + ' ' + (description || '')).toLowerCase();
+    const shortsKeywords = [
+      'shorts', 'short', '#shorts', '#short',
+      '쇼츠', '숏츠', '짧은영상', '60초',
+      'quick tip', 'quick', 'tip', '팁',
+      '1분', '30초', '빠르게'
+    ];
+    
+    return shortsKeywords.some(keyword => text.includes(keyword));
   }
 
   /**

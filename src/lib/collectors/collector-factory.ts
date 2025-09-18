@@ -8,6 +8,7 @@ import { SmartOutstandingCollector } from '../playwright/smart-outstanding-colle
 import { InflearnCrawler } from '../crawlers/inflearn-crawler';
 import { Class101Crawler } from '../crawlers/class101-crawler';
 import { ColosoCrawler } from '../crawlers/coloso-crawler';
+import { threadsCollector } from '../threads-collector';
 
 // 크롤러 인터페이스 정의
 export interface ContentCollector {
@@ -25,6 +26,7 @@ export class CollectorFactory {
     'naver-d2': () => new SmartNaverD2Collector(), // 네이버 D2 웹 크롤러
     'line-engineering': () => new SmartLINECollector(), // LINE Engineering 웹 크롤러
     outstanding: () => new SmartOutstandingCollector(), // 아웃스탠딩 베스트 아티클 크롤러
+    threads: () => threadsCollector, // Threads AI 포스트 수집기
     inflearn: () => new InflearnCrawler(),
     class101: () => new Class101Crawler(),
     coloso: () => new ColosoCrawler()
@@ -37,6 +39,7 @@ export class CollectorFactory {
     'naver-d2': 'collectArticles',
     'line-engineering': 'collectArticles',
     outstanding: 'collectArticles',
+    threads: 'collectArticles',
     inflearn: 'collectCourses',
     class101: 'collectCourses',
     coloso: 'collectCourses'

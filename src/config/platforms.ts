@@ -437,6 +437,32 @@ export const PLATFORM_CONFIGS: Record<string, PlatformConfig> = {
     limit: 4
   },
 
+  // 📰 한국 AI/테크 뉴스레터
+  aikorea_news: {
+    id: 'aikorea_news',
+    name: 'AI 코리아 커뮤니티 뉴스',
+    type: 'community',
+    baseUrl: 'https://news.aikoreacommunity.com',
+    description: 'AI 코리아 커뮤니티의 AI 뉴스레터',
+    isActive: true,
+    collectionMethod: 'rss',
+    rssUrl: 'https://news.aikoreacommunity.com/feed/',
+    limit: 5
+  },
+
+  // 📱 소셜 미디어 플랫폼
+  threads_ai: {
+    id: 'threads_ai',
+    name: 'Threads AI 포스트',
+    type: 'community',
+    baseUrl: 'https://www.threads.net',
+    description: 'Threads에서 수집한 AI 관련 포스트',
+    isActive: true,
+    collectionMethod: 'crawler',
+    crawlerType: 'threads',
+    limit: 6
+  },
+
   // 🤖 AI 관련 대형 사이트
   anthropic_news: {
     id: 'anthropic_news',

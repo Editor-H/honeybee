@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Bookmark, BookmarkCheck, Clock } from "lucide-react";
 import { Article } from "@/types/article";
 import { useToastContext } from "@/contexts/toast-context";
+import { PlatformLogo } from "@/components/platform-logo";
 
 interface ArticleCardProps {
   article: Article;
@@ -133,63 +134,6 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
     return '#DAA63E'; // 모든 플랫폼에 동일한 포인트 컬러 사용
   };
 
-  const getPlatformLogoComponent = (platform: Article['platform']) => {
-
-    // 폴백 이니셜 로고
-    const logoStyles = {
-      // 기존 플랫폼들
-      '토스 기술블로그': { bg: 'bg-blue-500', text: 'T', color: 'text-white' },
-      '카카오 기술블로그': { bg: 'bg-yellow-400', text: 'K', color: 'text-black' },
-      '당근마켓 기술블로그': { bg: 'bg-orange-500', text: '당', color: 'text-white' },
-      '우아한형제들': { bg: 'bg-gray-800', text: '우', color: 'text-white' },
-      '네이버 D2': { bg: 'bg-green-500', text: 'N', color: 'text-white' },
-      '넷마블 기술블로그': { bg: 'bg-red-500', text: 'N', color: 'text-white' },
-      '마켓컬리 기술 블로그': { bg: 'bg-purple-500', text: 'K', color: 'text-white' },
-      '생활코딩': { bg: 'bg-green-600', text: '생', color: 'text-white' },
-      '조코딩': { bg: 'bg-blue-600', text: '조', color: 'text-white' },
-      '코딩애플': { bg: 'bg-red-400', text: '코', color: 'text-white' },
-      
-      // 현재 활성화된 플랫폼들
-      'YouTube': { bg: 'bg-red-600', text: 'YT', color: 'text-white' },
-      'Velog': { bg: 'bg-green-500', text: 'V', color: 'text-white' },
-      'DEV Community': { bg: 'bg-black', text: 'DEV', color: 'text-white' },
-      'Medium - UX 실무자들': { bg: 'bg-purple-600', text: 'UX', color: 'text-white' },
-      'Hacker News': { bg: 'bg-orange-500', text: 'HN', color: 'text-white' },
-      'UX Collective': { bg: 'bg-blue-500', text: 'UXC', color: 'text-white' },
-      '아웃스탠딩(Outstanding)': { bg: 'bg-pink-500', text: 'OUT', color: 'text-white' },
-      'freeCodeCamp': { bg: 'bg-green-600', text: 'FCC', color: 'text-white' },
-      'Medium - UX Planet': { bg: 'bg-purple-500', text: 'UXP', color: 'text-white' },
-      'Medium - Product Coalition': { bg: 'bg-indigo-600', text: 'PC', color: 'text-white' },
-      'Medium': { bg: 'bg-gray-700', text: 'M', color: 'text-white' },
-      'YOZM': { bg: 'bg-cyan-500', text: 'Y', color: 'text-white' },
-      
-      // 강의 플랫폼들
-      '인프런': { bg: 'bg-green-500', text: '인', color: 'text-white' },
-      'Inflearn': { bg: 'bg-green-500', text: '인', color: 'text-white' },
-      '콜로소': { bg: 'bg-purple-600', text: '콜', color: 'text-white' },
-      'Coloso': { bg: 'bg-purple-600', text: '콜', color: 'text-white' },
-      '클래스101': { bg: 'bg-orange-500', text: '클', color: 'text-white' },
-      'Class101': { bg: 'bg-orange-500', text: '클', color: 'text-white' }
-    };
-
-    const style = logoStyles[platform.name as keyof typeof logoStyles];
-    
-    if (style) {
-      return (
-        <div className={`w-8 h-8 rounded-full ${style.bg} flex items-center justify-center border border-gray-200 flex-shrink-0`}>
-          <span className={`text-sm font-bold ${style.color}`}>{style.text}</span>
-        </div>
-      );
-    }
-    
-    return (
-      <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center border border-gray-200 flex-shrink-0">
-        <span className="text-sm font-semibold text-white">
-          {platform.name.replace(' 기술블로그', '').replace('NAVER ', '').charAt(0)}
-        </span>
-      </div>
-    );
-  };
 
   const handleCardClick = () => {
     window.open(article.url, '_blank', 'noopener,noreferrer');
@@ -224,7 +168,7 @@ export function ArticleCard({ article, isInitiallySaved = false, onUnsave, onSav
       <CardContent className="p-3 flex-1 flex flex-col">
         <div className="flex items-start gap-2 mb-2">
           {/* Platform Logo */}
-          {getPlatformLogoComponent(article.platform)}
+          <PlatformLogo platform={article.platform} size="lg" />
 
           {/* Platform Info */}
           <div className="flex-1 min-w-0">
