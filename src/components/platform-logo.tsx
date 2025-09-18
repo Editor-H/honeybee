@@ -44,12 +44,6 @@ const LOGO_MAPPINGS: Record<string, {
     bgColor: '#4AC1FF',
     textColor: '#FFFFFF'
   },
-  'socar': { 
-    logo: '/logos/socar.svg', 
-    fallback: 'S',
-    bgColor: '#3366FF',
-    textColor: '#FFFFFF'
-  },
   'line': { 
     logo: '/logos/line.svg', 
     fallback: 'L',
