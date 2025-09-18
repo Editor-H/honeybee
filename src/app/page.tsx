@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedStats } from "@/components/animated-stats";
 import { ArticleList } from "@/components/article-list";
 import { SearchBox } from "@/components/search-box";
-import { Sidebar } from "@/components/sidebar";
+import { Sidebar } from "@/components/sidebar-backup";
 import { KeywordsAnalysis } from "@/components/keywords-analysis";
 import { AuthorsAnalysis } from "@/components/authors-analysis";
 import { TrendingAnalysis } from "@/components/trending-analysis";
