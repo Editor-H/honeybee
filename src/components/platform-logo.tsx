@@ -44,12 +44,6 @@ const LOGO_MAPPINGS: Record<string, {
     bgColor: '#4AC1FF',
     textColor: '#FFFFFF'
   },
-  'banksalad': { 
-    logo: '/logos/banksalad.svg', 
-    fallback: 'B',
-    bgColor: '#00C853',
-    textColor: '#FFFFFF'
-  },
   'socar': { 
     logo: '/logos/socar.svg', 
     fallback: 'S',
